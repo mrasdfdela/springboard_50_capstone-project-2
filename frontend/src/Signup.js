@@ -18,10 +18,13 @@ function Signup({userSignUp}){
   const handleSubmit = (e)=> {
     e.preventDefault();
     // userSignUp(formData);
+    console.log(formData);
+    setFormData(INITIAL_STATE);
+    e.target.reset();
+
     setTimeout(function(){
-      console.log(formData);
       history.push("/");
-    }, 5000)
+    }, 5000);
   }
 
   const handleChange = (e)=>{
@@ -32,27 +35,27 @@ function Signup({userSignUp}){
   return (
     <>
       <h3>Signup</h3>
-      <div class="d-flex justify-content-center">
-        <Card className="col-sm-4">
+      <div className="d-flex justify-content-center">
+        <Card className="col-sm-6">
           <CardBody>
             <Form className="form" onSubmit={handleSubmit}>
-              <Label for="username">Username</Label>
-              <Input
-                id="username"
-                name="username"
-                type="text"
-                placeholder="username"
-                onChange={handleChange}
-              />
-              <Label for="password">Password</Label>
+                <Label for="username"></Label>
+                <Input
+                  id="username"
+                  name="username"
+                  type="text"
+                  placeholder="username"
+                  onChange={handleChange}
+                />
+              <Label for="password"></Label>
               <Input
                 id="password"
                 name="password"
-                type="text"
+                type="password"
                 placeholder="password"
                 onChange={handleChange}
               />
-              <Label for="firstname">First Name</Label>
+              <Label for="firstname"></Label>
               <Input
                 id="firstname"
                 name="firstname"
@@ -60,7 +63,7 @@ function Signup({userSignUp}){
                 placeholder="First Name"
                 onChange={handleChange}
               />
-              <Label for="lastname">Last Name</Label>
+              <Label for="lastname"></Label>
               <Input
                 id="lastname"
                 name="lastname"
@@ -68,7 +71,7 @@ function Signup({userSignUp}){
                 placeholder="Last Name"
                 onChange={handleChange}
               />
-              <Label for="email">E-Mail</Label>
+              <Label for="email"></Label>
               <Input
                 id="email"
                 name="email"

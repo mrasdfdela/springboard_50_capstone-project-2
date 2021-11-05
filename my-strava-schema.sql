@@ -7,6 +7,8 @@ CREATE DATABASE my_strava;
 CREATE TABLE users(
   username VARCHAR(25) PRIMARY KEY,
   password TEXT NOT NULL,
+  firstname VARCHAR(25),
+  lastname VARCHAR(25),
   email TEXT NOT NULL
     CHECK (position ('@' IN email) > 1),
   athlete_id INTEGER UNIQUE
