@@ -8,7 +8,14 @@ This project uses the [Strava API](https://developers.strava.com/docs/reference)
 
 ## Libraries & Installation
 
+- Backend
+  - node, express, body-parser, jsonschema, pg, bcrypt, jsonschema
+- Frontend
+  - create-react-app, reactstrap, bootstrap, react-router-dom, axios
+
 ## API
+
+- http://www.passportjs.org/packages/passport-strava-oauth2/
 
 ## Pages
 

@@ -1,20 +1,30 @@
-const express, { response } = require("express");
+"user strict";
+
+const express = require("express");
+const bodyParser = require("body-parser");
 const passport = require('passport');
 const StravaStrategy = require('passport-strava-oauth2').Strategy;
-// const cors = require("cors");
+// const { response } = require("express");
+const cors = require("cors");
 
+// stores strava secret locally; needs to eventually be setup on the server
+const { STRAVA_CLIENT_ID, STRAVA_CLIENT_SECRET } = require("./config");
 
-// temporary way to store strava secret locally; needs to eventually be setup on the server
-import { STRAVA_CLIENT_ID, STRAVA_CLIENT_SECRET } from "./client";
-
-// const authRoutes = require("./routes/auth");
 const app = express();
-
-app.use("/auth", authRoutes);
+app.use(cors());
 app.use(express.json());
-app.use(express.bodyParser());
+app.use(bodyParser.json());
+app.use(express.urlencoded( {extended: true} ));
 app.use(passport.initialize());
 app.use(passport.session());
+
+const authRoutes = require("./routes/auth");
+// const actRoutes = require("./routes/activities");
+// const goalRoutes = require("./routes/goals");
+
+app.use("/auth", authRoutes);
+// app.use("/activities", actRoutes);
+// app.use("/goals", goalRoutes);
 
 passport.serializeUser(function(user,done) {
   done(null, user);
@@ -46,7 +56,7 @@ function ensureAuthenticated(req, res, next) {
   res.redirect('/login')
 }
 
-// Strava Routes
+// Strava Routes Middleware
 app.get('/auth/strava',
   passport.authenticate('strava', { scope: ['public'] }),
   function(req, res){
@@ -57,6 +67,8 @@ app.get('/auth/strava/callback',
   function(req, res) {
     res.redirect('/');
 });
+
+//
 app.get('/logout', function(req, res){
   req.logout();
 });

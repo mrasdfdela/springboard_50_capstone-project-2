@@ -17,8 +17,7 @@ function Signup({userSignUp}){
 
   const handleSubmit = (e)=> {
     e.preventDefault();
-    // userSignUp(formData);
-    console.log(formData);
+    userSignUp(formData);
     setFormData(INITIAL_STATE);
     e.target.reset();
 
@@ -39,14 +38,14 @@ function Signup({userSignUp}){
         <Card className="col-sm-6">
           <CardBody>
             <Form className="form" onSubmit={handleSubmit}>
-                <Label for="username"></Label>
-                <Input
-                  id="username"
-                  name="username"
-                  type="text"
-                  placeholder="username"
-                  onChange={handleChange}
-                />
+              <Label for="username"></Label>
+              <Input
+                id="username"
+                name="username"
+                type="text"
+                placeholder="username"
+                onChange={handleChange}
+              />
               <Label for="password"></Label>
               <Input
                 id="password"
@@ -55,18 +54,18 @@ function Signup({userSignUp}){
                 placeholder="password"
                 onChange={handleChange}
               />
-              <Label for="firstname"></Label>
+              <Label for="firstName"></Label>
               <Input
-                id="firstname"
-                name="firstname"
+                id="firstName"
+                name="firstName"
                 type="text"
                 placeholder="First Name"
                 onChange={handleChange}
               />
-              <Label for="lastname"></Label>
+              <Label for="lastName"></Label>
               <Input
-                id="lastname"
-                name="lastname"
+                id="lastName"
+                name="lastName"
                 type="text"
                 placeholder="Last Name"
                 onChange={handleChange}
@@ -79,7 +78,9 @@ function Signup({userSignUp}){
                 placeholder="E-Mail"
                 onChange={handleChange}
               />
-              <Button color="primary" className='mt-1'>Submit</Button>
+              <Button color="primary" className="mt-1">
+                Submit
+              </Button>
             </Form>
           </CardBody>
         </Card>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 
 // import logo from './logo.svg';
@@ -12,7 +12,38 @@ import Activity from "./Activity";
 import Goals from "./Goals";
 import Profile from "./Profile";
 
+import MyStravaApi from "./api.js";
+
 function App() {
+  const [ currentUser, setCurrentUser ] = useState(null);
+  const [ currentToken, setCurrentToken ] = useState(null);
+  // async function userSignUp(formData){
+  //   try {
+  //     const newToken = await JoblyApi.registerUser(formData);
+  //     setCurrentUser(formData.username);
+  //     setCurrentToken(newToken);
+
+  //     const newUser = await getUserDetails(username);
+  //     setUserDetails(newUser);
+  //   } catch {
+  //     console.log("User not stored in session!");
+  //   }
+  // }
+  async function userSignUp(formData){
+    try {
+      const newToken = await MyStravaApi.registerUser(formData);
+      setCurrentUser(formData.username);
+      setCurrentToken(newToken);
+      console.log(`state currentUser: ${currentUser}`);
+      console.log(`state currentToken: ${currentToken}`);
+
+      // const newUser = await getUserDetails(formData.username);
+      // setUserDetails(newUser);
+    } catch {
+      console.log("Error. User not registered...");
+    }
+  }
+
   return (
     <div className="App">
       <BrowserRouter>
@@ -20,11 +51,9 @@ function App() {
         <Switch>
           <Route exact path="/" component={Home} />
           <Route exact path="/login" component={Login} />
-          <Route 
-            exact path="/signup"
-            component={Signup}
-            userSignup={"userSignup"}
-          />
+          <Route exact path="/signup">
+            <Signup userSignUp={userSignUp} />
+          </Route>
           <Route exact path="/profile">
               <Profile
                 userDetails={"userDetails"}
