@@ -103,7 +103,8 @@ class User {
         username,
         first_name AS "firstName",
         last_name AS "lastName",
-        email
+        email,
+        athlete_id
       FROM users
       WHERE username = $1`,
       [username]

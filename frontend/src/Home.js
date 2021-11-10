@@ -1,10 +1,17 @@
 import React, { useContext } from "react";
-// import { Button, Card, CardBody, Form, Input, Label } from "reactstrap";
+// import { useHistory } from "react-router-dom";
+import { Button, Form } from "reactstrap";
 
 import UserContext from "./UserContext";
 
-function Home(){
+function Home({connectStrava}){
   const { currentUser } = useContext(UserContext);
+  // const history = useHistory();
+
+  const handleSubmit = (e)=> {
+    e.preventDefault();
+    connectStrava();
+  }
 
   return (
     <>
@@ -13,7 +20,17 @@ function Home(){
         <p>Nobody is signed in</p>
       ) : (
         <>
-          <p>{currentUser.username} is signed in!</p>
+          <p>Welcome, {currentUser.username}!</p>
+          { currentUser.athlete_id ? (
+            <p>You have connected your strava</p>
+          ) : (
+            <>
+              <Form className="form" onSubmit={handleSubmit}>
+                <p>You have not connected your strava</p>
+                <Button color="primary" className="mt-1">Connect Strava</Button>
+              </Form>
+            </>
+          )}
         </>
       )}
     </>

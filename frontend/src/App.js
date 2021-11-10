@@ -85,6 +85,10 @@ function App() {
     MyStravaApi.token = null;
   }
 
+  async function connectStrava(){
+    MyStravaApi.connectToStrava();
+  }
+
   return (
     <UserContext.Provider
       value={{
@@ -95,7 +99,9 @@ function App() {
         <BrowserRouter>
           <NavBar userLogout={userLogout} />
           <Switch>
-            <Route exact path="/" component={Home} />
+            <Route exact path="/">
+              <Home connectStrava={connectStrava}/>
+            </Route>
             <Route exact path="/login">
               <Login userLogin={userLogin} />
             </Route>

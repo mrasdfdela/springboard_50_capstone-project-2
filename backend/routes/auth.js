@@ -1,6 +1,9 @@
 "use strict";
 
 const express = require("express");
+const passport = require("passport");
+const cors = require("cors");
+const StravaStrategy = require("passport-strava-oauth2").Strategy;
 
 const jsonschema = require("jsonschema");
 const userAuthSchema = require("../schemas/userAuth.json");
@@ -9,9 +12,51 @@ const userRegisterSchema = require("../schemas/userRegister.json");
 const User = require("../models/user");
 const { createToken } = require("../helpers/tokens");
 const { BadRequestError } = require("../expressError");
+// stores strava secret locally; needs to eventually be setup on the server
+const { STRAVA_CLIENT_ID, STRAVA_CLIENT_SECRET } = require("../config");
+const { route } = require("./users");
 
 // const { BadRequestError } = require ("../expressError");
 const router = new express.Router();
+router.use(passport.initialize());
+router.use(passport.session());
+router.use(cors());
+
+passport.serializeUser(function (user, done) { done(null, user) });
+passport.deserializeUser(function (obj, done) { done(null, obj) });
+
+// Setup strava strategy & check authentication
+passport.use(new StravaStrategy({
+    clientID: STRAVA_CLIENT_ID,
+    clientSecret: STRAVA_CLIENT_SECRET,
+    callbackURL: "localhost:3001/auth/strava/callback"
+  },
+  function(accessToken, refreshToken, profile, done) {
+    // asynchronous verification, for effect...
+    process.nextTick(function () {
+
+      // To keep the example simple, the user's Strava profile is returned to
+      // represent the logged-in user.  In a typical application, you would want
+      // to associate the Strava account with a user record in your database,
+      // and return that user instead.
+      return done(null, profile);
+    });
+  }
+));
+
+// Strava Routes Middleware
+router.get('/strava',
+  passport.authenticate('strava', { scope: ['public'] }),
+  function(req, res){
+    // The request will be redirected to Strava for authentication, so this function will not be called.
+  });
+router.get('/strava/callback', 
+  passport.authenticate('strava', { failureRedirect: '/' }),
+  function(req, res) {
+    console.log(res.status);
+    console.log(res.body);
+    res.redirect('/');
+});
 
 // POST /auth/token:  { username, password } => { token }
 // Route for logging into the system; returns JWT token to front end, which can be saved to browser to authenticate future requests

@@ -1,7 +1,6 @@
 "use strict";
 
 const SECRET_KEY = process.env.SECRET_KEY || "bed-bath-and-way-beyond";
-const STRAVA_SECRET_KEY = "8c1b9a9e093abe7dc39c6d34e4230f9244783c86";
 
 const PORT = +process.env.PORT || 3001;
 function getDatabaseUri(){
@@ -11,7 +10,7 @@ function getDatabaseUri(){
 }
 
 const STRAVA_CLIENT_ID = 73357;
-const STRAVA_CLIENT_SECRET = "8c1b9a9e093abe7dc39c6d34e4230f9244783c86 ";
+const STRAVA_CLIENT_SECRET = "8c1b9a9e093abe7dc39c6d34e4230f9244783c86";
 
 const BCRYPT_WORK_FACTOR = process.env.NODE_ENV === "test" ? 1 : 12;
 

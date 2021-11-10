@@ -45,13 +45,18 @@ class MyStravaApi {
   // Get user info
   static async getUser(user){
     let res = await this.request(`users/${user}`);
-    let { username, firstName, lastName, email } = res.user;
+    let { username, firstName, lastName, email, athlete_id } = res.user;
     return {
       username: username,
       firstName: firstName,
       lastName: lastName,
-      email: email
+      email: email,
+      athlete_id: athlete_id
     };
+  }
+  // Connect user to Strava
+  static async connectToStrava(){
+    await this.request('auth/strava');
   }
 }
 
