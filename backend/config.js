@@ -16,6 +16,7 @@ const BCRYPT_WORK_FACTOR = process.env.NODE_ENV === "test" ? 1 : 12;
 
 module.exports = { 
   BCRYPT_WORK_FACTOR, 
+  PORT,
   SECRET_KEY,
   STRAVA_CLIENT_ID, 
   STRAVA_CLIENT_SECRET,

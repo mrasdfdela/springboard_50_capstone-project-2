@@ -36,6 +36,23 @@ class MyStravaApi {
     this.token = res.token;
     return this.token;
   }
+  // Login
+  static async authenticateUser(username, password){
+    const credentials = { username: username, password: password };
+    let res = await this.request(`auth/token`, credentials, "post");
+    return res.token;
+  }
+  // Get user info
+  static async getUser(user){
+    let res = await this.request(`users/${user}`);
+    let { username, firstName, lastName, email } = res.user;
+    return {
+      username: username,
+      firstName: firstName,
+      lastName: lastName,
+      email: email
+    };
+  }
 }
 
 export default MyStravaApi;

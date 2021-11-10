@@ -18,11 +18,15 @@ app.use(express.urlencoded( {extended: true} ));
 app.use(passport.initialize());
 app.use(passport.session());
 
+const { NotFoundError } = require("./expressError");
+
 const authRoutes = require("./routes/auth");
+const userRoutes = require("./routes/users");
 // const actRoutes = require("./routes/activities");
 // const goalRoutes = require("./routes/goals");
 
 app.use("/auth", authRoutes);
+app.use("/users", userRoutes);
 // app.use("/activities", actRoutes);
 // app.use("/goals", goalRoutes);
 
@@ -74,9 +78,7 @@ app.get('/logout', function(req, res){
 });
 
 app.use(function(req,res,next){
-  return next(new Error('404 Error'));
+  return next(new NotFoundError());
 });
 
-app.listen(3001, function (req, res) {
-  console.log("App backend on port 3001");
-});
+module.exports = app;
