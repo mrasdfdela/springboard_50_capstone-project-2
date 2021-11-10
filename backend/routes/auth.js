@@ -21,13 +21,15 @@ router.post("/token", async function (req, res, next) {
   try {
     const validator = jsonschema.validate(req.body, userAuthSchema);
     if (!validator.valid) {
-      const errs = validator.errors.map(e => e.stack);
+      const errs = validator.errors.map((e) => e.stack);
       throw new BadRequestError(errs);
     }
 
     const { username, password } = req.body;
     const user = await User.authenticate(username, password);
     const token = createToken(user);
+    // https://medium.com/@ryanchenkie_40935/react-authentication-how-to-store-jwt-in-a-cookie-346519310e81
+    // res.cookie('token', token, { httpOnly: true });
     return res.json({ token });
   } catch (err) {
     return next(err);

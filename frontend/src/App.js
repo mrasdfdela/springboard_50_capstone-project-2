@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 
 // import logo from './logo.svg';
@@ -31,6 +31,17 @@ function App() {
   //     console.log("User not stored in session!");
   //   }
   // }
+  useEffect( async () => {
+    const token = localStorage.getItem("currentToken");
+    const user = localStorage.getItem("currentUser");
+    if (token) {
+      MyStravaApi.token = token;
+      const currUser = await MyStravaApi.getUser(user);
+      setCurrentUser(currUser);
+      setCurrentToken(token);
+    }
+  }, []);
+
   async function userSignUp(formData){
     try {
       const newToken = await MyStravaApi.registerUser(formData);
@@ -38,8 +49,8 @@ function App() {
         const newUser = await MyStravaApi.getUser(formData.username);
         setCurrentUser(newUser);
         setCurrentToken(newToken);
-        console.log(`state currentUser: ${currentUser}`);
-        console.log(`state currentToken: ${currentToken}`);
+        localStorage.setItem("currentUser", formData.username);
+        localStorage.setItem("currentToken", newToken);
       }
     } catch {
       console.log("Error; user not registered...");
@@ -49,16 +60,29 @@ function App() {
   async function userLogin(username, password){
     try {
       const newToken = await MyStravaApi.authenticateUser(username, password);
+      console.log(`logged in; token: ${newToken}`)
       if (newToken) {
-        const newUser = await MyStravaApi.getUser(username);
-        setCurrentUser(newUser);
+        const loggedInUser = await MyStravaApi.getUser(username);
+        console.log(loggedInUser);
+        setCurrentUser(loggedInUser);
         setCurrentToken(newToken);
-        console.log(`state currentUser: ${currentUser}`);
-        console.log(`state currentToken: ${currentToken}`);
+
+        localStorage.setItem("currentUser", username);
+        localStorage.setItem("currentToken", newToken);
       }
     } catch {
       console.log("Error; user not logged in...")
     }
+  }
+
+  // async function getUserInfo(username){
+  //   const currUser = await MyStravaApi.getUser(user);
+  // }
+
+  async function userLogout(){
+    setCurrentUser(null);
+    setCurrentToken(null);
+    MyStravaApi.token = null;
   }
 
   return (
@@ -69,7 +93,7 @@ function App() {
       }}>
       <div className="App">
         <BrowserRouter>
-          <NavBar userLogout={null} />
+          <NavBar userLogout={userLogout} />
           <Switch>
             <Route exact path="/" component={Home} />
             <Route exact path="/login">

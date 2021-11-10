@@ -1,6 +1,7 @@
 "use strict";
 
 const SECRET_KEY = process.env.SECRET_KEY || "bed-bath-and-way-beyond";
+const STRAVA_SECRET_KEY = "8c1b9a9e093abe7dc39c6d34e4230f9244783c86";
 
 const PORT = +process.env.PORT || 3001;
 function getDatabaseUri(){
