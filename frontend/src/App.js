@@ -1,44 +1,35 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 
-// import logo from './logo.svg';
-import './App.css';
-
 import UserContext from "./UserContext";
 import NavBar from "./NavBar";
 import Home from "./Home";
 import Login from "./Login";
 import Signup from "./Signup";
+import UserUpdate from "./UserUpdate"
 import Activities from "./Activities";
 import Activity from "./Activity";
 import Goals from "./Goals";
 import Profile from "./Profile";
 
 import MyStravaApi from "./api.js";
+import './App.css';
 
 function App() {
   const [ currentUser, setCurrentUser ] = useState(null);
   const [ currentToken, setCurrentToken ] = useState(null);
-  // async function userSignUp(formData){
-  //   try {
-  //     const newToken = await JoblyApi.registerUser(formData);
-  //     setCurrentUser(formData.username);
-  //     setCurrentToken(newToken);
 
-  //     const newUser = await getUserDetails(username);
-  //     setUserDetails(newUser);
-  //   } catch {
-  //     console.log("User not stored in session!");
-  //   }
-  // }
-  useEffect( async () => {
+  useEffect( () => {
     const token = localStorage.getItem("currentToken");
-    const user = localStorage.getItem("currentUser");
+    const username = localStorage.getItem("currentUser");
+    const getUser = async(username)=> (await MyStravaApi.getUser(username));
+
     if (token) {
       MyStravaApi.token = token;
-      const currUser = await MyStravaApi.getUser(user);
-      setCurrentUser(currUser);
-      setCurrentToken(token);
+      getUser(username).then((resp) => {
+        setCurrentToken(token);
+        setCurrentUser(resp);
+      });
     }
   }, []);
 
@@ -75,10 +66,6 @@ function App() {
     }
   }
 
-  // async function getUserInfo(username){
-  //   const currUser = await MyStravaApi.getUser(user);
-  // }
-
   async function userLogout(){
     setCurrentUser(null);
     setCurrentToken(null);
@@ -112,6 +99,11 @@ function App() {
               <Profile
                 userDetails={"userDetails"}
                 patchUserDetails={"patchUserDetails"}/>
+            </Route>
+            <Route exact path="/user-update">
+              <UserUpdate 
+                userDetails={currentUser}
+              />
             </Route>
             <Route 
               exact path="/activities" 

@@ -148,27 +148,27 @@ class User {
       data.password = await bcrypt.hash(data.password, BCRYPT_WORK_FACTOR);
     }
 
-    // const { setCols, values } = sqlForPartialUpdate(data, {
-    //   firstName: "first_name",
-    //   lastName: "last_name",
-    //   isAdmin: "is_admin",
-    // });
-    // const usernameVarIdx = "$" + (values.length + 1);
+    const { setCols, values } = sqlForPartialUpdate(data, {
+      firstName: "first_name",
+      lastName: "last_name",
+      isAdmin: "is_admin",
+    });
+    const usernameVarIdx = "$" + (values.length + 1);
 
-    // const querySql = `UPDATE users
-    //                   SET ${setCols}
-    //                   WHERE username = ${usernameVarIdx}
-    //                   RETURNING username,
-    //                             first_name AS "firstName",
-    //                             last_name AS "lastName",
-    //                             email,
-    //                             is_admin AS "isAdmin"`;
-    // const result = await db.query(querySql, [...values, username]);
-    // const user = result.rows[0];
+    const querySql = `UPDATE users
+                      SET ${setCols}
+                      WHERE username = ${usernameVarIdx}
+                      RETURNING username,
+                                first_name AS "firstName",
+                                last_name AS "lastName",
+                                email,
+                                is_admin AS "isAdmin"`;
+    const result = await db.query(querySql, [...values, username]);
+    const user = result.rows[0];
 
-    // if (!user) throw new NotFoundError(`No user: ${username}`);
+    if (!user) throw new NotFoundError(`No user: ${username}`);
 
-    // delete user.password;
+    delete user.password;
     return user;
   }
 

@@ -22,6 +22,9 @@ function NavBar({userLogout}) {
               <NavLink to="/set-goals">Set Goals</NavLink>
             </NavItem>
             <NavItem>
+              <NavLink to="/user-update">{currentUser.username}</NavLink>
+            </NavItem>
+            <NavItem>
               <Link to="/" onClick={() => userLogout()}>Logout</Link>
             </NavItem>
           </Nav>
