@@ -22,9 +22,9 @@ function App() {
   useEffect( () => {
     const token = localStorage.getItem("currentToken");
     const username = localStorage.getItem("currentUser");
-    const getUser = async(username)=> (await MyStravaApi.getUser(username));
-
+    
     if (token) {
+      const getUser = async(username)=> (await MyStravaApi.getUser(username));
       MyStravaApi.token = token;
       getUser(username).then((resp) => {
         setCurrentToken(token);
@@ -51,7 +51,6 @@ function App() {
   async function userLogin(username, password){
     try {
       const newToken = await MyStravaApi.authenticateUser(username, password);
-      console.log(`logged in; token: ${newToken}`)
       if (newToken) {
         const loggedInUser = await MyStravaApi.getUser(username);
         console.log(loggedInUser);
@@ -70,6 +69,19 @@ function App() {
     setCurrentUser(null);
     setCurrentToken(null);
     MyStravaApi.token = null;
+    localStorage.removeItem("currentUser");
+    localStorage.removeItem("currentToken");
+  }
+
+  async function patchUserDetails(formData){
+    try {
+      await MyStravaApi.patchUser(formData);
+      MyStravaApi.getUser(formData.username).then(res=>{
+        setCurrentUser(res);
+      });
+    } catch (error) {
+
+    }
   }
 
   async function connectStrava(){
@@ -98,11 +110,11 @@ function App() {
             <Route exact path="/profile">
               <Profile
                 userDetails={"userDetails"}
-                patchUserDetails={"patchUserDetails"}/>
+                patchUserDetails={'patchUserDetails'}/>
             </Route>
             <Route exact path="/user-update">
               <UserUpdate 
-                userDetails={currentUser}
+                patchUserDetails={patchUserDetails}
               />
             </Route>
             <Route 

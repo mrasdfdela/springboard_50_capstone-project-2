@@ -25,7 +25,7 @@ function Login({userLogin}){
   
   return (
     <>
-      { currentUser === null ? (
+      {currentUser === null ? (
         <>
           <h3>Login</h3>
           <div className="d-flex justify-content-center">
@@ -38,6 +38,7 @@ function Login({userLogin}){
                     name="username"
                     type="text"
                     placeholder="username"
+                    autoComplete="on"
                     onChange={handleChange}
                   />
                   <Label for="password"></Label>
@@ -46,6 +47,7 @@ function Login({userLogin}){
                     name="password"
                     type="password"
                     placeholder="password"
+                    autoComplete="on"
                     onChange={handleChange}
                   />
                   <Button color="primary" className="mt-1">

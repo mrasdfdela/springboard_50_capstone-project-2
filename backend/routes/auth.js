@@ -16,7 +16,6 @@ const { BadRequestError } = require("../expressError");
 const { STRAVA_CLIENT_ID, STRAVA_CLIENT_SECRET } = require("../config");
 const { route } = require("./users");
 
-// const { BadRequestError } = require ("../expressError");
 const router = new express.Router();
 router.use(passport.initialize());
 router.use(passport.session());
@@ -64,7 +63,7 @@ router.get('/strava/callback',
 
 router.post("/token", async function (req, res, next) {
   try {
-    const validator = jsonschema.validate(req.body, userAuthSchema);
+    const validator = jsonschema.validate(req.body,userAuthSchema);
     if (!validator.valid) {
       const errs = validator.errors.map((e) => e.stack);
       throw new BadRequestError(errs);
@@ -87,14 +86,13 @@ router.post("/token", async function (req, res, next) {
  * Returns JWT token which can be used to authenticate further requests.
  * Authorization required: none
  */
-
 router.post("/register", async function (req, res, next) {
   console.log("routes: auth");
   try {
     const validator = jsonschema.validate(req.body, userRegisterSchema);
     if (!validator.valid) {
       const errs = validator.errors.map(e => e.stack);
-      throw new Error(errs);
+      throw new BadRequestError(errs);
     }
 
     const newUser = await User.register({ ...req.body, isAdmin: false });

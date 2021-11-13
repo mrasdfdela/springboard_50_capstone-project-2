@@ -8,13 +8,14 @@ import { Button, Card, CardBody, CardTitle, Form, Input, Label } from "reactstra
 import UserContext from "./UserContext";
 import "./UserUpdate.css";
 
-function UserUpdate() {
+function UserUpdate({ patchUserDetails }) {
   const { currentUser } = useContext(UserContext);
-  const [ formData, setFormData ] = useState(currentUser);
+  const [formData, setFormData] = useState(currentUser);
   const history = useHistory();
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    patchUserDetails(formData);
     history.push("/");
   };
 
@@ -38,7 +39,7 @@ function UserUpdate() {
                     name="firstName"
                     type="text"
                     placeholder="First Name"
-                    value={currentUser.username}
+                    defaultValue={currentUser.firstName}
                     onChange={handleChange}
                   />
                   <Label for="lastName"></Label>
@@ -47,7 +48,7 @@ function UserUpdate() {
                     name="lastName"
                     type="text"
                     placeholder="Last Name"
-                    value={currentUser.lastName}
+                    defaultValue={currentUser.lastName}
                     onChange={handleChange}
                   />
                   <Label for="email"></Label>
@@ -56,47 +57,30 @@ function UserUpdate() {
                     name="email"
                     type="email"
                     placeholder="E-Mail"
-                    value={currentUser.email}
+                    defaultValue={currentUser.email}
                     onChange={handleChange}
                   />
-                  <Button color="primary" className="mt-1">
-                    Submit
-                  </Button>
-                </Form>
-              </CardBody>
-            </Card>
-          </div>
-
-          <div className="d-flex justify-content-center mt-4">
-            <Card className="col-sm-6">
-              <CardBody>
-                <CardTitle>Update Password</CardTitle>
-                <Form className="form" onSubmit={() => console.log("hello")}>
-                  <Label for="currentPassword">Current Password</Label>
-                  <Input
-                    id="currentPassword"
-                    name="currentPassword"
-                    type="password"
-                    placeholder="Enter Current Password"
-                    onChange={handleChange}
-                  />
-                  <Label for="newPassword">New Password</Label>
+                  <Label for="password"></Label>
                   <Input
                     id="newPassword"
                     name="newPassword"
                     type="password"
                     placeholder="New Password"
+                    autoComplete="off"
                     onChange={handleChange}
                   />
-                  <Label for="confirmNewPassword">Confirm New Password</Label>
+                  <Label for="password" className="mt-4">
+                    Confirm Password To Update:
+                  </Label>
                   <Input
-                    id="confirmNewPassword"
-                    name="confirmNewPassword"
+                    id="password"
+                    name="password"
                     type="password"
-                    placeholder="Confirm New Password"
+                    placeholder="Current Password"
+                    autoComplete="off"
                     onChange={handleChange}
                   />
-                  <Button color="primary" className="mt-1">
+                  <Button color="primary" className="mt-3">
                     Submit
                   </Button>
                 </Form>

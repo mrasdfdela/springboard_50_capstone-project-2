@@ -10,7 +10,7 @@ class MyStravaApi {
 
     // pass in an authorization token via the header
     const url = `${BASE_URL}/${endpoint}`;
-    const headers = { Authorization: `Bearer ${MyStravaApi.token}` };
+    const headers = { Authorization: `Bearer ${this.token}` };
     const params = method === "get" ? data : {};
 
     try {
@@ -40,6 +40,7 @@ class MyStravaApi {
   static async authenticateUser(username, password){
     const credentials = { username: username, password: password };
     let res = await this.request(`auth/token`, credentials, "post");
+    this.token = res.token;
     return res.token;
   }
   // Get user info
@@ -54,6 +55,30 @@ class MyStravaApi {
       athlete_id: athlete_id
     };
   }
+  // Patch user info
+  static async patchUser(formData){
+    try {
+      const token = await this.authenticateUser(formData.username, formData.password);
+      console.log(formData);
+      if (typeof token === "string") {
+        const userInfo = {
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          password: formData.password,
+          newPassword: formData.newPassword
+        }
+        let res = await this.request(
+                    `users/${formData.username}`,
+                    userInfo,
+                    "patch");
+        return res.user;
+      }
+    } catch(err){
+      return err;
+    }
+  }
+
   // Connect user to Strava
   static async connectToStrava(){
     await this.request('auth/strava');
