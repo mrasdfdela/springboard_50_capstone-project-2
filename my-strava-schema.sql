@@ -11,7 +11,10 @@ CREATE TABLE users(
   last_name VARCHAR(25),
   email TEXT NOT NULL
     CHECK (position ('@' IN email) > 1),
-  athlete_id INTEGER UNIQUE
+  athlete_id INTEGER UNIQUE,
+  strava_auth_code VARCHAR(80),
+  strava_access_token VARCHAR(80),
+  strava_refresh_token VARCHAR(80)
 );
 
 CREATE TABLE bikes(

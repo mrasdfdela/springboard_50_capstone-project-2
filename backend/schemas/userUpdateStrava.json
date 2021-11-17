@@ -1,0 +1,27 @@
+{
+  "type": "object",
+  "properties": {
+    "strava_auth_code": {
+      "type": "string",
+      "minLength": 20,
+      "maxLength": 80
+    },
+    "strava_access_token": {
+      "type": "string",
+      "minLength": 20,
+      "maxLength": 80
+    },
+    "strava_refresh_token": {
+      "type": "string",
+      "minLength": 20,
+      "maxLength": 80
+    },
+    "athlete_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 10
+    }
+  },
+  "additionalProperties": false,
+  "required": []
+}
