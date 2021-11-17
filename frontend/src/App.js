@@ -7,6 +7,7 @@ import Home from "./Home";
 import Login from "./Login";
 import Signup from "./Signup";
 import UserUpdate from "./UserUpdate"
+import StravaTokens from "./StravaTokens";
 import Activities from "./Activities";
 import Activity from "./Activity";
 import Goals from "./Goals";
@@ -51,8 +52,9 @@ function App() {
   async function userLogin(username, password){
     try {
       const newToken = await MyStravaApi.authenticateUser(username, password);
+      let loggedInUser;
       if (newToken) {
-        const loggedInUser = await MyStravaApi.getUser(username);
+        loggedInUser = await MyStravaApi.getUser(username);
         console.log(loggedInUser);
         setCurrentUser(loggedInUser);
         setCurrentToken(newToken);
@@ -60,6 +62,10 @@ function App() {
         localStorage.setItem("currentUser", username);
         localStorage.setItem("currentToken", newToken);
       }
+      // if(!loggedInUser.athlete_id){
+      //   const stravaData = MyStravaApi.connectToStravaFrontEnd;
+      //   console.log(stravaData);
+      // };
     } catch {
       console.log("Error; user not logged in...")
     }
@@ -84,9 +90,18 @@ function App() {
     }
   }
 
-  async function connectStrava(){
-    MyStravaApi.connectToStrava();
+  // async function connectStrava(){
+  //   MyStravaApi.connectToStrava();
+  // }
+  const connectUserStrava = (username)=>{
+    MyStravaApi.connectToStravaFrontEndApi(username);
   }
+
+  // bug: unable to pass in user context into 
+  const getStravaTokens = async ()=> {
+    const user = await MyStravaApi.getUser(currentUser);
+    MyStravaApi.retrieveStravaTokens(user);
+  };
 
   return (
     <UserContext.Provider
@@ -99,13 +114,17 @@ function App() {
           <NavBar userLogout={userLogout} />
           <Switch>
             <Route exact path="/">
-              <Home connectStrava={connectStrava}/>
+              <Home connectUserStrava={connectUserStrava}/>
             </Route>
             <Route exact path="/login">
               <Login userLogin={userLogin} />
             </Route>
             <Route exact path="/signup">
               <Signup userSignUp={userSignUp} />
+            </Route>
+            <Route exact path="/strava-tokens">
+              <StravaTokens getStravaTokens={getStravaTokens}
+              />
             </Route>
             <Route exact path="/profile">
               <Profile

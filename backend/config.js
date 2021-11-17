@@ -1,5 +1,6 @@
 "use strict";
 
+require("dotenv").config();
 const SECRET_KEY = process.env.SECRET_KEY || "bed-bath-and-way-beyond";
 
 const PORT = +process.env.PORT || 3001;
@@ -9,8 +10,9 @@ function getDatabaseUri(){
     : process.env.DATABASE_URL || "my_strava";
 }
 
-const STRAVA_CLIENT_ID = 73357;
-const STRAVA_CLIENT_SECRET = "8c1b9a9e093abe7dc39c6d34e4230f9244783c86";
+const STRAVA_CLIENT_ID = process.env.STRAVA_CLIENT_ID;
+const STRAVA_CLIENT_SECRET = process.env.STRAVA_CLIENT_SECRET;
+const YOUR_ACCESS_TOKEN = process.env.YOUR_ACCESS_TOKEN;
 
 const BCRYPT_WORK_FACTOR = process.env.NODE_ENV === "test" ? 1 : 12;
 
@@ -20,5 +22,6 @@ module.exports = {
   SECRET_KEY,
   STRAVA_CLIENT_ID, 
   STRAVA_CLIENT_SECRET,
+  YOUR_ACCESS_TOKEN,
   getDatabaseUri
 };

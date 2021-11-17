@@ -4,30 +4,32 @@ import { Button, Form } from "reactstrap";
 
 import UserContext from "./UserContext";
 
-function Home({connectStrava}){
+function Home({ connectUserStrava }) {
   const { currentUser } = useContext(UserContext);
   // const history = useHistory();
 
-  const handleSubmit = (e)=> {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    connectStrava();
-  }
+    connectUserStrava(currentUser.username);
+  };
 
   return (
     <>
       <h3>Home</h3>
-      { currentUser === null ? (
+      {currentUser === null ? (
         <p>Nobody is signed in</p>
       ) : (
         <>
           <p>Welcome, {currentUser.username}!</p>
-          { currentUser.athlete_id ? (
+          {currentUser.athlete_id ? (
             <p>You have connected your strava</p>
           ) : (
             <>
               <Form className="form" onSubmit={handleSubmit}>
                 <p>You have not connected your strava</p>
-                <Button color="primary" className="mt-1">Connect Strava</Button>
+                <Button color="primary" className="mt-1">
+                  Connect Strava
+                </Button>
               </Form>
             </>
           )}

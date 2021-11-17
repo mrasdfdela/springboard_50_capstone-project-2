@@ -62,10 +62,8 @@ router.patch("/:username",
   }
 });
 
-/** DELETE /[username]  =>  { deleted: username }
- *
- * Authorization required: admin or same-user-as-:username
- **/
+/** DELETE /:username => { deleted: username }
+ * Authorization required: same-user-as-:username **/
 
 // router.delete(
 //   "/:username",

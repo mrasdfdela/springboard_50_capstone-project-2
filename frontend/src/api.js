@@ -17,6 +17,7 @@ class MyStravaApi {
       return (await axios({ url, method, data, params, headers })).data;
     } catch (err) {
       console.error("API Error:", err.response);
+      console.error("Testing Error:", err);
       let message = err.response.data.error.message;
       throw Array.isArray(message) ? message : [message];
     }
@@ -80,9 +81,69 @@ class MyStravaApi {
   }
 
   // Connect user to Strava
-  static async connectToStrava(){
-    await this.request('auth/strava');
+  // static async connectToStrava(){
+  //   await this.request('auth/strava');
+  // }
+
+  static async connectToStravaFrontEndApi(username){
+  //   const respType = 'code';
+  //   const redirectUri = 'http://localhost:3001/auth/strava/callback';
+  //   const scope = 'activity:read_all,activity:write';
+  //   const clientId = '73357';
+  //   const state = username;
+  //   try {
+  //     const res = await axios.get(
+  //       "https://www.strava.com/oauth/authorize?response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A3001%2Fauth%2Fstrava%2Fcallback&scope=activity%3Aread_all,activity%3Awrite&client_id=73357",
+  //       {
+  //         params: {
+  //           response_type: respType,
+  //           redirect_uri: redirectUri,
+  //           scope: scope,
+  //           client_id: clientId,
+  //           state: state,
+  //         },
+  //       }
+  //     );
+  //     return res.data;
+  //   } catch (err){
+  //     return(err);
+  //   }
+    const respType = "code";
+    const redirectUri =
+      "http%3A%2F%2Flocalhost%3A3001%2Fauth%2Fstrava%2Fcallback";
+    const scope = "activity%3Aread_all,activity%3Awrite";
+    const clientId = "73357";
+
+    window.location = `https://www.strava.com/oauth/authorize?response_type=${respType}&redirect_uri=${redirectUri}&scope=${scope}&state=${username}&client_id=${clientId}`;
   }
+
+  static async retrieveStravaTokens(user){
+    const clientId = "73357";
+    const clientSecret = "8c1b9a9e093abe7dc39c6d34e4230f9244783c86";
+    const code = user.strava_auth_code;
+
+    // window.location = `https://www.strava.com/oauth/token?client_id=${clientId}&client_secret=${clientSecret}&code=${code}&grant_type=authorization_code`
+    try {
+      const res = await axios.post(
+        `https://www.strava.com/oauth/token?client_id=${clientId}&client_secret=${clientSecret}&code=${code}&grant_type=authorization_code`
+      );
+  
+      console.log(`refresh token: ${res.refresh_token}`);
+      console.log(`access token: ${res.access_token}`);
+
+      const updatedUser = await axios.post('/strava/tokens', {
+        username: user.username,
+        refresh_token: res.refresh_token,
+        access_token: res.access_token,
+        athlete_id: res.athlete.id
+      });
+
+      console.log(`access token: ${updatedUser.access_token}`);
+    } catch(err) {
+      return err;
+    }
+  }
+  
 }
 
 export default MyStravaApi;
