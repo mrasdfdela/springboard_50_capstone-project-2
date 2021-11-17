@@ -117,28 +117,31 @@ class MyStravaApi {
     window.location = `https://www.strava.com/oauth/authorize?response_type=${respType}&redirect_uri=${redirectUri}&scope=${scope}&state=${username}&client_id=${clientId}`;
   }
 
-  static async retrieveStravaTokens(user){
-    const clientId = "73357";
-    const clientSecret = "8c1b9a9e093abe7dc39c6d34e4230f9244783c86";
-    const code = user.strava_auth_code;
-
-    // window.location = `https://www.strava.com/oauth/token?client_id=${clientId}&client_secret=${clientSecret}&code=${code}&grant_type=authorization_code`
+  static async retrieveStravaTokens(username){
     try {
-      const res = await axios.post(
+      const userRes = await this.request(`users/${username}/details`);
+      const clientId = "73357";
+      const clientSecret = "8c1b9a9e093abe7dc39c6d34e4230f9244783c86";
+      const code = userRes.user.strava_auth_code;
+      
+      // retrieve strava user info, including refresh token, access token, and athlete id
+      // window.location = `https://www.strava.com/oauth/token?client_id=${clientId}&client_secret=${clientSecret}&code=${code}&grant_type=authorization_code`
+      const codeRes = await axios.post(
         `https://www.strava.com/oauth/token?client_id=${clientId}&client_secret=${clientSecret}&code=${code}&grant_type=authorization_code`
       );
-  
-      console.log(`refresh token: ${res.refresh_token}`);
-      console.log(`access token: ${res.access_token}`);
+      const stravaDetails = {
+        username: userRes.user.username,
+        refresh_token: codeRes.data.refresh_token,
+        access_token: codeRes.data.access_token,
+        athlete_id: codeRes.data.athlete.id,
+      };
 
-      const updatedUser = await axios.post('/strava/tokens', {
-        username: user.username,
-        refresh_token: res.refresh_token,
-        access_token: res.access_token,
-        athlete_id: res.athlete.id
-      });
-
-      console.log(`access token: ${updatedUser.access_token}`);
+      // updates user with token and athlete id
+      const updatedUser = await this.request(
+        "auth/strava/tokens", 
+        stravaDetails, 
+        "post");
+      console.log(`Tokens updated for user: '${updatedUser.username}`);
     } catch(err) {
       return err;
     }

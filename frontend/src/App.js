@@ -90,17 +90,13 @@ function App() {
     }
   }
 
-  // async function connectStrava(){
-  //   MyStravaApi.connectToStrava();
-  // }
   const connectUserStrava = (username)=>{
     MyStravaApi.connectToStravaFrontEndApi(username);
   }
 
-  // bug: unable to pass in user context into 
   const getStravaTokens = async ()=> {
-    const user = await MyStravaApi.getUser(currentUser);
-    MyStravaApi.retrieveStravaTokens(user);
+    const username = localStorage.getItem("currentUser");
+    MyStravaApi.retrieveStravaTokens(username);
   };
 
   return (

@@ -5,10 +5,8 @@ import UserContext from "./UserContext";
 function StravaTokens({getStravaTokens}){
   const { currentUser } = useContext(UserContext);
 
-  console.log('Current User:');
-  console.log(currentUser);
   // if (!currentUser.strava_access_token) {
-  //   getStravaTokens(currentUser);
+    getStravaTokens(currentUser);
   // }
 
   return (

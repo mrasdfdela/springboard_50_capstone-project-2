@@ -100,6 +100,30 @@ class User {
     return user;
   }
 
+  /** Given a username, get details about user
+   * Returns { username, first_name, last_name, email }
+   * Throws NotFoundError if user not found. **/
+  static async getDetails(username) {
+    const userRes = await db.query(
+      `SELECT 
+        username,
+        first_name AS "firstName",
+        last_name AS "lastName",
+        email,
+        athlete_id,
+        strava_auth_code,
+        strava_access_token,
+        strava_refresh_token
+      FROM users
+      WHERE username = $1`,
+      [username]
+    );
+    const user = userRes.rows[0];
+
+    if (!user) throw new NotFoundError(`No user: ${username}`);
+    return user;
+  }
+
   /** Update user data, including for "partial updates"
    * Data can include: { firstName, lastName, email, newPassword, password }
    * Returns { username, firstName, lastName, email }

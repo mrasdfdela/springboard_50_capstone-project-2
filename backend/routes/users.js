@@ -40,6 +40,16 @@ router.get("/:username",
     }
   }
 );
+router.get("/:username/details",
+  async function (req, res, next) {
+    try {
+      const user = await User.getDetails(req.params.username);
+      return res.json({ user });
+    } catch (err) {
+      return next(err);
+    }
+  }
+);
 
 /** PATCH /[username] { user } => { user }
  * Data can include: { firstName, lastName, email, password }

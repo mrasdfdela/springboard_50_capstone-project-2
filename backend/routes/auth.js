@@ -7,6 +7,7 @@ const StravaStrategy = require("passport-strava-oauth2").Strategy;
 
 const jsonschema = require("jsonschema");
 const userAuthSchema = require("../schemas/userAuth.json");
+const userUpdateStrava = require("../schemas/userUpdateStrava.json");
 const userRegisterSchema = require("../schemas/userRegister.json");
 
 const User = require("../models/user");
@@ -65,42 +66,31 @@ const router = new express.Router();
 router.get('/strava/callback', 
   function(req, res) {
     const queryParams = req.query;
-    // console.log(queryParams);
-    // console.log(queryParams.state);
-    // console.log(queryParams.code);
-    // console.log(queryParams.scope);
     User.update( queryParams.state, { strava_auth_code: queryParams.code });
 
     res.writeHead(302, { Location: "http://localhost:3000/strava-tokens" });
     res.end();
 });
 
-router.get('/strava/tokens',
-function(req,res){
-  const { username, refresh_token, access_token, athlete_id } = req.body;
-  console.log(`backend request body:`);
-  console.log(req.body);
-  const user = User.update( username, 
-    { 
-      strava_access_token: access_token,
-      strava_refresh_token: refresh_token,
-      athlete_id: athlete_id
-    });
-  console.log(`backend updated user:`);
-  console.log(user);
+router.post('/strava/tokens', function(req,res){
+  try {
+    const { username, refresh_token, access_token, athlete_id } = req.body;
+    console.log(`backend request body:`);
+    console.log(req.body);
+    const user = User.update( username, 
+      { 
+        strava_access_token: access_token,
+        strava_refresh_token: refresh_token,
+        athlete_id: athlete_id
+      });
+    console.log(`backend updated user:`);
+    console.log(user);
 
-  return user;
+    return user;
+  } catch(err) {
+    return next(err);
+  }
 });
-
-// router.get('/strava/save-credentials',
-//   function(req,res){
-//     console.log('testing');
-//     console.log(req.body);
-//     // console.log(req.headers);
-//     res.writeHead( 302, { Location:'http://localhost:3000/' })
-//     res.end();
-//   }
-// )
 
 // POST /auth/token:  { username, password } => { token }
 // Route for logging into the system; returns JWT token to front end, which can be saved to browser to authenticate future requests
