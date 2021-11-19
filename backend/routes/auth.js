@@ -75,16 +75,12 @@ router.get('/strava/callback',
 router.post('/strava/tokens', function(req,res){
   try {
     const { username, refresh_token, access_token, athlete_id } = req.body;
-    console.log(`backend request body:`);
-    console.log(req.body);
     const user = User.update( username, 
       { 
         strava_access_token: access_token,
         strava_refresh_token: refresh_token,
         athlete_id: athlete_id
       });
-    console.log(`backend updated user:`);
-    console.log(user);
 
     return user;
   } catch(err) {
