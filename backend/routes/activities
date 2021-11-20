@@ -1,0 +1,66 @@
+"use strict";
+
+/** Routes for activities */
+const User = require("../models/activity");
+const { BadRequestError, NotFoundError } = require("../expressError");
+
+const jsonschema = require("jsonschema");
+const { ensureCorrectUser } = require("../middleware/auth");
+
+const express = require("express");
+const Activity = require("../models/activity");
+const router = express.Router();
+
+// POST new activities
+// Checks that activity id does not exist before populating activity
+router.post("/", async function(req,res,next){
+  try {
+    // console.log(req.body);
+    const activities = req.body;
+    for (const activity of activities) {
+      const activityExists = await Activity.activityExists(activity.activity_id);
+      if (!activityExists) {
+        const {
+          id,
+          athlete,
+          start_date,
+          type,
+          distance,
+          kilojoules,
+          moving_time,
+          name
+        } = activity;
+        await Activity.new(String(id), String(athlete.id), start_date, type, distance, kilojoules, moving_time, name);
+      } else {
+        console.log(`Duplicate activity id: ${activity.activity_id}`);
+      }
+    }
+  } catch(err) {
+    return next(err);
+  }
+});
+
+// GET activity by ID
+router.get("/:activity_id", async function (req, res, next) {
+  try {
+    const activity = await Activity.getById(req.params.activity_id);
+    return activity;
+  } catch(err) {
+    return next(err);
+  }
+});
+
+// DELETES activity by ID
+router.delete("/:activity_id", async function (req, res, next) {
+  try {
+    await Activity.remove(req.params.activity_id);
+  } catch(err) {
+    return next(err);
+  }
+});
+
+// router.patch("/:activity_id", async function (req, res, next) {
+  
+// });
+
+module.exports = router;
