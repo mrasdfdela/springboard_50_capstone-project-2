@@ -1,8 +1,6 @@
 import axios from "axios";
 const BASE_URL = "http://localhost:3001";
-// const { STRAVA_CLIENT_ID, STRAVA_CLIENT_SECRET } = require("./config");
-const STRAVA_CLIENT_ID = "73357";
-const STRAVA_CLIENT_SECRET = "8c1b9a9e093abe7dc39c6d34e4230f9244783c86";
+const { STRAVA_CLIENT_ID, STRAVA_CLIENT_SECRET } = require("./config");
 
 
 class MyStravaApi {
@@ -104,7 +102,8 @@ class MyStravaApi {
     try {
       const userRes = await this.request(`users/${username}/details`);
       const code = userRes.user.strava_auth_code;
-      
+      const prevToken = userRes.user.strava_access_token;
+
       // retrieve strava user info, including refresh token, access token, and athlete id
       // window.location = `https://www.strava.com/oauth/token?client_id=${clientId}&client_secret=${clientSecret}&code=${code}&grant_type=authorization_code`
       const codeRes = await axios.post(
@@ -123,6 +122,10 @@ class MyStravaApi {
         stravaDetails, 
         "post");
       console.log(`Tokens updated for user: '${updatedUser.username}`);
+      if (!prevToken) {
+        console.log(`Downloading data for: '${updatedUser.username}`);
+        await this.getAllActivities(updatedUser.username);
+      }
     } catch(err) {
       return err;
     }
@@ -130,18 +133,25 @@ class MyStravaApi {
 
   static async refreshAccessToken(username){
     try {
-      const grantType = 'refresh_token'
+      const grantType = 'refresh_token';
       const userRes = await this.request(`users/${username}/details`);
-      console.log(userRes);
-      const refreshToken = userRes.user.access_token;
+      // console.log(userRes);
+      const athleteId = userRes.user.athlete_id;
+      const refreshToken = userRes.user.strava_refresh_token;
 
       const refRes = await axios.post(
         `https://www.strava.com/oauth/token?client_id=${STRAVA_CLIENT_ID}&client_secret=${STRAVA_CLIENT_SECRET}&grant_type=${grantType}&refresh_token=${refreshToken}`
       )
+      // console.log(`refRes:`);
+      // console.log(refRes);
+
       const stravaDetails = {
         username: username,
-        access_token: refRes.access_token
+        athlete_id: athleteId,
+        refresh_token: refreshToken,
+        access_token: refRes.data.access_token
       };
+      // console.log(stravaDetails);
 
       // updates user access token
       const updatedUser = await this.request(
@@ -149,9 +159,43 @@ class MyStravaApi {
         stravaDetails, 
         "post");
       console.log(`Tokens updated for user: '${updatedUser.username}`);
+    } catch (err) {
+      return err;
     }
   }
-  
+
+  // Get all user activities; called after first time connecting strava account
+  static async getAllActivities(username) {
+    try {
+      // await this.refreshAccessToken(username);
+      const userRes = await this.request(`users/${username}/details`);
+      const accessToken = userRes.user.strava_access_token;
+      let activitiesData = [''];
+      let page = 1;
+      const per_page = 200;
+      
+      while (activitiesData.length > 0) {
+        console.log(`Page: ${page}`);
+        const res = await axios.get(
+          `https://www.strava.com/api/v3/athlete/activities?access_token=${accessToken}&page=${page}&per_page=${per_page}`
+        );
+        // console.log(actRes[0]);
+
+        if (res.length > 0) {
+          activitiesData = res.data;
+          console.log(activitiesData.length);
+          const activityRes = await this.request(`activities`, activitiesData, "post");
+          console.log(activityRes);
+          page += 1;
+        } else {
+          activitiesData = [];
+        }
+      }
+      return;
+    } catch(err) {
+      return err;
+    }
+  }
 }
 
 export default MyStravaApi;

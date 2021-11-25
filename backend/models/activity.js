@@ -7,6 +7,7 @@ const { NotFoundError, BadRequestError } = require("../expressError");
 class Activity {
   /** Post activity */
   static async new(activityId,atheleteId,startDt,type,distance,calories,movingTime,desc) {
+    // First checks if the activity/activity_id exists in the database
     const duplicateCheck = await db.query(
       `SELECT activity_id FROM activities where activity_id=$1`,
       [activityId]
@@ -16,6 +17,7 @@ class Activity {
         `Activity already exists! activity_id: ${activityId}`
       );
 
+    // 
     const result = await db.query(
       `INSERT INTO activities
         (activity_id,
@@ -36,7 +38,7 @@ class Activity {
   /** Check if activity exists by id */
   static async activityExists(activityId) {
     const actRes = await db.query(
-      `SELECT activity_id FROM activities WHERE athlete_id = $1`,
+      `SELECT activity_id FROM activities WHERE activity_id = $1`,
       [activityId]
     );
     return actRes.rowCount === 0 ? false : true;
@@ -46,20 +48,15 @@ class Activity {
   static async getById(activityId) {
     const actRes = await db.query(
       `SELECT
-        start_date,
-        type,
-        distance,
-        calories,
-        moving_time,
-        description
+        activity_id, athlete_id, start_date, type, distance, calories, moving_time, description
       FROM activities WHERE activity_id = $1`,
       [activityId]
     );
 
-    if (!actRes[0]) {
+    if (!actRes.rows[0]) {
       throw new NotFoundError(`No activity with that ID found`);
     } else {
-      return actRes[0];
+      return actRes.rows[0];
     }
   }
 

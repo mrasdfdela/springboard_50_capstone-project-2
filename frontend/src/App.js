@@ -98,19 +98,34 @@ function App() {
     const username = localStorage.getItem("currentUser");
     MyStravaApi.retrieveStravaTokens(username);
   };
+  
+  const testRefreshAccessToken = async ()=> {
+    const username = localStorage.getItem("currentUser");
+    MyStravaApi.refreshAccessToken(username);
+  }
+  
+  const testingGetAllActivities = async ()=> {
+    const username = localStorage.getItem("currentUser");
+    MyStravaApi.getAllActivities(username);
+  }
 
   return (
     <UserContext.Provider
       value={{
         currentUser: currentUser,
-        currentToken: currentToken
-      }}>
+        currentToken: currentToken,
+      }}
+    >
       <div className="App">
         <BrowserRouter>
           <NavBar userLogout={userLogout} />
           <Switch>
             <Route exact path="/">
-              <Home connectUserStrava={connectUserStrava}/>
+              <Home
+                connectUserStrava={connectUserStrava}
+                testRefreshAccessToken={testRefreshAccessToken}
+                testingGetAllActivities={testingGetAllActivities}
+              />
             </Route>
             <Route exact path="/login">
               <Login userLogin={userLogin} />
@@ -119,27 +134,20 @@ function App() {
               <Signup userSignUp={userSignUp} />
             </Route>
             <Route exact path="/strava-tokens">
-              <StravaTokens getStravaTokens={getStravaTokens}
-              />
+              <StravaTokens getStravaTokens={getStravaTokens} />
             </Route>
             <Route exact path="/profile">
               <Profile
                 userDetails={"userDetails"}
-                patchUserDetails={'patchUserDetails'}/>
-            </Route>
-            <Route exact path="/user-update">
-              <UserUpdate 
-                patchUserDetails={patchUserDetails}
+                patchUserDetails={"patchUserDetails"}
               />
             </Route>
-            <Route 
-              exact path="/activities" 
-              component={Activities} />
-            <Route 
-              exact path="/activities/:id" 
-              element={Activity} />
-            <Route 
-              exact path="/set-goals" component={Goals} />
+            <Route exact path="/user-update">
+              <UserUpdate patchUserDetails={patchUserDetails} />
+            </Route>
+            <Route exact path="/activities" component={Activities} />
+            <Route exact path="/activities/:id" element={Activity} />
+            <Route exact path="/set-goals" component={Goals} />
             <Redirect to="/" />
           </Switch>
         </BrowserRouter>
