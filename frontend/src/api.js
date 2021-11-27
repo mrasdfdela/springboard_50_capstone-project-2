@@ -90,7 +90,7 @@ class MyStravaApi {
     const respType = "code";
     const redirectUri =
       "http%3A%2F%2Flocalhost%3A3001%2Fauth%2Fstrava%2Fcallback";
-    const scope = "activity%3Aread_all,activity%3Awrite";
+    const scope = "profile%3Aread_all,activity%3Aread_all";
     window.location = `https://www.strava.com/oauth/authorize?response_type=${respType}&redirect_uri=${redirectUri}&scope=${scope}&state=${username}&client_id=${STRAVA_CLIENT_ID}`;
   }
 
@@ -124,7 +124,7 @@ class MyStravaApi {
       console.log(`Tokens updated for user: '${updatedUser.username}`);
       if (!prevToken) {
         console.log(`Downloading data for: '${updatedUser.username}`);
-        await this.getAllActivities(updatedUser.username);
+        await this.getUserActivities(updatedUser.username);
       }
     } catch(err) {
       return err;
@@ -165,25 +165,23 @@ class MyStravaApi {
   }
 
   // Get all user activities; called after first time connecting strava account
-  static async getAllActivities(username) {
+  static async getUserActivities(username) {
     try {
       // await this.refreshAccessToken(username);
       const userRes = await this.request(`users/${username}/details`);
       const accessToken = userRes.user.strava_access_token;
       let activitiesData = [''];
       let page = 1;
-      const per_page = 200;
       
       while (activitiesData.length > 0) {
         console.log(`Page: ${page}`);
         const res = await axios.get(
-          `https://www.strava.com/api/v3/athlete/activities?access_token=${accessToken}&page=${page}&per_page=${per_page}`
+          `https://www.strava.com/api/v3/athlete/activities?access_token=${accessToken}&page=${page}`
         );
-        // console.log(actRes[0]);
+        console.log(res.data);
 
-        if (res.length > 0) {
+        if (res.data.length > 0) {
           activitiesData = res.data;
-          console.log(activitiesData.length);
           const activityRes = await this.request(`activities`, activitiesData, "post");
           console.log(activityRes);
           page += 1;
@@ -192,6 +190,22 @@ class MyStravaApi {
         }
       }
       return;
+    } catch(err) {
+      return err;
+    }
+  }
+
+  static async getUserBikes(username){
+    try {
+      const userRes = await this.request(`users/${username}/details`);
+      const accessToken = userRes.user.strava_access_token;
+
+      const res = await axios.get(
+        `https://www.strava.com/api/v3/athlete?access_token=${accessToken}`
+      );
+      const bikes = res.data.bikes;
+      console.log(bikes);
+      
     } catch(err) {
       return err;
     }

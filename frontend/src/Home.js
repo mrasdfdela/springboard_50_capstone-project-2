@@ -7,7 +7,7 @@ import UserContext from "./UserContext";
 function Home({ 
   connectUserStrava, 
   testRefreshAccessToken, 
-  testingGetAllActivities }) {
+  testingGetUserActivities }) {
   const { currentUser } = useContext(UserContext);
   // const history = useHistory();
 
@@ -18,8 +18,7 @@ function Home({
 
   const handleDownload = (e) => {
     e.preventDefault();
-    console.log(`handle download`)
-    testingGetAllActivities();
+    testingGetUserActivities();
   };
 
   const handleRefresh = (e)=> {

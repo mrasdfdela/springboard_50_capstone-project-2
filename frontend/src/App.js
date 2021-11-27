@@ -104,10 +104,10 @@ function App() {
     MyStravaApi.refreshAccessToken(username);
   }
   
-  const testingGetAllActivities = async ()=> {
+  const testingGetUserActivities = async () => {
     const username = localStorage.getItem("currentUser");
-    MyStravaApi.getAllActivities(username);
-  }
+    MyStravaApi.getUserActivities(username);
+  };
 
   return (
     <UserContext.Provider
@@ -124,7 +124,7 @@ function App() {
               <Home
                 connectUserStrava={connectUserStrava}
                 testRefreshAccessToken={testRefreshAccessToken}
-                testingGetAllActivities={testingGetAllActivities}
+                testingGetUserActivities={testingGetUserActivities}
               />
             </Route>
             <Route exact path="/login">

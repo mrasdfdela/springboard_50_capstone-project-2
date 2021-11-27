@@ -1,11 +1,11 @@
 "use strict";
 
-/** Routes for activities */
-const Activity = require("../models/activity");
-const { BadRequestError, NotFoundError } = require("../expressError");
+/** Routes for bikes */
+const Bike = require("../models/bike");
+// const { BadRequestError, NotFoundError } = require("../expressError");
 
 const jsonschema = require("jsonschema");
-const { ensureCorrectUser } = require("../middleware/auth");
+// const { ensureCorrectUser } = require("../middleware/auth");
 
 const express = require("express");
 const router = new express.Router();
@@ -16,7 +16,7 @@ router.post("/", async function(req,res,next){
     const activities = req.body;
     for (const activity of activities) {
       // Checks if activity exists before populating activity
-      const activityExists = await Activity.activityExists(activity.id);
+      const activityExists = await Bike.activityExists(activity.id);
       // Creates activity if it exists
       if (!activityExists) {
         console.log(`inserting activity: ${activity.id}`);
@@ -31,7 +31,7 @@ router.post("/", async function(req,res,next){
           name,
         } = activity;
 
-        await Activity.new(
+        await Bike.new(
           String(id),
           String(athlete.id),
           start_date,
@@ -54,7 +54,7 @@ router.post("/", async function(req,res,next){
 // GET activity by ID
 router.get("/:activity_id", async function (req, res, next) {
   try {
-    const activity = await Activity.getById(req.params.activity_id);
+    const activity = await Bike.getById(req.params.activity_id);
     return res.status(200).json({activity})
   } catch (err) {
     return next(err);
@@ -65,7 +65,7 @@ router.get("/", async function(req, res, next) {
   try {
     const { athleteId, startDt, endDt } = req.body;
     if (athleteId && startDt) {
-      const activities = await Activity.getByDates(athleteId, startDt, endDt);
+      const activities = await Bike.getByDates(athleteId, startDt, endDt);
       return res.status(200).json({activities});
     } else {
       return res.status(204).json({ "msg":"missing athlete id or start date" });
@@ -78,7 +78,7 @@ router.get("/", async function(req, res, next) {
 // DELETES activity by ID
 router.delete("/:activity_id", async function (req, res, next) {
   try {
-    await Activity.remove(req.params.activity_id);
+    await Bike.remove(req.params.activity_id);
     return res.status(204).json({ deleted: req.params.activity_id });
   } catch(err) {
     return next(err);

@@ -6,7 +6,16 @@ const { NotFoundError, BadRequestError } = require("../expressError");
 
 class Activity {
   /** Post activity */
-  static async new(activityId,atheleteId,startDt,type,distance,calories,movingTime,desc) {
+  static async new(
+    activityId,
+    atheleteId,
+    startDt,
+    type,
+    distance,
+    kilojoules,
+    movingTime,
+    desc
+  ) {
     // First checks if the activity/activity_id exists in the database
     const duplicateCheck = await db.query(
       `SELECT activity_id FROM activities where activity_id=$1`,
@@ -17,7 +26,7 @@ class Activity {
         `Activity already exists! activity_id: ${activityId}`
       );
 
-    // 
+    //
     const result = await db.query(
       `INSERT INTO activities
         (activity_id,
@@ -25,16 +34,26 @@ class Activity {
           start_date,
           type,
           distance,
-          calories,
+          kilojoules,
           moving_time,
           description)
       VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
-      RETURNING activity_id, athlete_id, start_date, type, distance, calories, moving_time, description`,
-      [ activityId, atheleteId, startDt, type, distance, calories, movingTime,desc ]);
+      RETURNING activity_id, athlete_id, start_date, type, distance, kilojoules, moving_time, description`,
+      [
+        activityId,
+        atheleteId,
+        startDt,
+        type,
+        distance,
+        kilojoules,
+        movingTime,
+        desc,
+      ]
+    );
     const activity = result.rows[0];
     return activity;
   }
-  
+
   /** Check if activity exists by id */
   static async activityExists(activityId) {
     const actRes = await db.query(
@@ -48,7 +67,7 @@ class Activity {
   static async getById(activityId) {
     const actRes = await db.query(
       `SELECT
-        activity_id, athlete_id, start_date, type, distance, calories, moving_time, description
+        activity_id, athlete_id, start_date, type, distance, kilojoules, moving_time, description
       FROM activities WHERE activity_id = $1`,
       [activityId]
     );
@@ -61,13 +80,13 @@ class Activity {
   }
 
   /** Finds activity by date */
-  static async getByDate(athleteId,startDt=undefined,endDt=undefined){
+  static async getByDates(athleteId, startDt, endDt="NOW()") {
     const res = await db.query(
       `SELECT
         start_date,
         type,
         distance,
-        calories,
+        kilojoules,
         moving_time,
         description
       FROM activities 
@@ -75,6 +94,7 @@ class Activity {
         AND start_date BETWEEN $2 AND $3`,
       [athleteId, startDt, endDt]
     );
+    return res.rows;
   }
 
   /** Finds all activities by user*/
@@ -91,7 +111,7 @@ class Activity {
         start_date,
         type,
         distance,
-        calories,
+        kilojoules,
         moving_time,
         description
       FROM activities WHERE athlete_id = $1`,
@@ -113,7 +133,7 @@ class Activity {
           start_date,
           type,
           distance,
-          calories,
+          kilojoules,
           moving_time,
           description`,
       [activityId]
