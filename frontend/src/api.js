@@ -164,21 +164,24 @@ class MyStravaApi {
     }
   }
 
+  static async getUserAccessToken(username){
+      const res = await this.request(`users/${username}/details`);
+      return res.user.strava_access_token;
+  }
+
   // Get all user activities; called after first time connecting strava account
-  static async getUserActivities(username) {
+  static async stravaGetUserActivities(username) {
     try {
-      // await this.refreshAccessToken(username);
-      const userRes = await this.request(`users/${username}/details`);
-      const accessToken = userRes.user.strava_access_token;
+      const accessToken = await this.getUserAccessToken(username);
       let activitiesData = [''];
       let page = 1;
+      let per_page = 50;
       
       while (activitiesData.length > 0) {
         console.log(`Page: ${page}`);
         const res = await axios.get(
-          `https://www.strava.com/api/v3/athlete/activities?access_token=${accessToken}&page=${page}`
+          `https://www.strava.com/api/v3/athlete/activities?access_token=${accessToken}&page=${page}&per_page=${per_page}`
         );
-        console.log(res.data);
 
         if (res.data.length > 0) {
           activitiesData = res.data;
@@ -195,18 +198,39 @@ class MyStravaApi {
     }
   }
 
-  static async getUserBikes(username){
+  static async stravaGetUserBikes(username){
     try {
-      const userRes = await this.request(`users/${username}/details`);
-      const accessToken = userRes.user.strava_access_token;
-
+      const accessToken = await this.getUserAccessToken(username);
       const res = await axios.get(
         `https://www.strava.com/api/v3/athlete?access_token=${accessToken}`
       );
-      const bikes = res.data.bikes;
-      console.log(bikes);
-      
+      const numBikes = res.data.bikes.length;
+
+      if (numBikes > 0) {
+        const bikeRes = await this.request(`bikes`, res.data, "post");
+        console.log(bikeRes);
+      }
     } catch(err) {
+      return err;
+    }
+  }
+
+  // get bike by id
+  static async getBike(bikeId){
+    try {
+      const res = await this.request(`bikes/${bikeId}`);
+      return res.data;
+    } catch(err){
+      return err;
+    }
+  }
+
+  // get user's bikes
+  static async getUserBikes(username){
+    try {
+      const res = await this.request(`users/${username}/bikes`);
+      return res.data;
+    } catch (err) {
       return err;
     }
   }

@@ -8,14 +8,9 @@ const {
 
 class Bike {
   /** Post new bike */
-  static async new({ bikeId, athleteId, distance, brand, model, desc }) {
-    const duplicateCheck = await db.query(
-      `SELECT bike_id FROM bikes where bike_id=$1`,
-      [bikeId]);
-    if (duplicateCheck.rows[0]) throw new BadRequestError(`Bike already registered! id: ${bikeId}`);
-
+  static async new(bikeId, athleteId, distance, brand, model, desc) {
     const result = await db.query(
-      `INSERT INTO activities
+      `INSERT INTO bikes
         (bike_id, 
         athlete_id, 
         distance, 
@@ -35,8 +30,18 @@ class Bike {
     return newBike;
   }
 
+  /** Checks if bike exists */
+  static async bikeExists(bikeId){
+    const bikeRes = await db.query(
+      `SELECT bike_id from bikes WHERE bike_id = $1`, 
+      [bikeId] 
+    );
+    return bikeRes.rowCount === 0 ? false : true;
+  }
+
   /** Finds bike by id */
   static async getById(bikeId){
+    console.log(`finding bike: ${bikeId}`);
     const bikeRes = await db.query(
       `SELECT
         bike_id AS bikeId, 
@@ -48,11 +53,12 @@ class Bike {
       FROM bikes WHERE bike_id = $1`,
       [bikeId]
     );
+    console.log(bikeRes.rows);
 
-    if (!bikeRes[0]) {
+    if (!bikeRes.rows[0]) {
       throw new NotFoundError(`No bike with that ID found`);
     } else {
-      return bikeRes[0];
+      return bikeRes.rows[0];
     }
   }
 
@@ -76,7 +82,7 @@ class Bike {
   static async update(bikeId, data){
     const { setCols } = sqlForPartialUpdate(data, {});
     const bikeRes = await db.query(
-      `UPDATE activities
+      `UPDATE bikes
       SET ${setCols}
       WHERE bike_id = $1
       RETURNING 
@@ -96,7 +102,7 @@ class Bike {
       return bike;
     }
   }
-  /** Deletes activity by id */
+  /** Deletes bike by id */
   static async remove(bikeId){
     let result = await db.query(
       `DELETE FROM bikes WHERE bike_id = $1
@@ -105,7 +111,7 @@ class Bike {
     );
     const deletedId = result.rows[0];
     if (!deletedId) {
-      throw new NotFoundError(`No activity with that ID deleted`);
+      throw new NotFoundError(`No bike with that ID deleted`);
     }
   }
 }

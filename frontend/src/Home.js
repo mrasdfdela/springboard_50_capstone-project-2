@@ -4,10 +4,11 @@ import { Button, Form } from "reactstrap";
 
 import UserContext from "./UserContext";
 
-function Home({ 
-  connectUserStrava, 
-  testRefreshAccessToken, 
-  testingGetUserActivities }) {
+function Home({
+  connectUserStrava,
+  testRefreshAccessToken,
+  testingGetUserActivities,
+  stravaUserBikes}) {
   const { currentUser } = useContext(UserContext);
   // const history = useHistory();
 
@@ -21,10 +22,15 @@ function Home({
     testingGetUserActivities();
   };
 
-  const handleRefresh = (e)=> {
+  const handleDownloadBikes = (e) => {
+    e.preventDefault();
+    stravaUserBikes();
+  };
+
+  const handleRefresh = (e) => {
     e.preventDefault();
     testRefreshAccessToken();
-  }
+  };
 
   return (
     <>
@@ -47,6 +53,11 @@ function Home({
                 <p>Download Strava Data Here</p>
                 <Button color="primary" className="mt-1">
                   Download Strava Data
+                </Button>
+              </Form>
+              <Form className="form" onSubmit={handleDownloadBikes}>
+                <Button color="primary" className="mt-1">
+                  Download Strava Bike Data
                 </Button>
               </Form>
             </>

@@ -18,7 +18,7 @@ CREATE TABLE users(
 );
 
 CREATE TABLE bikes(
-  bike_id SERIAL PRIMARY KEY,
+  bike_id VARCHAR(20) PRIMARY KEY,
   athlete_id VARCHAR(20) REFERENCES users(athlete_id),
   distance INTEGER,
   brand_name TEXT,

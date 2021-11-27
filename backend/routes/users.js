@@ -2,6 +2,7 @@
 
 /** Routes for users. */
 const User = require("../models/user");
+const Bike = require("../models/bike");
 const { BadRequestError } = require("../expressError");
 
 const jsonschema = require("jsonschema");
@@ -40,6 +41,19 @@ router.get("/:username",
     }
   }
 );
+
+router.get("/:username/bikes", 
+  async function (req, res, next) {
+    try {
+      const user = await User.getDetails(req.params.username);
+      const bikes = await Bike.getByAthleteId(user.athlete_id);
+      return res.json({ bikes });
+    } catch (err) {
+      return next(err);
+    }
+  }
+);
+
 router.get("/:username/details",
   async function (req, res, next) {
     try {
