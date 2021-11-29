@@ -39,10 +39,10 @@ CREATE TABLE activities(
 
 CREATE TABLE goals (
   goal_id SERIAL PRIMARY KEY,
-  username VARCHAR(25) REFERENCES users(username),
+  username VARCHAR(25) REFERENCES users(username) NOT NULL,
   distance NUMERIC(8,1),
   kilojoules NUMERIC(8,1),
   moving_time INTEGER,
-  start_date DATE,
-  end_date DATE
+  start_date DATE NOT NULL,
+  end_date DATE NOT NULL
 );

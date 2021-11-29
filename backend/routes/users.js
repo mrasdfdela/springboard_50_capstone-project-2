@@ -3,6 +3,7 @@
 /** Routes for users. */
 const User = require("../models/user");
 const Bike = require("../models/bike");
+const Goal = require("../models/goal");
 const { BadRequestError } = require("../expressError");
 
 const jsonschema = require("jsonschema");
@@ -48,6 +49,19 @@ router.get("/:username/bikes",
       const user = await User.getDetails(req.params.username);
       const bikes = await Bike.getByAthleteId(user.athlete_id);
       return res.json({ bikes });
+    } catch (err) {
+      return next(err);
+    }
+  }
+);
+
+router.get("/:username/goals", 
+  async function (req, res, next) {
+    try {
+      const { startDt, endDt } = req.body;
+      const user = await User.getDetails(req.params.username);
+      const goals = await Goal.getUserGoalsByDate(user.athlete_id, startDt, endDt);
+      return res.json({ goals });
     } catch (err) {
       return next(err);
     }

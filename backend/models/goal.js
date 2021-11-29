@@ -7,19 +7,26 @@ const {
 
 class Goal {
   /** Post new goal */
-  static async new({ username, distance, calories, time, startDt, endDt }) {
+  static async new({
+    username,
+    distance,
+    kilojoules = 0,
+    movingTime = 0,
+    startDt = "NOW()",
+    endDt,
+  }) {
     const result = await db.query(
       `INSERT INTO goals
-        (username, distance, calories, moving_time, start_date, end_date)
+        (username, distance, kilojoules, moving_time, start_date, end_date)
       VALUES ($1,$2,$3,$4,$5,$6)
       RETURNING 
         username,
         distance,
-        calories,
+        kilojoules,
         moving_time AS time,
         start_date AS startDt,
         end_date AS endDt`,
-      [username, distance, calories, time, startDt, endDt]
+      [username, distance, kilojoules, movingTime, startDt, endDt]
     );
     const newGoal = result.rows[0];
     return newGoal;
@@ -32,7 +39,7 @@ class Goal {
         goal_id AS goalId
         username,
         distance,
-        calories,
+        kilojoules,
         moving_time AS time,
         start_date AS startDt,
         end_date AS endDt
@@ -48,19 +55,53 @@ class Goal {
   }
 
   /** Finds all user goals */
-  static async getByUser(username) {
+  static async getUserGoalsByDate(
+    username,
+    startDt = "2009-01-01",
+    endDt = "NOW()"
+  ) {
     const goalRes = await db.query(
       `SELECT
         username,
         distance,
-        calories,
+        kilojoules,
         moving_time AS time,
         start_date AS startDt,
         end_date AS endDt
-      FROM goals WHERE username = $1`,
-      [username]
+      FROM goals 
+      WHERE 
+        username = $1 AND 
+        start_date >= $2 AND
+        end_date <= $3`,
+      [username, startDt, endDt]
     );
     return goalRes.rows;
+  }
+
+  /** Updates goal by id */
+  static async update(goalId, data) {
+    const { setCols } = sqlForPartialUpdate(data, {});
+    const result = await db.query(
+      `UPDATE goals
+        SET ${setCols}
+        WHERE goal_id = $1
+        RETURNING 
+          goal_id,
+          username,
+          distance,
+          kilojoules,
+          moving_time,
+          start_date,
+          end_date`,
+      [goalId]
+    );
+    const activity = result.rows[0];
+
+    if (!activity) {
+      throw new NotFoundError(`Goal id ${goalId} not updated`);
+    } else {
+      return activity;
+    }
   }
 
   /** Deletes goal by id */
