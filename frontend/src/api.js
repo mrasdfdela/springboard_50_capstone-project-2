@@ -26,28 +26,34 @@ class MyStravaApi {
   }
 
   /** Register User **/
-  static async registerUser({username,firstName,lastName,password,email}){
+  static async registerUser({
+    username,
+    firstName,
+    lastName,
+    password,
+    email,
+  }) {
     console.log("api: registerUser");
-    const userInfo = { 
-      username: username, 
-      firstName: firstName, 
+    const userInfo = {
+      username: username,
+      firstName: firstName,
       lastName: lastName,
       password: password,
-      email: email
-    }
-    let res = await this.request(`auth/register`,userInfo,"post");
+      email: email,
+    };
+    let res = await this.request(`auth/register`, userInfo, "post");
     this.token = res.token;
     return this.token;
   }
   // Login
-  static async authenticateUser(username, password){
+  static async authenticateUser(username, password) {
     const credentials = { username: username, password: password };
     let res = await this.request(`auth/token`, credentials, "post");
     this.token = res.token;
     return res.token;
   }
   // Get user info
-  static async getUser(user){
+  static async getUser(user) {
     let res = await this.request(`users/${user}`);
     let { username, firstName, lastName, email, athlete_id } = res.user;
     return {
@@ -55,13 +61,16 @@ class MyStravaApi {
       firstName: firstName,
       lastName: lastName,
       email: email,
-      athlete_id: athlete_id
+      athlete_id: athlete_id,
     };
   }
   // Patch user info
-  static async patchUser(formData){
+  static async patchUser(formData) {
     try {
-      const token = await this.authenticateUser(formData.username, formData.password);
+      const token = await this.authenticateUser(
+        formData.username,
+        formData.password
+      );
       console.log(formData);
       if (typeof token === "string") {
         const userInfo = {
@@ -69,15 +78,16 @@ class MyStravaApi {
           lastName: formData.lastName,
           email: formData.email,
           password: formData.password,
-          newPassword: formData.newPassword
-        }
+          newPassword: formData.newPassword,
+        };
         let res = await this.request(
-                    `users/${formData.username}`,
-                    userInfo,
-                    "patch");
+          `users/${formData.username}`,
+          userInfo,
+          "patch"
+        );
         return res.user;
       }
-    } catch(err){
+    } catch (err) {
       return err;
     }
   }
@@ -86,7 +96,7 @@ class MyStravaApi {
   // Redirects to Strava login site to authorize sharing user data
   // After authorization, strava redirects to backend endpoint auth/strava/callback
   // Save strava user auth code, which will be used to request access and refresh tokens
-  static async connectToStravaFrontEndApi(username){
+  static async connectToStravaFrontEndApi(username) {
     const respType = "code";
     const redirectUri =
       "http%3A%2F%2Flocalhost%3A3001%2Fauth%2Fstrava%2Fcallback";
@@ -98,7 +108,7 @@ class MyStravaApi {
   // Retrieves user's auth code
   // Makes post request to retrieve access token, refresh token, and athlete id
   // Subsequently saves token to user
-  static async retrieveStravaTokens(username){
+  static async retrieveStravaTokens(username) {
     try {
       const userRes = await this.request(`users/${username}/details`);
       const code = userRes.user.strava_auth_code;
@@ -118,22 +128,23 @@ class MyStravaApi {
 
       // updates user with token and athlete id
       const updatedUser = await this.request(
-        "auth/strava/tokens", 
-        stravaDetails, 
-        "post");
+        "auth/strava/tokens",
+        stravaDetails,
+        "post"
+      );
       console.log(`Tokens updated for user: '${updatedUser.username}`);
       if (!prevToken) {
         console.log(`Downloading data for: '${updatedUser.username}`);
         await this.getUserActivities(updatedUser.username);
       }
-    } catch(err) {
+    } catch (err) {
       return err;
     }
   }
 
-  static async refreshAccessToken(username){
+  static async refreshAccessToken(username) {
     try {
-      const grantType = 'refresh_token';
+      const grantType = "refresh_token";
       const userRes = await this.request(`users/${username}/details`);
       // console.log(userRes);
       const athleteId = userRes.user.athlete_id;
@@ -141,7 +152,7 @@ class MyStravaApi {
 
       const refRes = await axios.post(
         `https://www.strava.com/oauth/token?client_id=${STRAVA_CLIENT_ID}&client_secret=${STRAVA_CLIENT_SECRET}&grant_type=${grantType}&refresh_token=${refreshToken}`
-      )
+      );
       // console.log(`refRes:`);
       // console.log(refRes);
 
@@ -149,34 +160,35 @@ class MyStravaApi {
         username: username,
         athlete_id: athleteId,
         refresh_token: refreshToken,
-        access_token: refRes.data.access_token
+        access_token: refRes.data.access_token,
       };
       // console.log(stravaDetails);
 
       // updates user access token
       const updatedUser = await this.request(
-        "auth/strava/tokens", 
-        stravaDetails, 
-        "post");
+        "auth/strava/tokens",
+        stravaDetails,
+        "post"
+      );
       console.log(`Tokens updated for user: '${updatedUser.username}`);
     } catch (err) {
       return err;
     }
   }
 
-  static async getUserAccessToken(username){
-      const res = await this.request(`users/${username}/details`);
-      return res.user.strava_access_token;
+  static async getUserAccessToken(username) {
+    const res = await this.request(`users/${username}/details`);
+    return res.user.strava_access_token;
   }
 
   // Get all user activities; called after first time connecting strava account
   static async stravaGetUserActivities(username) {
     try {
       const accessToken = await this.getUserAccessToken(username);
-      let activitiesData = [''];
+      let activitiesData = [""];
       let page = 1;
       let per_page = 50;
-      
+
       while (activitiesData.length > 0) {
         console.log(`Page: ${page}`);
         const res = await axios.get(
@@ -185,7 +197,11 @@ class MyStravaApi {
 
         if (res.data.length > 0) {
           activitiesData = res.data;
-          const activityRes = await this.request(`activities`, activitiesData, "post");
+          const activityRes = await this.request(
+            `activities`,
+            activitiesData,
+            "post"
+          );
           console.log(activityRes);
           page += 1;
         } else {
@@ -193,12 +209,12 @@ class MyStravaApi {
         }
       }
       return;
-    } catch(err) {
+    } catch (err) {
       return err;
     }
   }
 
-  static async stravaGetUserBikes(username){
+  static async stravaGetUserBikes(username) {
     try {
       const accessToken = await this.getUserAccessToken(username);
       const res = await axios.get(
@@ -210,27 +226,78 @@ class MyStravaApi {
         const bikeRes = await this.request(`bikes`, res.data, "post");
         console.log(bikeRes);
       }
-    } catch(err) {
+    } catch (err) {
       return err;
     }
   }
 
   // get bike by id
-  static async getBike(bikeId){
+  static async getBike(bikeId) {
     try {
       const res = await this.request(`bikes/${bikeId}`);
       return res.data;
-    } catch(err){
+    } catch (err) {
       return err;
     }
   }
 
   // get user's bikes
-  static async getUserBikes(username){
+  static async getUserBikes(username) {
     try {
       const res = await this.request(`users/${username}/bikes`);
       return res.data;
     } catch (err) {
+      return err;
+    }
+  }
+
+  // set goal
+  static async addGoal(username, formData) {
+    try {
+      formData.username = username;
+      let res = await this.request('goals', formData, "post");
+      return res.data;
+    } catch(err) {
+      return err;
+    }
+  }
+
+  // get goal by id
+  static async getGoal(goalId) {
+    try {
+      const res = await this.request(`goals/${goalId}`);
+      return res.data;
+    } catch (err) {
+      return err;
+    }
+  }
+
+  // get goals by username
+  static async getGoalsByUsername(username) {
+    try {
+      const res = await this.request(`users/${username}/goals`);
+      return res.data;
+    } catch (err) {
+      return err;
+    }
+  }
+
+  // update goal by id
+  static async updateGoal(goalId, formData) {
+    try {
+      const res = await this.request(`goals/${goalId}`, formData, patch);
+      return res.data;
+    } catch (err) {
+      return err;
+    }
+  }
+  
+  // delete goal by id
+  static async removeGoal(goalId){
+    try {
+      const res = await this.request(`goals/${goalId}`, {}, "delete");
+      return res;
+    } catch(err) {
       return err;
     }
   }

@@ -5,7 +5,7 @@ const Goal = require("../models/goal");
 // const { BadRequestError, NotFoundError } = require("../expressError");
 
 const jsonschema = require("jsonschema");
-// const { ensureCorrectUser } = require("../middleware/auth");
+const { ensureCorrectUser } = require("../middleware/auth");
 
 const express = require("express");
 const { BadRequestError } = require("../expressError");
