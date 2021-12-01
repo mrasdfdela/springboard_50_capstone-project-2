@@ -19,7 +19,7 @@ function NavBar({userLogout}) {
               <NavLink to="/activities">{currentUser.firstName}'s Activities</NavLink>
             </NavItem>
             <NavItem>
-              <NavLink to="/set-goals">Set Goals</NavLink>
+              <NavLink to="/goals">Goals</NavLink>
             </NavItem>
             <NavItem>
               <NavLink to="/user-update">{currentUser.username}</NavLink>

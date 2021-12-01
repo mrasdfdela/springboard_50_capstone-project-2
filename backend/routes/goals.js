@@ -16,13 +16,16 @@ const router = new express.Router();
 router.post("/", async function(req,res,next){
   try {
     const reqBody = req.body
-    const { username, distance, kilojoules, movingTime, startDt, endDt } = reqBody;
+    const { username, distance, kilojoules, movingTime, timePeriod, startDt, endDt } = reqBody;
 
+    console.log('posting new goal');
+    console.log(reqBody);
     const goal = await Goal.new(
       username, 
       distance, 
       kilojoules, 
       movingTime, 
+      // timePeriod,
       startDt, 
       endDt);
     return res.status(201).json({ goal });

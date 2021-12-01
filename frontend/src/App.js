@@ -11,6 +11,7 @@ import StravaTokens from "./StravaTokens";
 import Activities from "./Activities";
 import Activity from "./Activity";
 import Goals from "./Goals";
+import GoalSet from "./GoalSet";
 import Profile from "./Profile";
 
 import MyStravaApi from "./api.js";
@@ -114,6 +115,11 @@ function App() {
     MyStravaApi.stravaGetUserBikes(username);
   }
 
+  const createUserGoal = async (formData)=> {
+    const username = localStorage.getItem("currentUser");
+    MyStravaApi.addGoal(username, formData);
+  }
+
   return (
     <UserContext.Provider
       value={{
@@ -153,7 +159,10 @@ function App() {
             </Route>
             <Route exact path="/activities" component={Activities} />
             <Route exact path="/activities/:id" element={Activity} />
-            <Route exact path="/set-goals" component={Goals} />
+            <Route exact path="/set-goal">
+              <GoalSet createUserGoal={createUserGoal} />
+            </Route>
+            <Route exact path="/goals" component={Goals} />
             <Redirect to="/" />
           </Switch>
         </BrowserRouter>

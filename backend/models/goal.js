@@ -7,29 +7,28 @@ const {
 
 class Goal {
   /** Post new goal */
-  static async new({
-    username,
-    distance,
-    kilojoules = 0,
-    movingTime = 0,
-    startDt = "NOW()",
-    endDt,
-  }) {
-    const result = await db.query(
-      `INSERT INTO goals
-        (username, distance, kilojoules, moving_time, start_date, end_date)
-      VALUES ($1,$2,$3,$4,$5,$6)
-      RETURNING 
-        username,
-        distance,
-        kilojoules,
-        moving_time AS time,
-        start_date AS startDt,
-        end_date AS endDt`,
-      [username, distance, kilojoules, movingTime, startDt, endDt]
-    );
-    const newGoal = result.rows[0];
-    return newGoal;
+  static async new(
+    username, distance, kilojoules=0, movingTime=0, startDt="NOW()", endDt) {
+      const result = await db.query(
+        `INSERT INTO goals
+          (username, distance, kilojoules, moving_time, start_date, end_date)
+        VALUES ($1,$2,$3,$4,$5,$6)
+        RETURNING 
+          username,
+          distance,
+          kilojoules,
+          moving_time AS time,
+          start_date AS startDt,
+          end_date AS endDt`,
+        [ username, 
+          Number.parseInt(distance), 
+          Number.parseInt(kilojoules), 
+          Number.parseInt(movingTime), 
+          startDt, 
+          endDt ]
+      );
+      const newGoal = result.rows[0];
+      return newGoal;
   }
 
   /** Finds goal by id */
