@@ -6,6 +6,7 @@ const Goal = require("../models/goal");
 
 const jsonschema = require("jsonschema");
 const { ensureCorrectUser } = require("../middleware/auth");
+const { calToKj, milesToMeters, calcEndDt, timeToSeconds } = require("../helpers/conversions");
 
 const express = require("express");
 const { BadRequestError } = require("../expressError");
@@ -16,17 +17,26 @@ const router = new express.Router();
 router.post("/", async function(req,res,next){
   try {
     const reqBody = req.body
-    const { username, distance, kilojoules, movingTime, timePeriod, startDt, endDt } = reqBody;
+    const { calories, date, miles, time, timePeriod, username } = reqBody;
+    
+    const kilojoules = calToKj(calories);
+    const meters = milesToMeters(miles);
+    const endDt = calcEndDt(date, timePeriod);
+    const seconds = timeToSeconds(time);
+
+    // console.log(`kilojoules: ${kilojoules}`);
+    // console.log(`meters: ${meters}`);
+    // console.log(`endDt: ${endDt}`);
+    // console.log(`seconds: ${seconds}`);
 
     console.log('posting new goal');
     console.log(reqBody);
     const goal = await Goal.new(
       username, 
-      distance, 
+      meters, 
       kilojoules, 
-      movingTime, 
-      // timePeriod,
-      startDt, 
+      seconds,
+      date, 
       endDt);
     return res.status(201).json({ goal });
   } catch(err) {

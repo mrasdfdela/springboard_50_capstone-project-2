@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Button, Card, CardBody, CardTitle, Form, Input, Label } from "reactstrap";
+// import { Button, Card, CardBody, CardTitle, Form, Input, Label } from "reactstrap";
 import UserContext from "./UserContext";
 
 import MyStravaApi from "./api.js";
