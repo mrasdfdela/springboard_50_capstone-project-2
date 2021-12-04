@@ -14,7 +14,7 @@ import {
   Input,
   Label,
 } from "reactstrap";
-import UserContext from "./UserContext";
+import UserContext from "../contexts/UserContext";
 // import MyStravaApi from "./api.js";
 
 function GoalSet({ createUserGoal }) {

@@ -2,19 +2,30 @@ import React, { useContext, useState } from "react";
 import { Redirect, useHistory } from "react-router-dom";
 import { Button, Card, CardBody, Form, Input, Label } from "reactstrap";
 
-import UserContext from "./UserContext";
+import UserContext from "../contexts/UserContext";
+const user = require("../helpers/user");
 // import "./Login.css";
 
-function Login({userLogin}){
+function Login(){
   const history = useHistory();
-  const {currentUser} = useContext(UserContext);
+  const { 
+    currentUser, 
+    setCurrentUser, 
+    setCurrentToken
+  } = useContext(UserContext);
   const INITIAL_STATE = { username: "", password: "" };
   const [ formData, setFormData ] = useState(INITIAL_STATE);
 
   const handleSubmit = (e)=> {
     e.preventDefault();
-    const {username,password} = formData;
-    userLogin(username, password);
+    const { username, password } = formData;
+    try {
+      const token = user.default.userLogin(username, password);
+      setCurrentUser(username);
+      setCurrentToken(token);
+    } catch(err) {
+      console.log(err);
+    }
     history.push("/");
   };
 

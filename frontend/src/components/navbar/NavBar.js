@@ -2,11 +2,23 @@ import React, {useContext } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { Navbar, Nav, NavItem } from "reactstrap";
 
-import UserContext from "./UserContext";
+import UserContext from "../../contexts/UserContext";
 import "./NavBar.css";
+const user = require("../../helpers/user");
 
-function NavBar({userLogout}) {
-  const { currentUser } = useContext(UserContext);
+function NavBar() {
+  const { 
+    currentUser,
+    setCurrentUser, 
+    setCurrentToken 
+  } = useContext(UserContext);
+
+  const handleLogout = ()=> {
+    user.default.userLogout();
+    setCurrentUser(null);
+    setCurrentToken(null);
+  }
+
   return (
     <div className="container">
       <Navbar expand="ms">
@@ -16,7 +28,9 @@ function NavBar({userLogout}) {
         {currentUser ? (
           <Nav className="ml-auto navbar">
             <NavItem>
-              <NavLink to="/activities">{currentUser.firstName}'s Activities</NavLink>
+              <NavLink to="/activities">
+                {currentUser.firstName}'s Activities
+              </NavLink>
             </NavItem>
             <NavItem>
               <NavLink to="/goals">Goals</NavLink>
@@ -25,7 +39,11 @@ function NavBar({userLogout}) {
               <NavLink to="/user-update">{currentUser.username}</NavLink>
             </NavItem>
             <NavItem>
-              <Link to="/" onClick={() => userLogout()}>Logout</Link>
+              <Link 
+                to="/" 
+                onClick={ ()=> handleLogout() }>
+                Logout
+              </Link>
             </NavItem>
           </Nav>
         ) : (

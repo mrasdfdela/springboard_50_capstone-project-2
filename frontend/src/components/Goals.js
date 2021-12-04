@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 // import { Button, Card, CardBody, CardTitle, Form, Input, Label } from "reactstrap";
-import UserContext from "./UserContext";
+import UserContext from "../contexts/UserContext";
 
-import MyStravaApi from "./api.js";
+import MyStravaApi from "../services/api.js";
 
 function Goals(){
   const { currentUser } = useContext(UserContext);

@@ -1,21 +1,20 @@
-import React, { 
-  useContext, 
-  // useEffect, 
-  useState } from "react";
+import React, { useContext, useState /**, useEffect*/ } from "react";
 import { useHistory } from "react-router-dom";
 import { Button, Card, CardBody, CardTitle, Form, Input, Label } from "reactstrap";
 
-import UserContext from "./UserContext";
+import UserContext from "../contexts/UserContext";
+import user from "../helpers/user";
 import "./UserUpdate.css";
 
-function UserUpdate({ patchUserDetails }) {
+function UserUpdate() {
   const { currentUser } = useContext(UserContext);
   const [formData, setFormData] = useState(currentUser);
   const history = useHistory();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    patchUserDetails(formData);
+    formData['username'] = currentUser.username;
+    user.patchUserDetails(formData);
     history.push("/");
   };
 

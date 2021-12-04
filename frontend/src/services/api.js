@@ -1,6 +1,6 @@
 import axios from "axios";
 const BASE_URL = "http://localhost:3001";
-const { STRAVA_CLIENT_ID, STRAVA_CLIENT_SECRET } = require("./config");
+const { STRAVA_CLIENT_ID, STRAVA_CLIENT_SECRET } = require("../config");
 
 
 class MyStravaApi {

@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Button, Card, CardBody, Form, Input, Label} from "reactstrap";
 import "./Signup.css";
+import user from "../helpers/user";
+import UserContext from "../contexts/UserContext";
 
-function Signup({userSignUp}){
+function Signup(){
+  const { setCurrentUser, setCurrentToken } = useContext(UserContext);
+  
   const INITIAL_STATE = {
     username: "",
     password: "",
@@ -17,13 +21,20 @@ function Signup({userSignUp}){
 
   const handleSubmit = (e)=> {
     e.preventDefault();
-    userSignUp(formData);
+    try {
+      const newToken = user.userSignUp(formData);
+      setCurrentUser(formData.username);
+      setCurrentToken(newToken);
+    } catch(err){
+      console.log(err);
+    }
+    
     setFormData(INITIAL_STATE);
     e.target.reset();
 
     setTimeout(function(){
       history.push("/");
-    }, 5000);
+    }, 500);
   }
 
   const handleChange = (e)=>{

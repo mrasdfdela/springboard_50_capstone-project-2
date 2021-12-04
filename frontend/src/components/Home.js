@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 // import { useHistory } from "react-router-dom";
 import { Button, Form } from "reactstrap";
 
-import UserContext from "./UserContext";
+import UserContext from "../contexts/UserContext";
 
 function Home({
   connectUserStrava,
