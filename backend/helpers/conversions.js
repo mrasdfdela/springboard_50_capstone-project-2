@@ -49,11 +49,24 @@ function timeToSeconds(time){
   return seconds;
 }
 
+function secondsToTime(seconds){
+  const hours = Math.floor(seconds/3600);
+  seconds = seconds % 3600;
+  const minutes = Math.floor(seconds/60);
+  seconds = seconds % 60;
+  if (hours > 0) {
+    return `${minutes}:${seconds}`;
+  } else {
+    return `${hours}:${minutes}:${seconds}`;
+  } 
+}
+
 module.exports = {
   calToKj,
   kjToCal,
   metersToMiles,
   milesToMeters,
   calcEndDt,
-  timeToSeconds
+  timeToSeconds,
+  secondsToTime
 };
