@@ -10,17 +10,17 @@ function App() {
   const [ currentUser, setCurrentUser ] = useState(null);
   const [ currentToken, setCurrentToken ] = useState(null);
 
-  useEffect( () => {
+  useEffect(() => {
     const token = localStorage.getItem("currentToken");
     const username = localStorage.getItem("currentUser");
-    
+
     if (token) {
-      const getUser = async(username)=> (await MyStravaApi.getUser(username));
+      // const getUser = async (username) => await MyStravaApi.getUser(username);
       MyStravaApi.token = token;
-      getUser(username).then((resp) => {
+      // getUser(username).then((resp) => {
         setCurrentToken(token);
-        setCurrentUser(resp);
-      });
+        setCurrentUser(username);
+      // });
     }
   }, []);
 

@@ -24,13 +24,7 @@ router.post("/", async function(req,res,next){
     const endDt = calcEndDt(date, timePeriod);
     const seconds = timeToSeconds(time);
 
-    // console.log(`kilojoules: ${kilojoules}`);
-    // console.log(`meters: ${meters}`);
-    // console.log(`endDt: ${endDt}`);
-    // console.log(`seconds: ${seconds}`);
-
     console.log('posting new goal');
-    console.log(reqBody);
     const goal = await Goal.new(
       username, 
       meters, 

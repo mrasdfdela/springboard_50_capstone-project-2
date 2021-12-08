@@ -29,14 +29,14 @@ function NavBar() {
           <Nav className="ml-auto navbar">
             <NavItem>
               <NavLink to="/activities">
-                {currentUser.firstName}'s Activities
+                {currentUser}'s Activities
               </NavLink>
             </NavItem>
             <NavItem>
               <NavLink to="/goals">Goals</NavLink>
             </NavItem>
             <NavItem>
-              <NavLink to="/user-update">{currentUser.username}</NavLink>
+              <NavLink to="/user-update">{currentUser}</NavLink>
             </NavItem>
             <NavItem>
               <Link 

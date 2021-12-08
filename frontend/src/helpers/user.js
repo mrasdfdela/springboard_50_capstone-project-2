@@ -5,7 +5,7 @@ async function userSignUp(formData) {
   try {
     const newToken = await MyStravaApi.registerUser(formData);
     if (newToken) {
-      let newUser = await MyStravaApi.getUser(formData.username);
+      // let newUser = await MyStravaApi.getUser(formData.username);
       localStorage.setItem("currentUser", formData.username);
       localStorage.setItem("currentToken", newToken);
       return newToken;
@@ -19,17 +19,11 @@ async function userLogin(username, password) {
   try {
     const newToken = await MyStravaApi.authenticateUser(username, password);
     if (newToken) {
-      let loggedInUser = await MyStravaApi.getUser(username);
-
+      // let loggedInUser = await MyStravaApi.getUser(username);
       localStorage.setItem("currentUser", username);
       localStorage.setItem("currentToken", newToken);
-
       return newToken;
     }
-    // if(!loggedInUser.athlete_id){
-    //   const stravaData = MyStravaApi.connectToStravaFrontEnd;
-    //   console.log(stravaData);
-    // };
   } catch(err) {
     console.log("Error; user not logged in...");
     console.log(err);
@@ -37,8 +31,6 @@ async function userLogin(username, password) {
 }
 
 async function userLogout() {
-  // setCurrentUser(null);
-  // setCurrentToken(null);
   MyStravaApi.token = null;
   localStorage.removeItem("currentUser");
   localStorage.removeItem("currentToken");

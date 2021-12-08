@@ -1,26 +1,38 @@
 function calToKj(calories) {
-  const kilojoules = calories / 1.005;
-  return Math.round(kilojoules * 10) / 10;
+  if(typeof calories !== 'undefined') {
+    const kilojoules = calories / 1.005;
+    return Math.round(kilojoules * 10) / 10;
+  }
+  return null;
 }
 
 function kjToCal(kj) {
-  const calories = kj * 1.005;
-  return Math.round(calories * 10) / 10;
+  if (typeof kj !== "undefined") {
+    const calories = kj * 1.005;
+    return Math.round(calories * 10) / 10;
+  }
+  return null;
 }
 
 function metersToMiles(meters){
-  const miles = meters * 0.000621371;
-  return Math.round(miles * 10) / 10;
+  if (typeof meters !== "undefined") {
+    const miles = meters * 0.000621371;
+    return Math.round(miles * 10) / 10;
+  }
+  return null;
 }
 
 function milesToMeters(miles){
-  const meters = 1609.34 * miles;
-  return Math.round(meters * 10) / 10;
+  if (typeof miles !== "undefined") {
+    const meters = 1609.34 * miles;
+    return Math.round(meters * 10) / 10;
+  }
+  return null;
 }
 
 function calcEndDt(startDt, period) {
   let time = Date.parse(startDt);
-  const milliseconds = 1000 * 60 * 60 * 24
+  const milliseconds = 1000 * 60 * 60 * 24;
   switch (period) {
     case "day":
       time = time + 1 * milliseconds;
@@ -37,28 +49,32 @@ function calcEndDt(startDt, period) {
 }
 
 function timeToSeconds(time){
-  let seconds;
-  let timeArr = time.split(':');
-  timeArr = timeArr.map((el) => parseInt(el));
-  
-  if (timeArr.length === 3){
-    seconds = (timeArr[0]*24 + timeArr[1])*3600 + timeArr[2] * 60; 
-  } else if (timeArr.length === 2) {
-    seconds = timeArr[0] * 3600 + timeArr[1] * 60;
+  if (typeof time !== "undefined") {
+    let seconds;
+    let timeArr = time.split(":");
+    timeArr = timeArr.map((el) => parseInt(el));
+
+    if (timeArr.length === 3) {
+      seconds = (timeArr[0] * 24 + timeArr[1]) * 3600 + timeArr[2] * 60;
+    } else if (timeArr.length === 2) {
+      seconds = timeArr[0] * 3600 + timeArr[1] * 60;
+    }
+    return seconds;
   }
-  return seconds;
 }
 
 function secondsToTime(seconds){
-  const hours = Math.floor(seconds/3600);
-  seconds = seconds % 3600;
-  const minutes = Math.floor(seconds/60);
-  seconds = seconds % 60;
-  if (hours > 0) {
-    return `${minutes}:${seconds}`;
-  } else {
-    return `${hours}:${minutes}:${seconds}`;
-  } 
+  if (typeof seconds !== "undefined") {
+    const hours = Math.floor(seconds / 3600);
+    seconds = seconds % 3600;
+
+    const minutes = Math.floor(seconds / 60);
+    seconds = seconds % 60;
+
+    return hours > 0
+      ? `${minutes}:${seconds}`
+      : `${hours}:${minutes}:${seconds}`;
+  }
 }
 
 module.exports = {

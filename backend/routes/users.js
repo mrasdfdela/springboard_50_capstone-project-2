@@ -58,15 +58,28 @@ router.get("/:username/bikes",
 router.get("/:username/goals", 
   async function (req, res, next) {
     try {
-      const { startDt, endDt } = req.body;
-      const user = await User.getDetails(req.params.username);
-      const goals = await Goal.getUserGoalsByDate(user.athlete_id, startDt, endDt);
+      const goals = await Goal.getUserGoals(req.params.username);
       return res.json({ goals });
     } catch (err) {
       return next(err);
     }
   }
 );
+
+// router.get("/:username/goals", 
+//   async function (req, res, next) {
+//     try {
+//       const { startDt, endDt } = req.body;
+//       const user = await User.getDetails(req.params.username);
+//       console.log(user);
+//       const goals = await Goal.getUserGoalsByDate(user.username, startDt, endDt);
+//       console.log(goals);
+//       return res.json({ goals });
+//     } catch (err) {
+//       return next(err);
+//     }
+//   }
+// );
 
 router.get("/:username/details",
   async function (req, res, next) {

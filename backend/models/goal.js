@@ -53,6 +53,28 @@ class Goal {
     }
   }
 
+  /** Finds goals, with parameter to toggle latest vs. all goals */
+  static async getUserGoals(username, latest=true) {
+    const limit = (latest ? 'LIMIT 5' : '');
+    const goalRes = await db.query(
+      `SELECT
+        goal_id as goalId,
+        username,
+        distance,
+        kilojoules,
+        moving_time AS time,
+        start_date AS startDt,
+        end_date AS endDt
+      FROM goals
+      WHERE 
+        username = $1
+      ORDER BY end_date DESC
+      ${limit}`,
+      [username]
+    );
+    return goalRes.rows;
+  }
+
   /** Finds all user goals */
   static async getUserGoalsByDate(
     username,
@@ -71,7 +93,8 @@ class Goal {
       WHERE 
         username = $1 AND 
         start_date >= $2 AND
-        end_date <= $3`,
+        end_date <= $3
+      ORDER BY start_date DESC`,
       [username, startDt, endDt]
     );
     return goalRes.rows;
