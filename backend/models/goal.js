@@ -35,7 +35,7 @@ class Goal {
   static async getById(goalId) {
     const goalRes = await db.query(
       `SELECT
-        goal_id AS goalId
+        goal_id AS goalId,
         username,
         distance,
         kilojoules,
@@ -43,13 +43,14 @@ class Goal {
         start_date AS startDt,
         end_date AS endDt
       FROM goals WHERE goal_id = $1`,
-      [goalId]
+      [ Number.parseInt(goalId) ]
     );
 
-    if (!goalRes[0]) {
+    // console.log(goalRes.rows[0]);
+    if (!goalRes.rows[0]) {
       throw new NotFoundError(`Goal not found`);
     } else {
-      return goalRes[0];
+      return goalRes.rows[0];
     }
   }
 

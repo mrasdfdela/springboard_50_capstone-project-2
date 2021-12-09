@@ -9,6 +9,8 @@ const { BadRequestError } = require("../expressError");
 const jsonschema = require("jsonschema");
 const userUpdateSchema = require("../schemas/userUpdate.json");
 const { ensureCorrectUser } = require("../middleware/auth");
+const { kjToCal, metersToMiles, secondsToTime } = require("../helpers/conversions");
+
 
 const express = require("express");
 const router = express.Router();
@@ -58,7 +60,13 @@ router.get("/:username/bikes",
 router.get("/:username/goals", 
   async function (req, res, next) {
     try {
-      const goals = await Goal.getUserGoals(req.params.username);
+      let goals = await Goal.getUserGoals(req.params.username);
+      for (let g of goals) {
+        g.miles = metersToMiles(g.distance);
+        g.calories = kjToCal(g.kilojoules);
+        g.timeStr = secondsToTime(g.time);
+      }
+      // console.log(goals);
       return res.json({ goals });
     } catch (err) {
       return next(err);

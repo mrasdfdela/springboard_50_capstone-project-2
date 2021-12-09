@@ -4,9 +4,17 @@
 const Goal = require("../models/goal");
 // const { BadRequestError, NotFoundError } = require("../expressError");
 
-const jsonschema = require("jsonschema");
+// const jsonschema = require("jsonschema");
 const { ensureCorrectUser } = require("../middleware/auth");
-const { calToKj, milesToMeters, calcEndDt, timeToSeconds } = require("../helpers/conversions");
+const {
+  calToKj,
+  milesToMeters,
+  calcEndDt,
+  timeToSeconds,
+  kjToCal,
+  metersToMiles,
+  secondsToTime,
+} = require("../helpers/conversions");
 
 const express = require("express");
 const { BadRequestError } = require("../expressError");
@@ -41,8 +49,12 @@ router.post("/", async function(req,res,next){
 // GET goal by ID
 router.get("/:goal_id", async function (req, res, next) {
   try {
-    const goals = await Goal.getById(req.params.goal_id);
-    return res.status(200).json({goals})
+    const goal = await Goal.getById(req.params.goal_id);
+    goal.miles = metersToMiles(goal.distance);
+    goal.calories = kjToCal(goal.kilojoules);
+    goal.timeStr = secondsToTime(goal.time);
+
+    return res.status(200).json({ goal });
   } catch (err) {
     return next(err);
   }

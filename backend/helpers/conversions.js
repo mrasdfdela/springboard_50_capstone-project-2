@@ -64,16 +64,20 @@ function timeToSeconds(time){
 }
 
 function secondsToTime(seconds){
-  if (typeof seconds !== "undefined") {
-    const hours = Math.floor(seconds / 3600);
-    seconds = seconds % 3600;
+  if (typeof seconds !== "undefined" && seconds > 0) {
+  //   const hours = Math.floor(seconds / 3600);
+  //   seconds = seconds % 3600;
 
-    const minutes = Math.floor(seconds / 60);
-    seconds = seconds % 60;
+  //   const minutes = Math.floor(seconds / 60);
+  //   seconds = seconds % 60;
 
-    return hours > 0
-      ? `${minutes}:${seconds}`
-      : `${hours}:${minutes}:${seconds}`;
+  //   return hours > 0
+  //     ? `${minutes}:${seconds}`
+  //     : `${hours}:${minutes}:${seconds}`;
+  // }
+  let date = new Date(0);
+  date.setSeconds(seconds);
+  return date.toISOString().substr(11,5);
   }
 }
 
