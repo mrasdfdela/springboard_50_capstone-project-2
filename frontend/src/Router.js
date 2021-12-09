@@ -13,7 +13,9 @@ import StravaTokens from "./contexts/StravaTokens";
 import Activities from "./components/Activities";
 import Activity from "./components/Activity";
 import Goals from "./components/Goals";
+import GoalDetail from "./components/GoalDetail";
 import GoalSet from "./components/GoalSet";
+import GoalUpdate from "./components/GoalUpdate";
 
 import MyStravaApi from "./services/api.js";
 
@@ -65,9 +67,11 @@ function Router() {
           <Route exact path="/user-update" component={UserUpdate} />
           <Route exact path="/activities" component={Activities} />
           <Route exact path="/activities/:id" element={Activity} />
-          <Route exact path="/set-goal">
+          <Route exact path="/goals/new">
             <GoalSet createUserGoal={createUserGoal} />
           </Route>
+          <Route exact path="/goals/:goalId" component={GoalDetail} />
+          <Route exact path="/goals/:goalId/edit" component={GoalUpdate} />
           <Route exact path="/goals" component={Goals} />
           <Redirect to="/" />
         </Switch>

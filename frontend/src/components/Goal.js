@@ -1,8 +1,8 @@
 import React  from "react";
 import { Link } from "react-router-dom";
-import { Button, Card, CardBody, CardTitle, Form, Input, Label } from "reactstrap";
+import { Card, CardBody, CardTitle } from "reactstrap";
 
-function Goals({userGoal}){
+function Goal({userGoal}){
   const startDt = userGoal.startdt.substr(0, 10);
   let endDt = userGoal.enddt !== null ? userGoal.enddt.substr(0, 10) : false;
   let userGoalLink = `/goals/${userGoal.goalid}`
@@ -14,9 +14,9 @@ function Goals({userGoal}){
           {endDt ? <div>End: {endDt}</div> : <div></div>}
         </CardTitle>
         <CardBody>
-          <p>{userGoal.distance}</p>
-          <p>{userGoal.kilojoules}</p>
-          <p>{userGoal.time}</p>
+          {userGoal.distance > 0 ? <p>{userGoal.miles} miles</p> : <div></div>}
+          {userGoal.kilojoules > 0 ? <p>{userGoal.calories} caloriess</p> : <div></div>}
+          {userGoal.time > 0 ? <p>{userGoal.timeStr}</p> : <div></div>}
         </CardBody>
         <Link to={userGoalLink}>Details</Link>
       </Card>
@@ -24,4 +24,4 @@ function Goals({userGoal}){
   );
 }
 
-export default Goals;
+export default Goal;

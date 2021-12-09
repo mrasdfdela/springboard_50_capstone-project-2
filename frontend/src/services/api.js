@@ -266,7 +266,7 @@ class MyStravaApi {
   static async getGoal(goalId) {
     try {
       const res = await this.request(`goals/${goalId}`);
-      return res.data;
+      return res.goal;
     } catch (err) {
       return err;
     }
