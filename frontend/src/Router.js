@@ -45,6 +45,10 @@ function Router() {
     MyStravaApi.addGoal(username, formData);
   };
 
+  const updateUserGoal = async (formData)=> {
+    MyStravaApi.updateGoal(formData.goalId, formData);
+  }
+
   return (
     <>
       <BrowserRouter>
@@ -71,7 +75,9 @@ function Router() {
             <GoalSet createUserGoal={createUserGoal} />
           </Route>
           <Route exact path="/goals/:goalId" component={GoalDetail} />
-          <Route exact path="/goals/:goalId/edit" component={GoalUpdate} />
+          <Route exact path="/goals/:goalId/edit">
+            <GoalUpdate updateUserGoal={updateUserGoal} />
+          </Route>
           <Route exact path="/goals" component={Goals} />
           <Redirect to="/" />
         </Switch>

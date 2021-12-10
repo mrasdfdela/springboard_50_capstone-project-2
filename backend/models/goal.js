@@ -1,6 +1,8 @@
 "use strict";
 
 const db = require("../db");
+const { sqlForPartialUpdate } = require("../helpers/sql");
+
 const {
   NotFoundError
 } = require("../expressError");
@@ -103,6 +105,8 @@ class Goal {
 
   /** Updates goal by id */
   static async update(goalId, data) {
+    console.log(`updating ${goalId}`)
+    console.log(data)
     const { setCols } = sqlForPartialUpdate(data, {});
     const result = await db.query(
       `UPDATE goals

@@ -32,6 +32,7 @@ function milesToMeters(miles){
 
 function calcEndDt(startDt, period) {
   let time = Date.parse(startDt);
+
   const milliseconds = 1000 * 60 * 60 * 24;
   switch (period) {
     case "day":
@@ -42,6 +43,9 @@ function calcEndDt(startDt, period) {
       break;
     case "month":
       time = time + 30 * milliseconds;
+      break;
+    case "year":
+      time = time + 365 * milliseconds;
       break;
   }
   const newDate = new Date(time);
@@ -81,6 +85,30 @@ function secondsToTime(seconds){
   }
 }
 
+function datesToTimePeriod(startDt, endDt){
+  if (typeof startDt != "undefined" && typeof endDt != "undefined") {
+    const timeDiff = endDt - startDt;
+    const dayDiff = timeDiff / ( 86400 * 1000); // 
+    let timePeriod;
+    
+    switch(dayDiff) {
+      case 1:
+        timePeriod = "day";
+        break;
+      case 7:
+        timePeriod = "week";
+        break;
+      case 30:
+        timePeriod = "month";
+        break;
+      case 365:
+        timePeriod = "year";
+        break;
+    }
+    return timePeriod;
+  }
+}
+
 module.exports = {
   calToKj,
   kjToCal,
@@ -88,5 +116,6 @@ module.exports = {
   milesToMeters,
   calcEndDt,
   timeToSeconds,
-  secondsToTime
+  secondsToTime,
+  datesToTimePeriod
 };

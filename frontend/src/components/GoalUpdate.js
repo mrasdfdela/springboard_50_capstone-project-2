@@ -1,9 +1,9 @@
 import React, { 
   useContext, 
-  // useEffect, 
+  useEffect, 
   useState 
   } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import {
   Button,
   Card,
@@ -15,60 +15,79 @@ import {
   Label,
 } from "reactstrap";
 import UserContext from "../contexts/UserContext";
-// import MyStravaApi from "./api.js";
+import MyStravaApi from "../services/api.js";
 
-function GoalUpdate({ createUserGoal }) {
+function GoalUpdate({ updateUserGoal }) {
+  const { goalId } = useParams();
+  // const { currentUser } = useContext(UserContext);
+  const [formData, setFormData] = useState({});
   const history = useHistory();
-  const { currentUser } = useContext(UserContext);
-  const [formData, setFormData] = useState([]);
+  const [doneLoading, setDoneLoading] = useState(false);
+  // const [weekChecked, setWeekChecked] = useState(false);
+  // const [monthChecked, setMonthChecked] = useState(false);
+  // const [yearChecked, setYearChecked] = useState(false);
 
+  useEffect(() => {
+    async function getGoalById() {
+      // console.log(`fn: getGoalById ${goalId}`);
+      let goalRes = await MyStravaApi.getGoal(goalId);
+      setDoneLoading(true);
+      return goalRes;
+    }
+    // const goal = getGoalById();
+    // setFormData(goal);
+    getGoalById().then( (res)=>{
+      // const resFormData = { ...res, [res.timePeriod]: true };
+      // console.log(resFormData);
+      setFormData(res);
+      // switch (res.timePeriod) {
+      //   case 'week':
+      //     setWeekChecked(true);
+      //     break;
+      //   case 'month':
+      //     setMonthChecked(true);
+      //   case 'year':
+      //     setYearChecked(true);
+      //     break;
+      // }
+    });
+  }, []);
+  
   const handleChange = (e)=> {
     const { name, value } = e.target;
+    // if (name==='timePeriod') {
+    //   setWeekChecked(null);
+    //   setMonthChecked(null);
+    //   setYearChecked(null);
+    // }
+    console.log(`changing ${name} with value : ${value}`)
     setFormData({ ...formData, [name]: value });
     console.log( formData );
   };
 
   const handleDate = (e)=> {
-    console.log(e.target.name);
-    console.log(e.target.value);
+    // console.log(e.target.name);
+    // console.log(e.target.value);
     let date = new Date(e.target.value);
     let currDt = date.toISOString().substr(0, 10);
-    console.log(currDt);
+    // console.log(currDt);
     setFormData({ ...formData, [e.target.name]: currDt })
   }
 
   const handleSubmit = (e)=> {
     e.preventDefault();
-
-    // for (let prop in formData) {
-    //   formData[prop] = parseInt( formData[prop] );
-    // }
-    // console.log('adding new goal');
     // console.log(formData);
-    createUserGoal(formData);
+    updateUserGoal(formData);
     history.push("/");
   };
 
-  // function getMonday(){
-  //   const today = new Date();
-  //   const dow = today.getDay();
-
-  //   const currWkMonday = today.getDate() - dow + (dow == 0 ? -6 : 1); 
-  //   const date = new Date(today.setDate(currWkMonday));
-  //   return date.toISOString().substr(0, 10);
-  // }
-  // const newDate = new Date();
-  // // const currDate = newDate.getDate();
-  // const convertedDate = newDate.toISOString().substr(0, 10);
-
-  // const convertedDate = getMonday()
-  const date = new Date()
-  const convertedDate = date.toISOString().substr
+  // const date = new Date()
+  // const convertedDate = date.toISOString().substr
   return (
     <>
       <div className="d-flex justify-content-center">
         <Card className="col-sm-6">
-          <CardTitle>Create New Goal</CardTitle>
+          <CardTitle>Update Goal</CardTitle>
           <CardBody>
             <Form className="form" onSubmit={handleSubmit}>
               <FormGroup>
@@ -79,7 +98,7 @@ function GoalUpdate({ createUserGoal }) {
                   name="miles"
                   type="text"
                   placeholder="Distance (miles)"
-                  autoComplete="on"
+                  defaultValue={formData.miles}
                   onChange={handleChange}
                 />
                 <Input
@@ -87,7 +106,7 @@ function GoalUpdate({ createUserGoal }) {
                   name="calories"
                   type="text"
                   placeholder="Calories"
-                  autoComplete="on"
+                  defaultValue={formData.calories}
                   onChange={handleChange}
                 />
                 <Input
@@ -95,7 +114,7 @@ function GoalUpdate({ createUserGoal }) {
                   name="time"
                   type="text"
                   placeholder="Time (format: hh:mm)"
-                  autoComplete="on"
+                  defaultValue={formData.time}
                   onChange={handleChange}
                 />
               </FormGroup>
@@ -109,6 +128,8 @@ function GoalUpdate({ createUserGoal }) {
                     name="timePeriod"
                     type="radio"
                     onChange={handleChange}
+                    // defaultValue={formData.timePeriod === "week"}
+                    checked={formData.timePeriod === "week"}
                   />
                   <Label for="week">&nbsp; Week&nbsp;</Label>
                   <Input
@@ -117,16 +138,20 @@ function GoalUpdate({ createUserGoal }) {
                     name="timePeriod"
                     type="radio"
                     onChange={handleChange}
+                    // defaultValue={formData.timePeriod === "month"}
+                    checked={formData.timePeriod === "month"}
                   />
                   <Label for="month">&nbsp; Month&nbsp;</Label>
                   <Input
                     id="year"
-                    value="month"
+                    value="year"
                     name="timePeriod"
                     type="radio"
                     placeholder="Time Period"
                     autoComplete="on"
                     onChange={handleChange}
+                    // defaultValue={formData.timePeriod === "year"}
+                    checked={formData.timePeriod === "year"}
                   />
                   <Label for="year">&nbsp; Year</Label>
                 </FormGroup>
@@ -136,7 +161,7 @@ function GoalUpdate({ createUserGoal }) {
                   value="date"
                   name="date"
                   type="date"
-                  // value={convertedDate}
+                  value={formData.startdt}
                   id="date"
                   onChange={handleDate}
                 />

@@ -16,7 +16,7 @@ function Goal({userGoal}){
         <CardBody>
           {userGoal.distance > 0 ? <p>{userGoal.miles} miles</p> : <div></div>}
           {userGoal.kilojoules > 0 ? <p>{userGoal.calories} caloriess</p> : <div></div>}
-          {userGoal.time > 0 ? <p>{userGoal.timeStr}</p> : <div></div>}
+          {userGoal.time > 0 ? <p>{userGoal.time}</p> : <div></div>}
         </CardBody>
         <Link to={userGoalLink}>Details</Link>
       </Card>

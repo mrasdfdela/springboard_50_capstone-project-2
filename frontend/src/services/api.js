@@ -266,7 +266,7 @@ class MyStravaApi {
   static async getGoal(goalId) {
     try {
       const res = await this.request(`goals/${goalId}`);
-      return res.goal;
+      return res.displayGoal;
     } catch (err) {
       return err;
     }
@@ -276,7 +276,6 @@ class MyStravaApi {
   static async getUserGoals(username) {
     try {
       const res = await this.request(`users/${username}/goals`);
-      // console.log(res);
       return res;
     } catch (err) {
       return err;
@@ -286,6 +285,8 @@ class MyStravaApi {
   // update goal by id
   static async updateGoal(goalId, formData) {
     try {
+      // console.log(`updating goal: ${goalId}`);
+      // console.log(formData);
       const res = await this.request(`goals/${goalId}`, formData, "patch");
       return res.data;
     } catch (err) {

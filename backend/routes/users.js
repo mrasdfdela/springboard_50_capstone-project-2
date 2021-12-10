@@ -64,7 +64,7 @@ router.get("/:username/goals",
       for (let g of goals) {
         g.miles = metersToMiles(g.distance);
         g.calories = kjToCal(g.kilojoules);
-        g.timeStr = secondsToTime(g.time);
+        g.time = secondsToTime(g.time);
       }
       // console.log(goals);
       return res.json({ goals });
