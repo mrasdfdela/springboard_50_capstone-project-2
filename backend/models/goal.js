@@ -10,7 +10,8 @@ const {
 class Goal {
   /** Post new goal */
   static async new(
-    username, distance, kilojoules=0, movingTime=0, startDt="NOW()", endDt) {
+    username, distance=0, kilojoules=0, movingTime=0, startDt="NOW()", endDt) {
+      console.log(`username: ${username}, distance: ${distance}, kilojoules: ${kilojoules}, movingTime: ${movingTime}, startDt: ${startDt}, endDt: ${endDt}`);
       const result = await db.query(
         `INSERT INTO goals
           (username, distance, kilojoules, moving_time, start_date, end_date)
@@ -105,13 +106,13 @@ class Goal {
 
   /** Updates goal by id */
   static async update(goalId, data) {
-    console.log(`updating ${goalId}`)
-    console.log(data)
-    const { setCols } = sqlForPartialUpdate(data, {});
+    let { setCols } = sqlForPartialUpdate(data, {});
+    let goalVals = Object.values(data);
+
     const result = await db.query(
       `UPDATE goals
         SET ${setCols}
-        WHERE goal_id = $1
+        WHERE goal_id = $${goalVals.length + 1}
         RETURNING 
           goal_id,
           username,
@@ -120,7 +121,7 @@ class Goal {
           moving_time,
           start_date,
           end_date`,
-      [goalId]
+      [ ...goalVals, goalId]
     );
     const activity = result.rows[0];
 

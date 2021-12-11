@@ -285,8 +285,6 @@ class MyStravaApi {
   // update goal by id
   static async updateGoal(goalId, formData) {
     try {
-      // console.log(`updating goal: ${goalId}`);
-      // console.log(formData);
       const res = await this.request(`goals/${goalId}`, formData, "patch");
       return res.data;
     } catch (err) {

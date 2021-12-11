@@ -37,13 +37,13 @@ function GoalDetail() {
               {goal.enddt.substr(0, 10)}
             </CardSubtitle>
             <CardBody>
-              {goal.distance > 0 ? <p>{goal.miles} miles</p> : <div></div>}
-              {goal.kilojoules > 0 ? (
+              {goal.miles > 0 ? <p>{goal.miles} miles</p> : <div></div>}
+              {goal.calories > 0 ? (
                 <p>{goal.calories} calories</p>
               ) : (
                 <div></div>
               )}
-              {goal.time > 0 ? <p>{goal.timeStr}</p> : <div></div>}
+              {typeof goal.time === 'string' ? <p>{goal.time} moving time</p> : <div></div>}
               <p>Goal Id: {goal.goalId}</p>
             </CardBody>
           </Card>

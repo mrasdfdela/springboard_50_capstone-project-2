@@ -77,14 +77,19 @@ router.patch("/:goals_id",
       //   const errs = validator.errors.map( (e)=> e.stack );
       //   throw new BadRequestError(errs);
       // }
-      let goal = {};
-      goal.start_date = req.body.startdt;
-      goal.end_date = calcEndDt(req.body.startdt, req.body.timePeriod);
-      goal.distance = milesToMeters(req.body.distance);
-      goal.time = timeToSeconds(req.body.time);
-      goal.kilojoules = calToKj(req.body.calories);
-
-      const newGoal = await Goal.update(req.params.goals_id, goal);
+      const goalId = parseInt(req.params.goals_id);
+      
+      let goalUpdated = {};
+      const miles = parseInt(req.body.miles);
+      goalUpdated.distance = milesToMeters(miles);
+      goalUpdated.start_date = new Date(req.body.startdt);
+      goalUpdated.end_date = new Date(
+        calcEndDt(req.body.startdt, req.body.timePeriod)
+      );
+      goalUpdated.moving_time = timeToSeconds(req.body.time);
+      goalUpdated.kilojoules = calToKj(req.body.calories);;
+      
+      const newGoal = await Goal.update(goalId, goalUpdated);
       return res.json({ newGoal });
     } catch (err) {
       return next(err);

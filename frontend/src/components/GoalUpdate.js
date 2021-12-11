@@ -23,44 +23,20 @@ function GoalUpdate({ updateUserGoal }) {
   const [formData, setFormData] = useState({});
   const history = useHistory();
   const [doneLoading, setDoneLoading] = useState(false);
-  // const [weekChecked, setWeekChecked] = useState(false);
-  // const [monthChecked, setMonthChecked] = useState(false);
-  // const [yearChecked, setYearChecked] = useState(false);
 
   useEffect(() => {
     async function getGoalById() {
-      // console.log(`fn: getGoalById ${goalId}`);
       let goalRes = await MyStravaApi.getGoal(goalId);
       setDoneLoading(true);
       return goalRes;
     }
-    // const goal = getGoalById();
-    // setFormData(goal);
     getGoalById().then( (res)=>{
-      // const resFormData = { ...res, [res.timePeriod]: true };
-      // console.log(resFormData);
       setFormData(res);
-      // switch (res.timePeriod) {
-      //   case 'week':
-      //     setWeekChecked(true);
-      //     break;
-      //   case 'month':
-      //     setMonthChecked(true);
-      //   case 'year':
-      //     setYearChecked(true);
-      //     break;
-      // }
     });
   }, []);
   
   const handleChange = (e)=> {
     const { name, value } = e.target;
-    // if (name==='timePeriod') {
-    //   setWeekChecked(null);
-    //   setMonthChecked(null);
-    //   setYearChecked(null);
-    // }
-    console.log(`changing ${name} with value : ${value}`)
     setFormData({ ...formData, [name]: value });
     console.log( formData );
   };
@@ -76,13 +52,9 @@ function GoalUpdate({ updateUserGoal }) {
 
   const handleSubmit = (e)=> {
     e.preventDefault();
-    // console.log(formData);
     updateUserGoal(formData);
     history.push("/");
   };
-
-  // const date = new Date()
-  // const convertedDate = date.toISOString().substr
   return (
     <>
       <div className="d-flex justify-content-center">
