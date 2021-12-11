@@ -40,19 +40,11 @@ function Router() {
     const username = localStorage.getItem("currentUser");
     MyStravaApi.stravaGetUserBikes(username);
   };
-  const createUserGoal = async (formData) => {
-    const username = localStorage.getItem("currentUser");
-    MyStravaApi.addGoal(username, formData);
-  };
-
-  const updateUserGoal = async (formData)=> {
-    MyStravaApi.updateGoal(formData.goalId, formData);
-  }
 
   return (
     <>
       <BrowserRouter>
-        <NavBar/>
+        <NavBar />
         <Switch>
           <Route exact path="/">
             <Home
@@ -71,13 +63,9 @@ function Router() {
           <Route exact path="/user-update" component={UserUpdate} />
           <Route exact path="/activities" component={Activities} />
           <Route exact path="/activities/:id" element={Activity} />
-          <Route exact path="/goals/new">
-            <GoalSet createUserGoal={createUserGoal} />
-          </Route>
+          <Route exact path="/goals/new" component={GoalSet} />
           <Route exact path="/goals/:goalId" component={GoalDetail} />
-          <Route exact path="/goals/:goalId/edit">
-            <GoalUpdate updateUserGoal={updateUserGoal} />
-          </Route>
+          <Route exact path="/goals/:goalId/edit" component={GoalUpdate} />
           <Route exact path="/goals" component={Goals} />
           <Redirect to="/" />
         </Switch>

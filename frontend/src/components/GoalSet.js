@@ -15,11 +15,11 @@ import {
   Label,
 } from "reactstrap";
 import UserContext from "../contexts/UserContext";
-// import MyStravaApi from "./api.js";
+import MyStravaApi from "../services/api.js";
 
-function GoalSet({ createUserGoal }) {
+function GoalSet() {
   const history = useHistory();
-  const { currentUser } = useContext(UserContext);
+  // const { currentUser } = useContext(UserContext);
   const [formData, setFormData] = useState([]);
 
   const handleChange = (e)=> {
@@ -39,31 +39,15 @@ function GoalSet({ createUserGoal }) {
 
   const handleSubmit = (e)=> {
     e.preventDefault();
-
-    // for (let prop in formData) {
-    //   formData[prop] = parseInt( formData[prop] );
-    // }
-    // console.log('adding new goal');
-    // console.log(formData);
     createUserGoal(formData);
     history.push("/");
   };
 
-  // function getMonday(){
-  //   const today = new Date();
-  //   const dow = today.getDay();
+  const createUserGoal = async (formData) => {
+    const username = localStorage.getItem("currentUser");
+    MyStravaApi.addGoal(username, formData);
+  };
 
-  //   const currWkMonday = today.getDate() - dow + (dow == 0 ? -6 : 1); 
-  //   const date = new Date(today.setDate(currWkMonday));
-  //   return date.toISOString().substr(0, 10);
-  // }
-  // const newDate = new Date();
-  // // const currDate = newDate.getDate();
-  // const convertedDate = newDate.toISOString().substr(0, 10);
-
-  // const convertedDate = getMonday()
-  const date = new Date()
-  const convertedDate = date.toISOString().substr
   return (
     <>
       <div className="d-flex justify-content-center">
@@ -136,7 +120,6 @@ function GoalSet({ createUserGoal }) {
                   value="date"
                   name="date"
                   type="date"
-                  // value={convertedDate}
                   id="date"
                   onChange={handleDate}
                 />

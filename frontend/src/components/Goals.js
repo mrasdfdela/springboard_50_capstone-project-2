@@ -16,7 +16,6 @@ function Goals(){
     async function getUserGoals() {
       let userGoals = await MyStravaApi.getUserGoals(currentUser);
       setGoals(userGoals.goals);
-      // console.log(userGoals.goals);
       setDoneLoading(true);
       return userGoals;
     }

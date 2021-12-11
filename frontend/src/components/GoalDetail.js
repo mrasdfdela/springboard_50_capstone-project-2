@@ -1,27 +1,27 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { 
+  // useContext, 
+  useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Card, CardBody, CardSubtitle, CardTitle } from "reactstrap";
 
-import UserContext from "../contexts/UserContext";
+// import UserContext from "../contexts/UserContext";
 import MyStravaApi from "../services/api.js";
 
 function GoalDetail() {
   const { goalId } = useParams();
-  const { currentUser } = useContext(UserContext);
+  // const { currentUser } = useContext(UserContext);
   const [goal, setGoal] = useState({ goals: [] });
   const [doneLoading, setDoneLoading] = useState(false);
 
   useEffect(() => {
     async function getUserGoals() {
       let respGoal = await MyStravaApi.getGoal(goalId);
-      console.log('GoalDetail: respGoal')
-      console.log(respGoal);
       setGoal(respGoal);
       setDoneLoading(true);
       return goal;
     }
     getUserGoals();
-  }, [currentUser]);
+  }, []);
 
   const goalEditLink = `./${goalId}/edit`;
   return (

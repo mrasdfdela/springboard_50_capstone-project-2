@@ -1,5 +1,5 @@
 import React, { 
-  useContext, 
+  // useContext, 
   useEffect, 
   useState 
   } from "react";
@@ -14,20 +14,19 @@ import {
   Input,
   Label,
 } from "reactstrap";
-import UserContext from "../contexts/UserContext";
+// import UserContext from "../contexts/UserContext";
 import MyStravaApi from "../services/api.js";
 
-function GoalUpdate({ updateUserGoal }) {
+function GoalUpdate() {
   const { goalId } = useParams();
-  // const { currentUser } = useContext(UserContext);
   const [formData, setFormData] = useState({});
   const history = useHistory();
-  const [doneLoading, setDoneLoading] = useState(false);
+  // const [doneLoading, setDoneLoading] = useState(false);
 
   useEffect(() => {
     async function getGoalById() {
       let goalRes = await MyStravaApi.getGoal(goalId);
-      setDoneLoading(true);
+      // setDoneLoading(true);
       return goalRes;
     }
     getGoalById().then( (res)=>{
@@ -35,18 +34,18 @@ function GoalUpdate({ updateUserGoal }) {
     });
   }, []);
   
+  const updateUserGoal = async (formData) => {
+    MyStravaApi.updateGoal(formData.goalId, formData);
+  };
+  
   const handleChange = (e)=> {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    console.log( formData );
   };
 
   const handleDate = (e)=> {
-    // console.log(e.target.name);
-    // console.log(e.target.value);
     let date = new Date(e.target.value);
     let currDt = date.toISOString().substr(0, 10);
-    // console.log(currDt);
     setFormData({ ...formData, [e.target.name]: currDt })
   }
 
@@ -100,7 +99,6 @@ function GoalUpdate({ updateUserGoal }) {
                     name="timePeriod"
                     type="radio"
                     onChange={handleChange}
-                    // defaultValue={formData.timePeriod === "week"}
                     checked={formData.timePeriod === "week"}
                   />
                   <Label for="week">&nbsp; Week&nbsp;</Label>
@@ -110,7 +108,6 @@ function GoalUpdate({ updateUserGoal }) {
                     name="timePeriod"
                     type="radio"
                     onChange={handleChange}
-                    // defaultValue={formData.timePeriod === "month"}
                     checked={formData.timePeriod === "month"}
                   />
                   <Label for="month">&nbsp; Month&nbsp;</Label>
@@ -122,7 +119,6 @@ function GoalUpdate({ updateUserGoal }) {
                     placeholder="Time Period"
                     autoComplete="on"
                     onChange={handleChange}
-                    // defaultValue={formData.timePeriod === "year"}
                     checked={formData.timePeriod === "year"}
                   />
                   <Label for="year">&nbsp; Year</Label>
