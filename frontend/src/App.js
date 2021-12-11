@@ -4,6 +4,7 @@ import UserContext from "./contexts/UserContext";
 import Router from "./Router";
 
 import MyStravaApi from "./services/api.js";
+import user from "./helpers/user";
 import './App.css';
 
 function App() {
@@ -11,16 +12,21 @@ function App() {
   const [ currentToken, setCurrentToken ] = useState(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("currentToken");
-    const username = localStorage.getItem("currentUser");
+    let token = localStorage.getItem("currentToken");
+    let username = localStorage.getItem("currentUser");
 
-    if (token) {
-      // const getUser = async (username) => await MyStravaApi.getUser(username);
-      MyStravaApi.token = token;
-      // getUser(username).then((resp) => {
-        setCurrentToken(token);
-        setCurrentUser(username);
-      // });
+    if (token && username) {
+      MyStravaApi.getUser(username).then( (res)=> {
+        if (res instanceof Error) {
+          user.userLogout();
+          // localStorage.removeItem("currentUser");
+          // localStorage.removeItem("currentToken");
+        } else {
+          MyStravaApi.token = token
+          setCurrentToken(token);
+          setCurrentUser(username);
+        }
+      });
     }
   }, []);
 

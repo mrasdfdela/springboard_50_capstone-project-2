@@ -14,7 +14,8 @@ class Activity {
     distance,
     kilojoules,
     movingTime,
-    desc
+    desc,
+    trainer
   ) {
     // First checks if the activity/activity_id exists in the database
     const duplicateCheck = await db.query(
@@ -26,7 +27,6 @@ class Activity {
         `Activity already exists! activity_id: ${activityId}`
       );
 
-    //
     const result = await db.query(
       `INSERT INTO activities
         (activity_id,
@@ -36,9 +36,19 @@ class Activity {
           distance,
           kilojoules,
           moving_time,
-          description)
-      VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
-      RETURNING activity_id, athlete_id, start_date, type, distance, kilojoules, moving_time, description`,
+          description,
+          trainer)
+      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
+      RETURNING 
+        activity_id, 
+        athlete_id, 
+        start_date, 
+        type, 
+        distance, 
+        kilojoules,
+        moving_time, 
+        description,
+        trainer`,
       [
         activityId,
         atheleteId,
@@ -48,6 +58,7 @@ class Activity {
         kilojoules,
         movingTime,
         desc,
+        trainer
       ]
     );
     const activity = result.rows[0];

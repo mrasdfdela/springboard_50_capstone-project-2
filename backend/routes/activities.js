@@ -29,6 +29,7 @@ router.post("/", async function(req,res,next){
           kilojoules,
           moving_time,
           name,
+          trainer
         } = activity;
 
         await Activity.new(
@@ -39,7 +40,8 @@ router.post("/", async function(req,res,next){
           distance,
           kilojoules,
           moving_time,
-          name
+          name,
+          trainer
         );
       } else {
         console.log(`Duplicate activity id: ${activity.id}`);

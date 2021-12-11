@@ -16,12 +16,13 @@ function GoalDetail() {
   useEffect(() => {
     async function getUserGoals() {
       let respGoal = await MyStravaApi.getGoal(goalId);
+      console.log(respGoal);
       setGoal(respGoal);
       setDoneLoading(true);
       return goal;
     }
     getUserGoals();
-  }, []);
+  }, [goalId]);
 
   const goalEditLink = `./${goalId}/edit`;
   return (

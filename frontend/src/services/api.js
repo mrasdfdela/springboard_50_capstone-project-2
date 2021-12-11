@@ -54,15 +54,20 @@ class MyStravaApi {
   }
   // Get user info
   static async getUser(user) {
-    let res = await this.request(`users/${user}`);
-    let { username, firstName, lastName, email, athlete_id } = res.user;
-    return {
-      username: username,
-      firstName: firstName,
-      lastName: lastName,
-      email: email,
-      athlete_id: athlete_id,
-    };
+    try {
+      let res = await this.request(`users/${user}`);
+      let { username, firstName, lastName, email, athlete_id } = res.user;
+      return {
+        username: username,
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        athlete_id: athlete_id,
+      };
+    } catch(err){
+      // console.log('getUser Error')
+      return err;
+    }
   }
   // Patch user info
   static async patchUser(formData) {
@@ -245,7 +250,7 @@ class MyStravaApi {
   static async getUserBikes(username) {
     try {
       const res = await this.request(`users/${username}/bikes`);
-      return res.data;
+      return res.bikes;
     } catch (err) {
       return err;
     }

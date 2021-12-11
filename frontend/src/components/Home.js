@@ -1,8 +1,10 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
+import { useEffect } from "react/cjs/react.development";
 // import { useHistory } from "react-router-dom";
 import { Button, Form } from "reactstrap";
 
 import UserContext from "../contexts/UserContext";
+import MyStravaApi from "../services/api";
 
 function Home({
   connectUserStrava,
@@ -10,11 +12,23 @@ function Home({
   testingGetUserActivities,
   stravaUserBikes}) {
   const { currentUser } = useContext(UserContext);
+  const [ userData, setUserData ] = useState({});
   // const history = useHistory();
+
+  useEffect( ()=>{
+    async function getUserInfo() {
+      MyStravaApi.getUser(currentUser).then((res)=>{
+        setUserData(res);
+      });
+    }
+    if (currentUser) {
+      getUserInfo();
+    }
+  },[currentUser]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    connectUserStrava(currentUser.username);
+    connectUserStrava(userData.username);
   };
 
   const handleDownload = (e) => {
@@ -39,8 +53,8 @@ function Home({
         <p>Nobody is signed in</p>
       ) : (
         <>
-          <p>Welcome, {currentUser.username}!</p>
-          {currentUser.athlete_id ? (
+          <p>Welcome, {userData.firstName}!</p>
+          {userData.athlete_id ? (
             <>
               <p>You have connected your strava</p>
               <Form className="form" onSubmit={handleRefresh}>

@@ -1,5 +1,5 @@
 import React, { 
-  useContext, 
+  // useContext, 
   // useEffect, 
   useState 
   } from "react";
@@ -14,7 +14,7 @@ import {
   Input,
   Label,
 } from "reactstrap";
-import UserContext from "../contexts/UserContext";
+// import UserContext from "../contexts/UserContext";
 import MyStravaApi from "../services/api.js";
 
 function GoalSet() {

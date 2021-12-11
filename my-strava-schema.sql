@@ -34,7 +34,8 @@ CREATE TABLE activities(
   distance NUMERIC(8,1),
   kilojoules NUMERIC(8,1),
   moving_time INTEGER,
-  description VARCHAR(140)
+  description VARCHAR(140),
+  trainer boolean
 );
 
 CREATE TABLE goals (
