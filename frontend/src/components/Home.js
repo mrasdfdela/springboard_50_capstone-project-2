@@ -4,14 +4,17 @@ import { useEffect } from "react/cjs/react.development";
 import { Button, Form } from "reactstrap";
 
 import UserContext from "../contexts/UserContext";
+import StravaApiContext from "../contexts/StravaApiContext";
 import MyStravaApi from "../services/api";
 
-function Home({
-  connectUserStrava,
-  testRefreshAccessToken,
-  testingGetUserActivities,
-  stravaUserBikes}) {
+function Home() {
   const { currentUser } = useContext(UserContext);
+  const {
+    connectUserStrava,
+    refreshAccessToken,
+    getUserActivities,
+    stravaUserBikes,
+  } = useContext(StravaApiContext);
   const [ userData, setUserData ] = useState({});
   // const history = useHistory();
 
@@ -28,22 +31,26 @@ function Home({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    connectUserStrava(userData.username);
+    console.log(`connectUserStrava, ${currentUser}`);
+    connectUserStrava(currentUser);
   };
 
   const handleDownload = (e) => {
     e.preventDefault();
-    testingGetUserActivities();
+    console.log(`getUserActivities, ${currentUser}`);
+    getUserActivities(currentUser);
   };
 
   const handleDownloadBikes = (e) => {
     e.preventDefault();
-    stravaUserBikes();
+    console.log(`stravaUserBikes, ${currentUser}`);
+    stravaUserBikes(currentUser);
   };
 
   const handleRefresh = (e) => {
     e.preventDefault();
-    testRefreshAccessToken();
+    console.log(`refreshAccessToken, ${currentUser}`);
+    refreshAccessToken(currentUser);
   };
 
   return (

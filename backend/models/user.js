@@ -129,14 +129,13 @@ class User {
    * Returns { username, firstName, lastName, email }
    * Throws NotFoundError if not found. **/
   static async update(username, data) {
-    console.log(`model, user ${username}`)
-    console.log(data);
     if (data.newPassword) {
       data.password = await bcrypt.hash(data.newPassword, BCRYPT_WORK_FACTOR);
       delete data.newPassword;
-    } else {
+    } else if (data.password) {
       data.password = await bcrypt.hash(data.password, BCRYPT_WORK_FACTOR);
     }
+    
     const { setCols, values } = sqlForPartialUpdate(data, {
       firstName: "first_name",
       lastName: "last_name"

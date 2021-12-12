@@ -9,7 +9,7 @@ import Signup from "./components/Signup";
 import Profile from "./components/Profile";
 import UserUpdate from "./components/UserUpdate";
 
-import StravaTokens from "./contexts/StravaTokens";
+import StravaTokens from "./components/StravaTokens";
 import Activities from "./components/Activities";
 import Activity from "./components/Activity";
 import Goals from "./components/Goals";
@@ -17,48 +17,16 @@ import GoalDetail from "./components/GoalDetail";
 import GoalSet from "./components/GoalSet";
 import GoalUpdate from "./components/GoalUpdate";
 
-import MyStravaApi from "./services/api.js";
-
 function Router() {
-  const connectUserStrava = (username) => {
-    MyStravaApi.connectToStravaFrontEndApi(username);
-  };
-  const getStravaTokens = async () => {
-    const username = localStorage.getItem("currentUser");
-    MyStravaApi.retrieveStravaTokens(username);
-  };
-  const testRefreshAccessToken = async () => {
-    const username = localStorage.getItem("currentUser");
-    MyStravaApi.refreshAccessToken(username);
-  };
-
-  const testingGetUserActivities = async () => {
-    const username = localStorage.getItem("currentUser");
-    MyStravaApi.stravaGetUserActivities(username);
-  };
-  const stravaUserBikes = async () => {
-    const username = localStorage.getItem("currentUser");
-    MyStravaApi.stravaGetUserBikes(username);
-  };
-
   return (
     <>
       <BrowserRouter>
         <NavBar />
         <Switch>
-          <Route exact path="/">
-            <Home
-              connectUserStrava={connectUserStrava}
-              testRefreshAccessToken={testRefreshAccessToken}
-              testingGetUserActivities={testingGetUserActivities}
-              stravaUserBikes={stravaUserBikes}
-            />
-          </Route>
+          <Route exact path="/" component={Home} />
           <Route exact path="/login" component={Login} />
           <Route exact path="/signup" component={Signup} />
-          <Route exact path="/strava-tokens">
-            <StravaTokens getStravaTokens={getStravaTokens} />
-          </Route>
+          <Route exact path="/strava-tokens" component={StravaTokens} />
           <Route exact path="/profile" component={Profile} />
           <Route exact path="/user-update" component={UserUpdate} />
           <Route exact path="/activities" component={Activities} />
