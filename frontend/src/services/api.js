@@ -235,12 +235,12 @@ class MyStravaApi {
   static async getActivityCount(username) {
     try {
       const user = await this.getUser(username);
-      const res = await this.request(`activities/count`, {
-        athleteId: user.athlete_id,
-      });
-      console.log(`api getActivityCount response:`);
-      // console.log(res);
-      return res;
+      const res = await this.request(
+        `activities/count`,
+        {athleteId: user.athlete_id});
+      const activityCount = parseInt(res.count);
+      console.log(activityCount);
+      return activityCount;
     } catch (err) {
       return err;
     }
@@ -260,8 +260,7 @@ class MyStravaApi {
   static async getUserBikes(username) {
     try {
       const res = await this.request(`users/${username}/bikes`);
-      console.log(res);
-      // return res.bikes;
+      return res.bikes;
     } catch (err) {
       return err;
     }

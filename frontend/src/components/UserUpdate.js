@@ -53,17 +53,20 @@ function UserUpdate() {
     });
   }, [currentUser]);
 
-  const countRes = MyStravaApi.getActivityCount(currentUser);
-  // useEffect( ()=>{
-  //   async function getActivityCount(){
-  // const countRes = await MyStravaApi.getActivityCount();
-  //     return countRes;
-  //   }
-  //   getActivityCount(currentUser).then( (res)=> {
-  //     setActivityCount(res)
-  //     setCountLoaded(true);
-  //   });
-  // });
+  useEffect( ()=>{
+    async function getUserActivityCount(){
+      if (currentUser != null) {
+        const countRes = await MyStravaApi.getActivityCount(currentUser);
+        return countRes;
+      } else {
+        return false;
+      }
+    }
+    getUserActivityCount(currentUser).then((res) => {
+      setActivityCount(res);
+      setCountLoaded(true);
+    });
+  }, [currentUser]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -79,7 +82,7 @@ function UserUpdate() {
 
   return (
     <>
-      {bikesLoaded && userLoaded ? (
+      {bikesLoaded && userLoaded && countLoaded ? (
         <div>
           <Athlete
             athleteId={formData.athlete_id}

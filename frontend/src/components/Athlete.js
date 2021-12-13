@@ -4,7 +4,7 @@ import { Button, Card, CardBody, Form } from "reactstrap";
 import UserContext from "../contexts/UserContext";
 import StravaApiContext from "../contexts/StravaApiContext";
 import { useEffect } from "react/cjs/react.development";
-import MyStravaApi from "../services/api";
+// import MyStravaApi from "../services/api";
 
 function Athlete({ athleteId, bikes, activityCount }) {
   let [userBikes, setUserBikes] = useState([]);
