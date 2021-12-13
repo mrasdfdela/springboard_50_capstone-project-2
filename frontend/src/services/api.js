@@ -64,8 +64,7 @@ class MyStravaApi {
         email: email,
         athlete_id: athlete_id,
       };
-    } catch(err){
-      // console.log('getUser Error')
+    } catch (err) {
       return err;
     }
   }
@@ -158,8 +157,6 @@ class MyStravaApi {
       const refRes = await axios.post(
         `https://www.strava.com/oauth/token?client_id=${STRAVA_CLIENT_ID}&client_secret=${STRAVA_CLIENT_SECRET}&grant_type=${grantType}&refresh_token=${refreshToken}`
       );
-      // console.log(`refRes:`);
-      // console.log(refRes);
 
       const stravaDetails = {
         username: username,
@@ -167,9 +164,7 @@ class MyStravaApi {
         refresh_token: refreshToken,
         access_token: refRes.data.access_token,
       };
-      // console.log(stravaDetails);
 
-      // updates user access token
       const updatedUser = await this.request(
         "auth/strava/tokens",
         stravaDetails,
@@ -231,6 +226,21 @@ class MyStravaApi {
         const bikeRes = await this.request(`bikes`, res.data, "post");
         console.log(bikeRes);
       }
+      return res.data.bikes;
+    } catch (err) {
+      return err;
+    }
+  }
+
+  static async getActivityCount(username) {
+    try {
+      const user = await this.getUser(username);
+      const res = await this.request(`activities/count`, {
+        athleteId: user.athlete_id,
+      });
+      console.log(`api getActivityCount response:`);
+      // console.log(res);
+      return res;
     } catch (err) {
       return err;
     }
@@ -250,7 +260,8 @@ class MyStravaApi {
   static async getUserBikes(username) {
     try {
       const res = await this.request(`users/${username}/bikes`);
-      return res.bikes;
+      console.log(res);
+      // return res.bikes;
     } catch (err) {
       return err;
     }
@@ -260,9 +271,9 @@ class MyStravaApi {
   static async addGoal(username, formData) {
     try {
       formData.username = username;
-      let res = await this.request('goals', formData, "post");
+      let res = await this.request("goals", formData, "post");
       return res.data;
-    } catch(err) {
+    } catch (err) {
       return err;
     }
   }
@@ -296,13 +307,13 @@ class MyStravaApi {
       return err;
     }
   }
-  
+
   // delete goal by id
-  static async removeGoal(goalId){
+  static async removeGoal(goalId) {
     try {
       const res = await this.request(`goals/${goalId}`, {}, "delete");
       return res;
-    } catch(err) {
+    } catch (err) {
       return err;
     }
   }

@@ -70,8 +70,4 @@ router.delete("/:bikes_id", async function (req, res, next) {
   }
 });
 
-// PATCHES bikes by ID
-// router.patch("/:bikes_id", async function (req, res, next) {
-// });
-
 module.exports = router;

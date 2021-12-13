@@ -22,7 +22,8 @@ async function getUserActivities(username) {
 
 async function stravaUserBikes(username) {
   // const username = localStorage.getItem("currentUser");
-  MyStravaApi.stravaGetUserBikes(username);
+  const resp = MyStravaApi.stravaGetUserBikes(username);
+  return resp;
 };
 
 export default {

@@ -74,6 +74,14 @@ class Activity {
     return actRes.rowCount === 0 ? false : true;
   }
 
+  static async getCount(athleteId){
+    const countRes = await db.query(
+      `SELECT COUNT(*) FROM activities WHERE athlete_id = $1`,
+      [athleteId]
+    );
+    return countRes;
+  }
+
   /** Finds activity by id */
   static async getById(activityId) {
     const actRes = await db.query(

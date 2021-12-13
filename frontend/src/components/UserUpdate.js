@@ -10,49 +10,64 @@ import MyStravaApi from "../services/api";
 import "./UserUpdate.css";
 
 function UserUpdate() {
+  const history = useHistory();
+
   const { currentUser } = useContext(UserContext);
   const [formData, setFormData] = useState({});
   const [userLoaded, setUserLoaded] = useState(false);
   const [bikeData, setBikeData] = useState([]);
   const [bikesLoaded, setBikesLoaded] = useState(false);
-  const history = useHistory();
+  const [activityCount, setActivityCount] = useState(0);
+  const [countLoaded, setCountLoaded] = useState(false);
 
-  useEffect(()=>{
-    async function getUserDetails(){
-      if(currentUser != null){
+  useEffect(() => {
+    async function getUserDetails() {
+      if (currentUser != null) {
         return await MyStravaApi.getUser(currentUser);
       } else {
         return false;
       }
     }
-    getUserDetails().then( (res)=>{
-      if (res){
+    getUserDetails().then((res) => {
+      if (res) {
         setFormData(res);
         setUserLoaded(true);
       }
     });
   }, [currentUser]);
 
-  useEffect( ()=>{
-    async function getBikes(){
+  useEffect(() => {
+    async function getBikes() {
       if (currentUser != null) {
         const bikes = await MyStravaApi.getUserBikes(currentUser);
         return bikes;
       } else {
-        return false
+        return false;
       }
     }
-    getBikes().then( (res)=> {
+    getBikes().then((res) => {
       if (res) {
-        console.log(res);
         setBikeData(res);
         setBikesLoaded(true);
       }
     });
-  },[currentUser])
+  }, [currentUser]);
+
+  const countRes = MyStravaApi.getActivityCount(currentUser);
+  // useEffect( ()=>{
+  //   async function getActivityCount(){
+  // const countRes = await MyStravaApi.getActivityCount();
+  //     return countRes;
+  //   }
+  //   getActivityCount(currentUser).then( (res)=> {
+  //     setActivityCount(res)
+  //     setCountLoaded(true);
+  //   });
+  // });
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    formData['username'] = currentUser;
+    formData["username"] = currentUser;
     user.patchUserDetails(formData);
     history.push("/");
   };
@@ -66,7 +81,11 @@ function UserUpdate() {
     <>
       {bikesLoaded && userLoaded ? (
         <div>
-          <Athlete athleteId={formData.athlete_id} bikes={bikeData} />
+          <Athlete
+            athleteId={formData.athlete_id}
+            bikes={bikeData}
+            activityCount={activityCount}
+          />
         </div>
       ) : (
         <div></div>

@@ -53,16 +53,6 @@ router.post("/", async function(req,res,next){
   }
 });
 
-// GET activity by ID
-router.get("/:activity_id", async function (req, res, next) {
-  try {
-    const activity = await Activity.getById(req.params.activity_id);
-    return res.status(200).json({activity})
-  } catch (err) {
-    return next(err);
-  }
-});
-
 router.get("/", async function(req, res, next) {
   try {
     const { athleteId, startDt, endDt } = req.body;
@@ -73,6 +63,31 @@ router.get("/", async function(req, res, next) {
       return res.status(204).json({ "msg":"missing athlete id or start date" });
     }
   } catch(err) {
+    return next(err);
+  }
+});
+
+router.get("/count", async function(req,res,next){
+  try {
+    console.log(`activities route, count`)
+    console.log(req.body.athlete_id);
+    // const athleteId = req.body.athleteId;
+    // console.log(athleteId);
+    // const countRes = await Activity.getCount(athleteId);
+    // console.log(`route activities, countRes:`)
+    // console.log(countRes);
+    // return countRes;
+  } catch(err) {
+    return next(err);
+  }
+});
+
+// GET activity by ID
+router.get("/:activity_id", async function (req, res, next) {
+  try {
+    const activity = await Activity.getById(req.params.activity_id);
+    return res.status(200).json({activity})
+  } catch (err) {
     return next(err);
   }
 });
