@@ -69,14 +69,11 @@ router.get("/", async function(req, res, next) {
 
 router.get("/count", async function(req,res,next){
   try {
-    console.log(`activities route, count`)
-    console.log(req.body.athlete_id);
-    // const athleteId = req.body.athleteId;
-    // console.log(athleteId);
-    // const countRes = await Activity.getCount(athleteId);
-    // console.log(`route activities, countRes:`)
-    // console.log(countRes);
-    // return countRes;
+    const athleteId = req.query.athleteId;
+    const countRes = await Activity.getCount(athleteId);
+    console.log(`route activities, countRes:`)
+    console.log(countRes.rows[0]);
+    return res.json(countRes.rows[0]);
   } catch(err) {
     return next(err);
   }
