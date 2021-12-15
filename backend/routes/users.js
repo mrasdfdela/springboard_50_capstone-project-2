@@ -60,13 +60,16 @@ router.get("/:username/bikes",
 router.get("/:username/goals", 
   async function (req, res, next) {
     try {
-      let goals = await Goal.getUserGoals(req.params.username);
+      const username = req.params.username;
+      const { count, page } = req.query;
+      const offset = count * (page - 1);
+      
+      let goals = await Goal.getUserGoals(username, count, offset);
       for (let g of goals) {
         g.miles = metersToMiles(g.distance);
         g.calories = kjToCal(g.kilojoules);
         g.time = secondsToTime(g.time);
       }
-      // console.log(goals);
       return res.json({ goals });
     } catch (err) {
       return next(err);

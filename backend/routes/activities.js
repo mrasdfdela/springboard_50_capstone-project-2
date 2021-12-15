@@ -4,6 +4,7 @@
 const Activity = require("../models/activity");
 const { BadRequestError, NotFoundError } = require("../expressError");
 
+const { kjToCal, metersToMiles, secondsToTime } = require("../helpers/conversions");
 const jsonschema = require("jsonschema");
 const { ensureCorrectUser } = require("../middleware/auth");
 
@@ -19,7 +20,6 @@ router.post("/", async function(req,res,next){
       const activityExists = await Activity.activityExists(activity.id);
       // Creates activity if it exists
       if (!activityExists) {
-        console.log(`inserting activity: ${activity.id}`);
         const {
           id,
           athlete,
@@ -55,13 +55,17 @@ router.post("/", async function(req,res,next){
 
 router.get("/", async function(req, res, next) {
   try {
-    const { athleteId, startDt, endDt } = req.body;
-    if (athleteId && startDt) {
-      const activities = await Activity.getByDates(athleteId, startDt, endDt);
-      return res.status(200).json({activities});
-    } else {
-      return res.status(204).json({ "msg":"missing athlete id or start date" });
+    const { athleteId, count, page } = req.query;
+    const offset = count * (page - 1);
+    const activities = await Activity.getByAthlete(athleteId, count, offset);
+
+    for (let a of activities){
+      a.miles = metersToMiles(a.meters);
+      a.time = secondsToTime(a.time);
+      a.calories = kjToCal(a.kilojoules);
     }
+    
+    return res.status(200).json({ activities });
   } catch(err) {
     return next(err);
   }
@@ -71,8 +75,6 @@ router.get("/count", async function(req,res,next){
   try {
     const athleteId = req.query.athleteId;
     const countRes = await Activity.getCount(athleteId);
-    console.log(`route activities, countRes:`)
-    console.log(countRes.rows[0]);
     return res.json(countRes.rows[0]);
   } catch(err) {
     return next(err);

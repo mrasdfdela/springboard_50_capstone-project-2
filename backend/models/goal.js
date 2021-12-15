@@ -11,7 +11,6 @@ class Goal {
   /** Post new goal */
   static async new(
     username, distance=0, kilojoules=0, movingTime=0, startDt="NOW()", endDt) {
-      console.log(`username: ${username}, distance: ${distance}, kilojoules: ${kilojoules}, movingTime: ${movingTime}, startDt: ${startDt}, endDt: ${endDt}`);
       const result = await db.query(
         `INSERT INTO goals
           (username, distance, kilojoules, moving_time, start_date, end_date)
@@ -49,7 +48,6 @@ class Goal {
       [ Number.parseInt(goalId) ]
     );
 
-    // console.log(goalRes.rows[0]);
     if (!goalRes.rows[0]) {
       throw new NotFoundError(`Goal not found`);
     } else {
@@ -58,8 +56,7 @@ class Goal {
   }
 
   /** Finds goals, with parameter to toggle latest vs. all goals */
-  static async getUserGoals(username, latest=true) {
-    const limit = (latest ? 'LIMIT 5' : '');
+  static async getUserGoals(username, count, offset) {
     const goalRes = await db.query(
       `SELECT
         goal_id as goalId,
@@ -70,11 +67,10 @@ class Goal {
         start_date AS startDt,
         end_date AS endDt
       FROM goals
-      WHERE 
-        username = $1
+      WHERE username = $1
       ORDER BY end_date DESC
-      ${limit}`,
-      [username]
+      LIMIT $2 OFFSET $3`,
+      [username, count, offset]
     );
     return goalRes.rows;
   }

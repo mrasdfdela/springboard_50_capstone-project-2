@@ -117,26 +117,26 @@ class Activity {
   }
 
   /** Finds all activities by user*/
-  static async getByUser(username) {
+  static async getByAthlete(athleteId, count, offset) {
     const userRes = await db.query(
-      `SELECT athlete_id 
-      FROM users where username = $1`,
-      [username]
-    );
-    const atheleteId = userRes.rows[0];
-
-    const actRes = await db.query(
-      `SELECT
-        start_date,
+      `SELECT 
+        activity_id as activityId,
+        athlete_id as athleteId,
+        start_date as date,
         type,
-        distance,
+        distance as meters,
         kilojoules,
-        moving_time,
-        description
-      FROM activities WHERE athlete_id = $1`,
-      [atheleteId]
+        moving_time as time,
+        description,
+        trainer
+      FROM activities 
+      WHERE athlete_id = $1
+      ORDER BY date DESC
+      LIMIT $2 OFFSET $3
+      `,
+      [athleteId, count, offset]
     );
-    return actRes.rows;
+    return userRes.rows;
   }
 
   /** Updates activity by id */

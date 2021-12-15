@@ -246,6 +246,22 @@ class MyStravaApi {
     }
   }
 
+  static async getUserActivities(username,count=5,page=1) {
+    try {
+      const user = await this.getUser(username);
+      const res = await this.request(
+        `activities`,
+        { 
+          athleteId: user.athlete_id,
+          count:count,
+          page:page
+        });
+      return res.activities;
+    } catch(err) {
+      return err;
+    }
+  }
+
   // get bike by id
   static async getBike(bikeId) {
     try {
@@ -288,9 +304,11 @@ class MyStravaApi {
   }
 
   // get goals by username
-  static async getUserGoals(username) {
+  static async getUserGoals(username, count=3, page=1) {
     try {
-      const res = await this.request(`users/${username}/goals`);
+      const res = await this.request(
+        `users/${username}/goals`, { count:count, page:page }
+      );
       return res;
     } catch (err) {
       return err;

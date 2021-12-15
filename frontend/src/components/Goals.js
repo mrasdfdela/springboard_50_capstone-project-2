@@ -7,29 +7,34 @@ import { v4 as uuidv4 } from "uuid";
 
 import MyStravaApi from "../services/api.js";
 
-function Goals(){
+function Goals({ homePage=false }){
   const { currentUser } = useContext(UserContext);
   const [ goals, setGoals ] = useState({goals:[]});
-  const [ doneLoading, setDoneLoading ] = useState(false);
+  const [ loading, setLoading ] = useState(true);
 
   useEffect(() => {
     async function getUserGoals() {
       let userGoals = await MyStravaApi.getUserGoals(currentUser);
       setGoals(userGoals.goals);
-      setDoneLoading(true);
-      return userGoals;
+      setLoading(false);
     }
-    getUserGoals();
+    if (currentUser != null) {
+      getUserGoals();
+    }
   }, [currentUser]);
 
   return (
     <>
       <h3>Goals</h3>
-      <Link className="btn btn-primary" to="/goals/new">
-        Set a New Goal
-      </Link>
-      {doneLoading === false ? (
-        <p>I have no goals</p>
+      {homePage ? (
+        <div></div>  
+      ) : (
+        <Link className="btn btn-primary" to="/goals/new">
+          Set a New Goal
+        </Link>
+      )}
+      {loading ? (
+        <p>...loading goals...</p>
       ) : (
         <div className="form-inline d-flex justify-content-center">
           <div className="col-sm-6">
