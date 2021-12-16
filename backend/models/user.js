@@ -113,7 +113,8 @@ class User {
         athlete_id,
         strava_auth_code,
         strava_access_token,
-        strava_refresh_token
+        strava_refresh_token,
+        last_refresh
       FROM users
       WHERE username = $1`,
       [username]

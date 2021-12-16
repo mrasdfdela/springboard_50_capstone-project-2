@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import { Button } from "reactstrap";
 
 import Goal from "./Goal";
 import UserContext from "../contexts/UserContext";
@@ -8,14 +9,18 @@ import { v4 as uuidv4 } from "uuid";
 import MyStravaApi from "../services/api.js";
 
 function Goals({ homePage=false }){
+  const history = useHistory();
   const { currentUser } = useContext(UserContext);
+  
   const [ goals, setGoals ] = useState({goals:[]});
   const [ loading, setLoading ] = useState(true);
+  const [ goalsPerPage, setGoalsPerPage] = useState(3);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     async function getUserGoals() {
       let userGoals = await MyStravaApi.getUserGoals(currentUser);
-      setGoals(userGoals.goals);
+      setGoals(userGoals);
       setLoading(false);
     }
     if (currentUser != null) {
@@ -23,27 +28,69 @@ function Goals({ homePage=false }){
     }
   }, [currentUser]);
 
+  async function prevPage(){
+    let userGoals = await MyStravaApi.getUserGoals(currentUser, goalsPerPage, page - 1);
+    setPage(page - 1);
+    setGoals(userGoals);
+  }
+
+  async function nextPage(){
+    let userGoals = await MyStravaApi.getUserGoals(currentUser, goalsPerPage, page + 1);
+    setPage(page + 1);
+    setGoals(userGoals);
+  }
+
   return (
     <>
       <h3>Goals</h3>
-      {homePage ? (
-        <div></div>  
-      ) : (
+      {homePage ? <></> : (
         <Link className="btn btn-primary" to="/goals/new">
           Set a New Goal
         </Link>
       )}
-      {loading ? (
-        <p>...loading goals...</p>
-      ) : (
-        <div className="form-inline d-flex justify-content-center">
-          <div className="col-sm-6">
-            {goals.map((g) => {
-              return <Goal userGoal={g} key={uuidv4()} />;
-            })}
-          </div>
-        </div>
-      )}
+      <div className="form-inline d-flex justify-content-center">
+        
+        {loading ? (
+          <p>...loading goals...</p>
+        ) : (
+          <>
+            {goals.length > 0 ? (
+              <div className="form-inline d-flex justify-content-center">
+                <div className="col-sm-12">
+                  {goals.map((g) => {
+                    return <Goal userGoal={g} key={uuidv4()} />;
+                  })}
+
+                  {homePage ? (
+                    <Button color="primary" onClick={() => history.push("./goals")}>
+                      More Goals &#8594;
+                    </Button>
+                  ) : (
+                    <>
+                      {page <= 1 ? (
+                        <div></div>
+                      ) : (
+                        <Button onClick={() => prevPage()}>
+                          &#8592; Previous Page
+                        </Button>
+                      )}
+                      {goals.length < goalsPerPage ? (
+                        <></>
+                      ) : (
+                        <Button onClick={() => nextPage()}>
+                          Next Page &#8594;
+                        </Button>
+                      )}
+                    </>
+                  )}
+                </div>
+              </div>  
+            ) : (
+              <p>No Goals Loaded</p>
+            )}       
+          </>
+        )}
+      </div>
     </>
   );
 }

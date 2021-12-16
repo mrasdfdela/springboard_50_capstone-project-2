@@ -33,7 +33,6 @@ router.post("/", async function(req,res,next){
     const endDt = calcEndDt(date, timePeriod);
     const seconds = timeToSeconds(time);
 
-    console.log('posting new goal');
     const goal = await Goal.new(
       username, 
       meters, 

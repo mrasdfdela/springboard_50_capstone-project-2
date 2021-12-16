@@ -4,11 +4,12 @@ import UserContext from "../contexts/UserContext";
 import StravaApiContext from "../contexts/StravaApiContext";
 import { useEffect } from "react/cjs/react.development";
 
+
 function StravaTokens(){
-  const [ loading, setLoading ] = useState(true);
   const history = useHistory();
+  const [ loading, setLoading ] = useState(true);
   const { currentUser } = useContext(UserContext);
-  const { getStravaTokens } = useContext(StravaApiContext);
+  const { refreshAccessToken } = useContext(StravaApiContext);
 
   useEffect( ()=>{
     if (currentUser != null){
@@ -18,17 +19,12 @@ function StravaTokens(){
   
   useEffect( ()=>{
     if (!loading){
-      getStravaTokens(currentUser).then( ()=> {
-        history.push("/");
-      });
+      refreshAccessToken(currentUser);
+      history.push("./")
     }
   }, [currentUser, loading]);
 
-  return (
-    <>
-      <h4>Authorizing Strava</h4>
-    </>
-  )
+  return <h4>Refreshing Strava Access Token</h4>
 }
 
 export default StravaTokens;

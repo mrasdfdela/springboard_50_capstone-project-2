@@ -117,7 +117,6 @@ function GoalSet() {
                 <Label for="date">Goal Start Date:</Label>
                 <Input
                   id="date"
-                  value="date"
                   name="date"
                   type="date"
                   id="date"

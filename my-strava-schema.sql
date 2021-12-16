@@ -14,7 +14,8 @@ CREATE TABLE users(
   athlete_id VARCHAR(20) UNIQUE,
   strava_auth_code VARCHAR(80),
   strava_access_token VARCHAR(80),
-  strava_refresh_token VARCHAR(80)
+  strava_refresh_token VARCHAR(80),
+  last_refresh TIMESTAMP
 );
 
 CREATE TABLE bikes(

@@ -26,7 +26,7 @@ function Login(){
     } catch(err) {
       console.log(err);
     }
-    history.push("/");
+    history.push("/strava-tokens");
   };
 
   const handleChange = (e)=> {
@@ -70,7 +70,7 @@ function Login(){
           </div>
         </>
       ) : (
-        <Redirect to="/" />
+        <Redirect to="/StravaTokens" />
       )}
     </>
   );

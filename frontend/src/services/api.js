@@ -123,11 +123,20 @@ class MyStravaApi {
       const codeRes = await axios.post(
         `https://www.strava.com/oauth/token?client_id=${STRAVA_CLIENT_ID}&client_secret=${STRAVA_CLIENT_SECRET}&code=${code}&grant_type=authorization_code`
       );
+      // get current time
+      const timeRes = await axios.get(
+        `http://worldtimeapi.org/api/timezone/Europe/London`
+      );
+      const currDate = new Date(timeRes.data.utc_datetime);
+
+      console.log(`retrieveStravaTokens`);
+      console.log(codeRes);
       const stravaDetails = {
         username: userRes.user.username,
         refresh_token: codeRes.data.refresh_token,
         access_token: codeRes.data.access_token,
         athlete_id: codeRes.data.athlete.id,
+        last_refresh: currDate
       };
 
       // updates user with token and athlete id
@@ -150,27 +159,50 @@ class MyStravaApi {
     try {
       const grantType = "refresh_token";
       const userRes = await this.request(`users/${username}/details`);
-      // console.log(userRes);
       const athleteId = userRes.user.athlete_id;
       const refreshToken = userRes.user.strava_refresh_token;
 
       const refRes = await axios.post(
         `https://www.strava.com/oauth/token?client_id=${STRAVA_CLIENT_ID}&client_secret=${STRAVA_CLIENT_SECRET}&grant_type=${grantType}&refresh_token=${refreshToken}`
       );
+      
+      // Compares the current time vs the time of the last refresh
+      function addHours(date, hours) {
+        const newDate = new Date(date);
+        newDate.setHours(newDate.getHours() + hours);
+        return newDate;
+      }
+      const lastRefresh = new Date(userRes.user.last_refresh);
+      const hrsToExpire = 6;
+      const expireDt = addHours(lastRefresh, hrsToExpire);
 
-      const stravaDetails = {
-        username: username,
-        athlete_id: athleteId,
-        refresh_token: refreshToken,
-        access_token: refRes.data.access_token,
-      };
-
-      const updatedUser = await this.request(
-        "auth/strava/tokens",
-        stravaDetails,
-        "post"
+      // Query/store dates in GMT
+      const timeRes = await axios.get(
+        `http://worldtimeapi.org/api/timezone/Europe/London`
       );
-      console.log(`Tokens updated for user: '${updatedUser.username}`);
+      const currDate = new Date(timeRes.data.utc_datetime);
+
+      if (
+        typeof userRes.user.last_refresh === "undefined" ||
+        currDate > expireDt
+      ) {
+        const stravaCreds = {
+          username: username,
+          athlete_id: athleteId,
+          refresh_token: refreshToken,
+          access_token: refRes.data.access_token,
+          last_refresh: currDate,
+        };
+        const updatedUser = await this.request(
+          "auth/strava/tokens",
+          stravaCreds,
+          "post"
+        );
+        console.log(`Tokens updated for user: '${updatedUser.username}`);
+        console.log(stravaCreds);
+      } else {
+        console.log(`${username}'s refresh token is valid until ${expireDt}`);
+      }
     } catch (err) {
       return err;
     }
@@ -309,7 +341,7 @@ class MyStravaApi {
       const res = await this.request(
         `users/${username}/goals`, { count:count, page:page }
       );
-      return res;
+      return res.goals;
     } catch (err) {
       return err;
     }

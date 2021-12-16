@@ -19,7 +19,6 @@ async function userLogin(username, password) {
   try {
     const newToken = await MyStravaApi.authenticateUser(username, password);
     if (newToken) {
-      // let loggedInUser = await MyStravaApi.getUser(username);
       localStorage.setItem("currentUser", username);
       localStorage.setItem("currentToken", newToken);
       return newToken;

@@ -72,17 +72,23 @@ router.get('/strava/callback',
     res.end();
 });
 
-router.post('/strava/tokens', function(req,res){
+router.post('/strava/tokens', async function(req,res){
   try {
-    const { username, refresh_token, access_token, athlete_id } = req.body;
-    const user = User.update( username, 
+    const { 
+      username, 
+      refresh_token, 
+      access_token, 
+      athlete_id, 
+      last_refresh 
+    } = req.body;
+    const user = await User.update( username, 
       { 
         strava_access_token: access_token,
         strava_refresh_token: refresh_token,
-        athlete_id: athlete_id
+        athlete_id: athlete_id,
+        last_refresh: last_refresh
       });
-
-    return user;
+    return res.json({ user });
   } catch(err) {
     return next(err);
   }

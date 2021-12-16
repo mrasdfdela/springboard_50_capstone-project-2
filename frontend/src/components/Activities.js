@@ -11,10 +11,10 @@ function Activities({ homePage=false }) {
   const history = useHistory();
   const { currentUser } = useContext(UserContext);
 
-  const [activities, setActivities] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [actPerPage, setActPerPage] = useState(5);
-  const [page, setPage] = useState(1);
+  const [ activities, setActivities ] = useState([]);
+  const [ loading, setLoading ] = useState(true);
+  const [ actPerPage, setActPerPage ] = useState(5);
+  const [ page, setPage ] = useState(1);
 
   useEffect(() => {
     async function getRecentActivities() {

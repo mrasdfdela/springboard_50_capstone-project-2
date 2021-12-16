@@ -40,7 +40,7 @@ function NavBar() {
             </NavItem>
             <NavItem>
               <Link 
-                to="/" 
+                to="/login"
                 onClick={ ()=> handleLogout() }>
                 Logout
               </Link>
