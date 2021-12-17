@@ -88,6 +88,8 @@ router.post('/strava/tokens', async function(req,res){
         athlete_id: athlete_id,
         last_refresh: last_refresh
       });
+    console.log(`strava/tokens`)
+    console.log(user);
     return res.json({ user });
   } catch(err) {
     return next(err);

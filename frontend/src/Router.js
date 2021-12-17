@@ -9,6 +9,7 @@ import Signup from "./components/Signup";
 import Profile from "./components/Profile";
 import UserUpdate from "./components/UserUpdate";
 
+import StravaStartup from "./components/StravaStartup";
 import StravaTokens from "./components/StravaTokens";
 import Activities from "./components/Activities";
 import Activity from "./components/Activity";
@@ -26,6 +27,7 @@ function Router() {
           <Route exact path="/" component={Home} />
           <Route exact path="/login" component={Login} />
           <Route exact path="/signup" component={Signup} />
+          <Route exact path="/strava-startup" component={StravaStartup} />
           <Route exact path="/strava-tokens" component={StravaTokens} />
           <Route exact path="/profile" component={Profile} />
           <Route exact path="/user-update" component={UserUpdate} />

@@ -3,26 +3,29 @@ import { useHistory } from "react-router-dom";
 import UserContext from "../contexts/UserContext";
 
 import StravaApiContext from "../contexts/StravaApiContext";
-import MyStravaApi from "../services/api.js";
 
 function StravaStartup(){
   const history = useHistory();
   const [ loading, setLoading ] = useState(true);
   const { currentUser } = useContext(UserContext);
   const { 
-    getStravaTokens,
+    refreshAccessToken, 
+    getUserActivities,
+    stravaUserBikes
   } = useContext(StravaApiContext);
 
   useEffect( ()=>{
     if (currentUser != null){
-      getStravaTokens(currentUser);
       setLoading(false);
     }
   },[currentUser]);
   
   useEffect( ()=>{
     if (!loading){
-      history.push("./strava-startup");
+      refreshAccessToken(currentUser);
+      getUserActivities(currentUser);
+      stravaUserBikes(currentUser);
+      history.push("./")
     }
   }, [currentUser, loading]);
 

@@ -5,7 +5,6 @@ import { useHistory } from "react-router-dom";
 import UserContext from "../contexts/UserContext";
 import StravaApiContext from "../contexts/StravaApiContext";
 import { useEffect } from "react/cjs/react.development";
-// import MyStravaApi from "../services/api";
 
 function Athlete({ athleteId, bikes, activityCount }) {
   const history = useHistory();
@@ -13,7 +12,6 @@ function Athlete({ athleteId, bikes, activityCount }) {
   const { currentUser } = useContext(UserContext);
   const {
     connectUserStrava,
-    refreshAccessToken,
     getUserActivities,
     stravaUserBikes,
   } = useContext(StravaApiContext);
@@ -31,13 +29,14 @@ function Athlete({ athleteId, bikes, activityCount }) {
 
   const handleUserBikes = async (e) => {
     e.preventDefault();
-    stravaUserBikes(currentUser);
-    history.push("/user-update");
+    await stravaUserBikes(currentUser);
+    history.push("/");
   };
 
   const handleUserActivities = async (e) => {
     e.preventDefault();
-    getUserActivities(currentUser);
+    await getUserActivities(currentUser);
+    history.push("/");
   };
   
   return (
@@ -93,9 +92,6 @@ function Athlete({ athleteId, bikes, activityCount }) {
               )}
             </Form>
             <Form className="mt-2">
-              <Button onClick={() => refreshAccessToken(currentUser)}>
-                Refresh Access Token
-              </Button>
             </Form>
           </CardBody>
         </Card>

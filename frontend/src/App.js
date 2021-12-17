@@ -28,8 +28,6 @@ function App() {
       MyStravaApi.getUser(username).then( (res)=> {
         if (res instanceof Error) {
           user.userLogout();
-          // localStorage.removeItem("currentUser");
-          // localStorage.removeItem("currentToken");
         } else {
           MyStravaApi.token = token
           setCurrentToken(token);
@@ -38,28 +36,6 @@ function App() {
       });
     }
   }, []);
-  
-  // const connectUserStrava = (username) => {
-  //   MyStravaApi.connectToStravaFrontEndApi(username);
-  // };
-  // const getStravaTokens = async () => {
-  //   const username = localStorage.getItem("currentUser");
-  //   MyStravaApi.retrieveStravaTokens(username);
-  // };
-  // const testRefreshAccessToken = async () => {
-  //   const username = localStorage.getItem("currentUser");
-  //   MyStravaApi.refreshAccessToken(username);
-  // };
-
-  // const testingGetUserActivities = async () => {
-  //   const username = localStorage.getItem("currentUser");
-  //   MyStravaApi.stravaGetUserActivities(username);
-  //   MyStravaApi.stravaGetUserActivities(username);
-  // };
-  // const stravaUserBikes = async () => {
-  //   const username = localStorage.getItem("currentUser");
-  //   MyStravaApi.stravaGetUserBikes(username);
-  // };
 
   return (
     <UserContext.Provider

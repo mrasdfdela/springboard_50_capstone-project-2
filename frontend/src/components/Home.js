@@ -25,7 +25,7 @@ function Home() {
         </>
       ) : (
         <>
-          <h3>Latest Activity</h3>
+          <h3>{currentUser}'s Latest Activity</h3>
           <div className="d-flex justify-content-center">
             <Card className="col-sm-6">
               <Activities homePage={true}/>
