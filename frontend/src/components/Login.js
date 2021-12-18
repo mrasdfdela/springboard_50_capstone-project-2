@@ -16,17 +16,21 @@ function Login(){
   const INITIAL_STATE = { username: "", password: "" };
   const [ formData, setFormData ] = useState(INITIAL_STATE);
 
-  const handleSubmit = (e)=> {
+  const handleSubmit = async (e)=> {
     e.preventDefault();
     const { username, password } = formData;
     try {
-      const token = user.default.userLogin(username, password);
-      setCurrentUser(username);
-      setCurrentToken(token);
+      const token = await user.default.userLogin(username, password);
+      if (typeof token === 'string') {
+        setCurrentUser(username);
+        setCurrentToken(token);
+        history.push("/strava-startup");
+      } else {
+        history.push("./");
+      }
     } catch(err) {
       console.log(err);
     }
-    history.push("/strava-startup");
   };
 
   const handleChange = (e)=> {

@@ -1,12 +1,18 @@
 import axios from "axios";
-const BASE_URL = "http://localhost:3001";
-const { STRAVA_CLIENT_ID, STRAVA_CLIENT_SECRET } = require("../config");
+let { STRAVA_CLIENT_ID, STRAVA_CLIENT_SECRET } = require("../config");
 
+STRAVA_CLIENT_ID = 
+  process.env.REACT_APP_STRAVA_CLIENT_ID || 
+  STRAVA_CLIENT_ID;
+STRAVA_CLIENT_SECRET =
+  process.env.REACT_APP_STRAVA_CLIENT_SECRET || 
+  STRAVA_CLIENT_SECRET;
+const BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:3001";
 
 class MyStravaApi {
   static token;
 
-  // setup endpoint template
+  /** Endpoint Template */
   static async request(endpoint, data = {}, method = "get") {
     console.debug("API Call:", endpoint, data, method);
 
@@ -100,8 +106,7 @@ class MyStravaApi {
   // Redirects to Strava login site to authorize sharing user data. After authorizing, Strava makes a request to backend endpoint auth/strava/callback (which saves strava user auth code), which then redirects to /strava-startup to refresh tokens & download data
   static async connectToStravaFrontEndApi(username) {
     const respType = "code";
-    const redirectUri =
-      "http%3A%2F%2Flocalhost%3A3001%2Fauth%2Fstrava%2Fcallback";
+    const redirectUri = encodeURIComponent(`${BASE_URL}/auth/strava/callback`);
     const scope = "profile%3Aread_all,activity%3Aread_all";
     window.location = `https://www.strava.com/oauth/authorize?response_type=${respType}&redirect_uri=${redirectUri}&scope=${scope}&state=${username}&client_id=${STRAVA_CLIENT_ID}`;
   }

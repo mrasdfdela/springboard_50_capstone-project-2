@@ -1,10 +1,9 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Button, Card, CardBody, Form } from "reactstrap";
 import { useHistory } from "react-router-dom";
 
 import UserContext from "../contexts/UserContext";
 import StravaApiContext from "../contexts/StravaApiContext";
-import { useEffect } from "react/cjs/react.development";
 
 function Athlete({ athleteId, bikes, activityCount }) {
   const history = useHistory();
