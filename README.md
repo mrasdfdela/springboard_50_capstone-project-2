@@ -15,7 +15,8 @@ This project uses the [Strava API](https://developers.strava.com/docs/reference)
 
 ## API
 
-- http://www.passportjs.org/packages/passport-strava-oauth2/
+- https://developers.strava.com/docs/authentication, https://developers.strava.com/playground
+- http://worldtimeapi.org/api/timezone/Europe/London
 
 ## Pages
 
