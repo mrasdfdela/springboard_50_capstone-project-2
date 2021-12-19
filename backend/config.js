@@ -13,7 +13,7 @@ function getDatabaseUri(){
 const STRAVA_CLIENT_ID = process.env.STRAVA_CLIENT_ID;
 const STRAVA_CLIENT_SECRET = process.env.STRAVA_CLIENT_SECRET;
 const YOUR_ACCESS_TOKEN = process.env.YOUR_ACCESS_TOKEN;
-const frontendUri = process.env.FRONTEND_URI || `http://localhost:3000`;
+const frontendUri = process.env.frontendUri || `http://localhost:3000`;
 
 const BCRYPT_WORK_FACTOR = process.env.NODE_ENV === "test" ? 1 : 12;
 
