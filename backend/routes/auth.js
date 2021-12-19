@@ -14,7 +14,11 @@ const User = require("../models/user");
 const { createToken } = require("../helpers/tokens");
 const { BadRequestError } = require("../expressError");
 // stores strava secret locally; needs to eventually be setup on the server
-const { STRAVA_CLIENT_ID, STRAVA_CLIENT_SECRET } = require("../config");
+const {
+  STRAVA_CLIENT_ID,
+  STRAVA_CLIENT_SECRET,
+  frontendUri,
+} = require("../config");
 const { route } = require("./users");
 
 const router = new express.Router();
@@ -68,7 +72,7 @@ router.get('/strava/callback',
     const queryParams = req.query;
     User.update( queryParams.state, { strava_auth_code: queryParams.code });
 
-    res.writeHead(302, { Location: "http://localhost:3000/strava-tokens" });
+    res.writeHead(302, { Location: `${frontendUri}/strava-tokens` });
     res.end();
 });
 
