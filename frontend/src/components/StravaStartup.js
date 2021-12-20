@@ -9,9 +9,9 @@ function StravaStartup(){
   const [ loading, setLoading ] = useState(true);
   const { currentUser } = useContext(UserContext);
   const { 
-    refreshAccessToken, 
-    getUserActivities,
-    stravaUserBikes
+    stravaRefreshToken, 
+    stravaGetActivities, 
+    stravaGetBikes 
   } = useContext(StravaApiContext);
 
   useEffect( ()=>{
@@ -22,9 +22,9 @@ function StravaStartup(){
   
   useEffect( ()=>{
     if (!loading){
-      refreshAccessToken(currentUser);
-      getUserActivities(currentUser);
-      stravaUserBikes(currentUser);
+      stravaRefreshToken(currentUser);
+      stravaGetActivities(currentUser);
+      stravaGetBikes(currentUser);
       history.push("./")
     }
   }, [currentUser, loading]);

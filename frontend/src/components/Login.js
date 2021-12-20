@@ -3,18 +3,21 @@ import { Redirect, useHistory } from "react-router-dom";
 import { Button, Card, CardBody, Form, Input, Label } from "reactstrap";
 
 import UserContext from "../contexts/UserContext";
+import StravaApiContext from "../contexts/StravaApiContext";
 const user = require("../helpers/user");
 // import "./Login.css";
 
 function Login(){
   const history = useHistory();
-  const { 
-    currentUser, 
-    setCurrentUser, 
-    setCurrentToken
-  } = useContext(UserContext);
   const INITIAL_STATE = { username: "", password: "" };
-  const [ formData, setFormData ] = useState(INITIAL_STATE);
+  const [formData, setFormData] = useState(INITIAL_STATE);
+  const { currentUser, setCurrentUser, setCurrentToken
+    } = useContext(UserContext);
+  const { 
+    stravaRefreshToken, 
+    stravaGetActivities, 
+    stravaGetBikes 
+  } = useContext(StravaApiContext);
 
   const handleSubmit = async (e)=> {
     e.preventDefault();
@@ -24,10 +27,11 @@ function Login(){
       if (typeof token === 'string') {
         setCurrentUser(username);
         setCurrentToken(token);
-        history.push("/strava-startup");
-      } else {
-        history.push("./");
+        stravaRefreshToken(username).then((r) => console.log(r));
+        stravaGetActivities(username);
+        stravaGetBikes(username);
       }
+      history.push("/");
     } catch(err) {
       console.log(err);
     }

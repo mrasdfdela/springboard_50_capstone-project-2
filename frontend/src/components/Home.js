@@ -5,15 +5,28 @@ import { Card } from "reactstrap";
 import Activities from "./Activities";
 import Goals from "./Goals";
 import UserContext from "../contexts/UserContext";
+import StravaApiContext from "../contexts/StravaApiContext";
+// import MyStravaApi from "../services/api.js";
 
 function Home() {
   const [loading, setLoading] = useState(true);
   const { currentUser } = useContext(UserContext);
+  const { 
+    stravaGetTokens,
+    stravaGetActivities,
+    stravaGetBikes
+  } = useContext(StravaApiContext);
 
   useEffect(() => {
     if (currentUser != null) {
-      setLoading(false);
+      stravaGetTokens(currentUser).then( (res)=> {
+        if (res.tokenDownloaded) {
+          stravaGetActivities(currentUser);
+          stravaGetBikes(currentUser);
+        }
+      });
     }
+    setLoading(false);
   }, [currentUser]);
   
   return (

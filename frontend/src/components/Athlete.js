@@ -9,10 +9,10 @@ function Athlete({ athleteId, bikes, activityCount }) {
   const history = useHistory();
   let [userBikes, setUserBikes] = useState([]);
   const { currentUser } = useContext(UserContext);
-  const {
-    connectUserStrava,
-    getUserActivities,
-    stravaUserBikes,
+  const { 
+    stravaOauth, 
+    stravaGetActivities, 
+    stravaGetBikes 
   } = useContext(StravaApiContext);
 
   useEffect( ()=>{
@@ -23,18 +23,18 @@ function Athlete({ athleteId, bikes, activityCount }) {
 
   const handleUserConnect = (e) => {
     e.preventDefault();
-    connectUserStrava(currentUser);
+    stravaOauth(currentUser);
   };
 
   const handleUserBikes = async (e) => {
     e.preventDefault();
-    await stravaUserBikes(currentUser);
+    await stravaGetBikes(currentUser);
     history.push("/");
   };
 
   const handleUserActivities = async (e) => {
     e.preventDefault();
-    await getUserActivities(currentUser);
+    await stravaGetActivities(currentUser);
     history.push("/");
   };
   

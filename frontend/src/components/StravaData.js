@@ -8,11 +8,11 @@ import MyStravaApi from "../services/api";
 function StravaData() {
   const { currentUser } = useContext(UserContext);
   const [userData, setUserData] = useState({});
-  const {
-    connectUserStrava,
-    refreshAccessToken,
-    getUserActivities,
-    stravaUserBikes,
+  const { 
+    stravaOauth, 
+    stravaRefreshToken, 
+    getUserActivities, 
+    stravaGetBikes 
   } = useContext(StravaApiContext);
 
   useEffect(() => {
@@ -28,8 +28,8 @@ function StravaData() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(`connectUserStrava, ${currentUser}`);
-    connectUserStrava(currentUser);
+    console.log(`stravaOauth, ${currentUser}`);
+    stravaOauth(currentUser);
   };
 
   const handleDownload = (e) => {
@@ -40,14 +40,14 @@ function StravaData() {
 
   const handleDownloadBikes = (e) => {
     e.preventDefault();
-    console.log(`stravaUserBikes, ${currentUser}`);
-    stravaUserBikes(currentUser);
+    console.log(`stravaGetBikes, ${currentUser}`);
+    stravaGetBikes(currentUser);
   };
 
   const handleRefresh = (e) => {
     e.preventDefault();
-    console.log(`refreshAccessToken, ${currentUser}`);
-    refreshAccessToken(currentUser);
+    console.log(`stravaRefreshToken, ${currentUser}`);
+    stravaRefreshToken(currentUser);
   };
 
   return (

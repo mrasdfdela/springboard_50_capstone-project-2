@@ -15,7 +15,6 @@ router.post("/", async function(req,res,next){
   try {
     const athleteId = req.body.id
     const bikes = req.body.bikes;
-    console.log(bikes);
 
     for (const bike of bikes) {
       // Checks if bikes exists, then populates bikes

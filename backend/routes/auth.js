@@ -72,7 +72,7 @@ router.get('/strava/callback',
     const queryParams = req.query;
     User.update( queryParams.state, { strava_auth_code: queryParams.code });
 
-    res.writeHead(302, { Location: `${frontendUri}/strava-tokens` });
+    res.writeHead(302, { Location: `${frontendUri}` });
     res.end();
 });
 

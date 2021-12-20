@@ -1,30 +1,32 @@
 import MyStravaApi from "../services/api.js";
 
-async function connectUserStrava(username){
-  MyStravaApi.connectToStravaFrontEndApi(username);
+async function stravaOauth(username){
+  await MyStravaApi.stravaOathCode(username);
 };
 
-async function getStravaTokens(username) {
-  MyStravaApi.retrieveStravaTokens(username);
+async function stravaGetTokens(username) {
+  const resp = await MyStravaApi.stravaTokensExchange(username);
+  return resp;
 };
 
-async function refreshAccessToken(username) {
-  MyStravaApi.refreshAccessToken(username);
+async function stravaRefreshToken(username) {
+  const resp = await MyStravaApi.stravaRefreshAccessToken(username);
+  console.log(resp.msg);
 };
 
-async function getUserActivities(username) {
-  MyStravaApi.stravaGetUserActivities(username);
+async function stravaGetActivities(username) {
+  await MyStravaApi.stravaGetUserActivities(username);
 };
 
-async function stravaUserBikes(username) {
-  const resp = MyStravaApi.stravaGetUserBikes(username);
+async function stravaGetBikes(username) {
+  const resp = await MyStravaApi.stravaGetUserBikes(username);
   return resp;
 };
 
 export default {
-  connectUserStrava,
-  getStravaTokens,
-  refreshAccessToken,
-  getUserActivities,
-  stravaUserBikes,
+  stravaOauth,
+  stravaGetTokens,
+  stravaRefreshToken,
+  stravaGetActivities,
+  stravaGetBikes
 };

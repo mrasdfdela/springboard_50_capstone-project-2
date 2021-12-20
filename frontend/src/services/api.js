@@ -104,7 +104,7 @@ class MyStravaApi {
 
   // Connect user to Strava
   // Redirects to Strava login site to authorize sharing user data. After authorizing, Strava makes a request to backend endpoint auth/strava/callback (which saves strava user auth code), which then redirects to /strava-startup to refresh tokens & download data
-  static async connectToStravaFrontEndApi(username) {
+  static async stravaOathCode(username) {
     const respType = "code";
     const redirectUri = encodeURIComponent(`${BASE_URL}/auth/strava/callback`);
     const scope = "profile%3Aread_all,activity%3Aread_all";
@@ -115,52 +115,44 @@ class MyStravaApi {
   // Retrieves user's auth code
   // Makes post request to retrieve access token, refresh token, and athlete id
   // Subsequently saves token to user
-  static async retrieveStravaTokens(username) {
+  static async stravaTokensExchange(username) {
     try {
       const userRes = await this.request(`users/${username}/details`);
-      const code = userRes.user.strava_auth_code;
-      const prevToken = userRes.user.strava_access_token;
+      const authCode = userRes.user.strava_auth_code;
+      const token = userRes.user.strava_access_token;
 
-      console.log(`retrieveStravaTokens query: https://www.strava.com/oauth/token?client_id=${STRAVA_CLIENT_ID}&client_secret=${STRAVA_CLIENT_SECRET}&code=${code}&grant_type=authorization_code`);
-
-      // retrieve strava user info, including refresh token, access token, and athlete id
-      const codeRes = await axios.post(
-        `https://www.strava.com/oauth/token?client_id=${STRAVA_CLIENT_ID}&client_secret=${STRAVA_CLIENT_SECRET}&code=${code}&grant_type=authorization_code`
-      );
-      // get current time
-      const timeRes = await axios.get(
-        `http://worldtimeapi.org/api/timezone/Europe/London`
-      );
-      const currDate = new Date(timeRes.data.utc_datetime).toUTCString();
-
-
-      const stravaDetails = {
-        username: userRes.user.username,
-        refresh_token: codeRes.data.refresh_token,
-        access_token: codeRes.data.access_token,
-        athlete_id: codeRes.data.athlete.id,
-        last_refresh: currDate
-      };
-      console.log(`retrieveStravaTokens`);
-      console.log(stravaDetails);
-
-      // updates user with token and athlete id
-      const updatedUser = await this.request(
-        "auth/strava/tokens",
-        stravaDetails,
-        "post"
-      );
-      console.log(`Tokens updated for user: '${updatedUser.username}`);
-      if (!prevToken) {
-        console.log(`Downloading data for: '${updatedUser.username}`);
-        await this.getUserActivities(updatedUser.username);
+      if (typeof authCode === 'string' && token === null ) {
+        // retrieve strava user refresh & access tokens and athlete id
+        const codeRes = await axios.post(
+          `https://www.strava.com/oauth/token?client_id=${STRAVA_CLIENT_ID}&client_secret=${STRAVA_CLIENT_SECRET}&code=${authCode}&grant_type=authorization_code`
+        );
+        // get current time
+        const timeRes = await axios.get(
+          `http://worldtimeapi.org/api/timezone/Europe/London`
+        );
+        const currDate = new Date(timeRes.data.utc_datetime).toUTCString();
+  
+        const stravaDetails = {
+          username: userRes.user.username,
+          refresh_token: codeRes.data.refresh_token,
+          access_token: codeRes.data.access_token,
+          athlete_id: codeRes.data.athlete.id,
+          last_refresh: currDate
+        };
+  
+        // updates user with token and athlete id
+        const updatedUser = await this.request(
+          "auth/strava/tokens", stravaDetails, "post");
+        console.log(`Tokens downloaded for user: '${updatedUser.username}`);
+        return { tokenDownloaded: true};
       }
+      return { tokenDownloaded: false };
     } catch (err) {
       return err;
     }
   }
 
-  static async refreshAccessToken(username) {
+  static async stravaRefreshAccessToken(username) {
     try {
       const grantType = "refresh_token";
       const userRes = await this.request(`users/${username}/details`);
@@ -170,12 +162,12 @@ class MyStravaApi {
       if (refreshToken){
         // Query to refresh strava auth token
         const refRes = await axios.post(
-          `https://www.strava.com/oauth/token?client_id=${STRAVA_CLIENT_ID}&client_secret=${STRAVA_CLIENT_SECRET}&grant_type=${grantType}&refresh_token=${refreshToken}`
-        );
+          `https://www.strava.com/oauth/token?client_id=${STRAVA_CLIENT_ID}&client_secret=${STRAVA_CLIENT_SECRET}&grant_type=${grantType}&refresh_token=${refreshToken}`);
 
         // Update strava access token
         if (userRes.user.strava_access_token != refRes.data.access_token) {
-          const timeRes = await axios.get(`http://worldtimeapi.org/api/timezone/Europe/London`);
+          const timeRes = await axios.get(
+            `http://worldtimeapi.org/api/timezone/Europe/London`);
           const currDate = new Date(timeRes.data.utc_datetime).toUTCString();
 
           // POST strava auth credentials to database
@@ -186,21 +178,22 @@ class MyStravaApi {
               refresh_token: refreshToken,
               access_token: refRes.data.access_token,
               last_refresh: currDate },
-            "post"
-          );
-          console.log(`Tokens updated for user: '${username}`);
-          console.log(updatedUser);
+            "post");
+
+          return { msg :`Tokens updated for user: ${username}` };
         } else {
           let expireDt = new Date(userRes.user.last_refresh).toUTCString();
           expireDt.setHours(expireDt.getHours() + 6);
-          console.log(`${username}'s refresh token is valid until ${expireDt}`);
+          return { msg:`${username}'s access token is valid until ${expireDt}` }
         }
       }
+      return { msg: 'No refresh token available' }
     } catch (err) {
       return err;
     }
   }
 
+  // Queries database for access token
   static async getUserAccessToken(username) {
     const res = await this.request(`users/${username}/details`);
     return res.user.strava_access_token;
@@ -229,9 +222,7 @@ class MyStravaApi {
         if (res.data.length > 0) {
           activitiesData = res.data;
           const activityRes = await this.request(
-            `activities`,
-            activitiesData,
-            "post");
+            `activities`, activitiesData, 'post');
           console.log(activityRes);
           page += 1;
         } else {

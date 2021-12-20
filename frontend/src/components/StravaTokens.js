@@ -9,13 +9,11 @@ function StravaStartup(){
   const history = useHistory();
   const [ loading, setLoading ] = useState(true);
   const { currentUser } = useContext(UserContext);
-  const { 
-    getStravaTokens,
-  } = useContext(StravaApiContext);
+  const { stravaGetTokens } = useContext(StravaApiContext);
 
   useEffect( ()=>{
     if (currentUser != null){
-      getStravaTokens(currentUser);
+      stravaGetTokens(currentUser);
       setLoading(false);
     }
   },[currentUser]);

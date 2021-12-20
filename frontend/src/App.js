@@ -13,11 +13,11 @@ function App() {
   const [ currentUser, setCurrentUser ] = useState(null);
   const [ currentToken, setCurrentToken ] = useState(null);
   const {
-    connectUserStrava,
-    getStravaTokens,
-    refreshAccessToken,
-    getUserActivities,
-    stravaUserBikes,
+    stravaOauth,
+    stravaGetTokens,
+    stravaRefreshToken,
+    stravaGetActivities,
+    stravaGetBikes,
   } = strava;
 
   useEffect(() => {
@@ -48,11 +48,11 @@ function App() {
     >
       <StravaApiContext.Provider
         value={{
-          connectUserStrava: connectUserStrava,
-          getStravaTokens: getStravaTokens,
-          refreshAccessToken: refreshAccessToken,
-          getUserActivities: getUserActivities,
-          stravaUserBikes: stravaUserBikes,
+          stravaOauth: stravaOauth,
+          stravaGetTokens: stravaGetTokens,
+          stravaRefreshToken: stravaRefreshToken,
+          stravaGetActivities: stravaGetActivities,
+          stravaGetBikes: stravaGetBikes,
         }}
       >
         <div className="App">
