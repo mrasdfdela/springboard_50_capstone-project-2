@@ -25,8 +25,8 @@ function Home() {
           stravaGetBikes(currentUser);
         }
       });
+      setLoading(false);
     }
-    setLoading(false);
   }, [currentUser]);
   
   return (
