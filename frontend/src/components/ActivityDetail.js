@@ -16,8 +16,6 @@ function ActivityDetail() {
   useEffect(() => {
     async function getActivity() {
       let actResp = await MyStravaApi.getActivity(activityId);
-      console.log(`ActivityDetail actResp:`)
-      console.log(actResp)
       setActivity(actResp);
       setLoading(false);
     }
