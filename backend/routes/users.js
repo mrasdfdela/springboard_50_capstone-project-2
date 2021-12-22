@@ -77,20 +77,16 @@ router.get("/:username/goals",
   }
 );
 
-// router.get("/:username/goals", 
-//   async function (req, res, next) {
-//     try {
-//       const { startDt, endDt } = req.body;
-//       const user = await User.getDetails(req.params.username);
-//       console.log(user);
-//       const goals = await Goal.getUserGoalsByDate(user.username, startDt, endDt);
-//       console.log(goals);
-//       return res.json({ goals });
-//     } catch (err) {
-//       return next(err);
-//     }
-//   }
-// );
+router.get("/:username/goals-count", 
+  async function (req, res, next) {
+    try {
+      const countRes = await Goal.getUserGoalCount(req.params.username);
+      return res.json(countRes);
+    } catch (err) {
+      return next(err);
+    }
+  }
+);
 
 router.get("/:username/details",
   async function (req, res, next) {

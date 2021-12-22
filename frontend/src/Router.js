@@ -12,7 +12,7 @@ import UserUpdate from "./components/UserUpdate";
 // import StravaStartup from "./components/StravaStartup";
 // import StravaTokens from "./components/StravaTokens";
 import Activities from "./components/Activities";
-import Activity from "./components/Activity";
+import ActivityDetail from "./components/ActivityDetail";
 import Goals from "./components/Goals";
 import GoalDetail from "./components/GoalDetail";
 import GoalSet from "./components/GoalSet";
@@ -32,7 +32,7 @@ function Router() {
           <Route exact path="/profile" component={Profile} />
           <Route exact path="/user-update" component={UserUpdate} />
           <Route exact path="/activities" component={Activities} />
-          <Route exact path="/activities/:id" element={Activity} />
+          <Route exact path="/activities/:activityId" component={ActivityDetail} />
           <Route exact path="/goals/new" component={GoalSet} />
           <Route exact path="/goals/:goalId" component={GoalDetail} />
           <Route exact path="/goals/:goalId/edit" component={GoalUpdate} />

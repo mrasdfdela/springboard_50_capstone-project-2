@@ -84,8 +84,14 @@ router.get("/count", async function(req,res,next){
 // GET activity by ID
 router.get("/:activity_id", async function (req, res, next) {
   try {
-    const activity = await Activity.getById(req.params.activity_id);
-    return res.status(200).json({activity})
+    const activities = await Activity.getById(req.params.activity_id);
+    activities.miles = metersToMiles(activities.distance);
+    activities.time = secondsToTime(activities.moving_time);
+    activities.calories = kjToCal(activities.kilojoules);
+    
+    console.log(`activities routes, /:activity_id`)
+    console.log(activities);
+    return res.status(200).json({ activities });
   } catch (err) {
     return next(err);
   }

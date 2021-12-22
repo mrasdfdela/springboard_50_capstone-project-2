@@ -49,6 +49,8 @@ class MyStravaApi {
     };
     let res = await this.request(`auth/register`, userInfo, "post");
     this.token = res.token;
+    console.log("api: registerUser, token:")
+    console.log(this.token);
     return this.token;
   }
   // Login
@@ -128,7 +130,7 @@ class MyStravaApi {
         );
         // get current time
         const timeRes = await axios.get(
-          `http://worldtimeapi.org/api/timezone/Europe/London`
+          `https://worldtimeapi.org/api/timezone/Europe/London`
         );
         const currDate = new Date(timeRes.data.utc_datetime).toUTCString();
   
@@ -167,7 +169,7 @@ class MyStravaApi {
         // Update strava access token
         if (userRes.user.strava_access_token != refRes.data.access_token) {
           const timeRes = await axios.get(
-            `http://worldtimeapi.org/api/timezone/Europe/London`);
+            `https://worldtimeapi.org/api/timezone/Europe/London`);
           const currDate = new Date(timeRes.data.utc_datetime).toUTCString();
 
           // POST strava auth credentials to database
@@ -259,9 +261,16 @@ class MyStravaApi {
       const res = await this.request(
         `activities/count`,
         {athleteId: user.athlete_id});
-      const activityCount = parseInt(res.count);
-      console.log(activityCount);
-      return activityCount;
+      return parseInt(res.count);
+    } catch (err) {
+      return err;
+    }
+  }
+
+  static async getActivity(activityId) {
+    try {
+      const res = await this.request(`activities/${activityId}`);
+      return res.activities;
     } catch (err) {
       return err;
     }
@@ -332,6 +341,18 @@ class MyStravaApi {
         `users/${username}/goals`, { count:count, page:page }
       );
       return res.goals;
+    } catch (err) {
+      return err;
+    }
+  }
+
+  // get goals count
+  static async getUserGoalCount(username) {
+    try {
+      const res = await this.request(
+        `users/${username}/goals-count`
+      );
+      return parseInt(res.count);
     } catch (err) {
       return err;
     }

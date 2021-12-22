@@ -14,13 +14,16 @@ function Goals({ homePage=false }){
   
   const [ goals, setGoals ] = useState({goals:[]});
   const [ loading, setLoading ] = useState(true);
-  const [ goalsPerPage, setGoalsPerPage] = useState(3);
-  const [page, setPage] = useState(1);
+  const [ goalsPerPage, setGoalsPerPage ] = useState(3);
+  const [ page, setPage ] = useState(1);
+  const [ goalCount, setGoalCount ] = useState(0);
 
   useEffect(() => {
     async function getUserGoals() {
-      let userGoals = await MyStravaApi.getUserGoals(currentUser);
+      let userGoals = await MyStravaApi.getUserGoals(currentUser, goalsPerPage, page);
+      let goalCountRes = await MyStravaApi.getUserGoalCount(currentUser);
       setGoals(userGoals);
+      setGoalCount(goalCountRes);
       setLoading(false);
     }
     if (currentUser != null) {
@@ -35,9 +38,9 @@ function Goals({ homePage=false }){
   }
 
   async function nextPage(){
-    let userGoals = await MyStravaApi.getUserGoals(currentUser, goalsPerPage, page + 1);
+    let userGoalsResp = await MyStravaApi.getUserGoals(currentUser, goalsPerPage, page + 1);
     setPage(page + 1);
-    setGoals(userGoals);
+    setGoals(userGoalsResp);
   }
 
   return (
@@ -66,22 +69,22 @@ function Goals({ homePage=false }){
                       More Goals &#8594;
                     </Button>
                   ) : (
-                    <>
-                      {page <= 1 ? (
+                    <div>
+                      { page <= 1 ? (
                         <div></div>
                       ) : (
                         <Button onClick={() => prevPage()}>
                           &#8592; Previous Page
                         </Button>
                       )}
-                      {goals.length < goalsPerPage ? (
+                      { page * goalsPerPage >= goalCount? (
                         <></>
                       ) : (
                         <Button onClick={() => nextPage()}>
                           Next Page &#8594;
                         </Button>
                       )}
-                    </>
+                    </div>
                   )}
                 </div>
               </div>  

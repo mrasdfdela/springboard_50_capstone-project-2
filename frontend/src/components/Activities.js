@@ -15,11 +15,14 @@ function Activities({ homePage=false }) {
   const [ loading, setLoading ] = useState(true);
   const [ actPerPage, setActPerPage ] = useState(5);
   const [ page, setPage ] = useState(1);
+  const [ actCount, setActCount ] = useState(0);
 
   useEffect(() => {
     async function getRecentActivities() {
-      let activityRes = await MyStravaApi.getUserActivities(currentUser);
+      let activityRes = await MyStravaApi.getUserActivities(currentUser, actPerPage, page);
+      let goalCountRes = await MyStravaApi.getActivityCount(currentUser);
       setActivities(activityRes);
+      setActCount(goalCountRes);
       setLoading(false);
     }
     if (currentUser != null) {
@@ -64,12 +67,16 @@ function Activities({ homePage=false }) {
                     { page <= 1 ? (
                       <div></div>
                     ) : (
-                      <Button onClick={()=>prevPage()}>&#8592; Previous Page</Button>
+                      <Button onClick={()=>prevPage()}>
+                        &#8592; Previous Page
+                      </Button>
                     )}
-                    { activities.length < actPerPage ? (
+                    { page * actPerPage >= actCount ? (
                       <></>
                     ) : (
-                      <Button onClick={()=>nextPage()}>Next Page &#8594;</Button>
+                      <Button onClick={()=>nextPage()}>
+                        Next Page &#8594;
+                      </Button>
                     )}
                   </div>
                 )}

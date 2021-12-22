@@ -16,7 +16,6 @@ function GoalDetail() {
   useEffect(() => {
     async function getUserGoals() {
       let respGoal = await MyStravaApi.getGoal(goalId);
-      console.log(respGoal);
       setGoal(respGoal);
       setDoneLoading(true);
       return goal;
@@ -31,7 +30,7 @@ function GoalDetail() {
         <h6>...loading goal...</h6>
       ) : (
         <>
-          <Card key="goalId">
+          <Card key={goalId}>
             <CardTitle>Goal for: {goal.enddt.substr(0, 10)}</CardTitle>
             <CardSubtitle>
               Start: {goal.startdt.substr(0, 10)} - End:{" "}

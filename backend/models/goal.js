@@ -33,6 +33,15 @@ class Goal {
       return newGoal;
   }
 
+  // Finds total goal count of user
+  static async getUserGoalCount(username) {
+    const goalRes = await db.query(
+      `SELECT count(*) FROM goals WHERE username = $1`,
+      [ username ]
+    );
+    return goalRes.rows[0];
+  }
+
   /** Finds goal by id */
   static async getById(goalId) {
     const goalRes = await db.query(
