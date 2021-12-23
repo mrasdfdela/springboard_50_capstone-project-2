@@ -1,8 +1,8 @@
-\echo 'setting up db postgresql-clear-69895'
+\echo 'setting up db my_strava_test'
 
-DROP DATABASE postgresql-clear-69895;
-CREATE DATABASE postgresql-clear-69895;
-\connect postgresql-clear-69895
+DROP DATABASE my_strava_test;
+CREATE DATABASE my_strava_test;
+\connect my_strava_test
 
 CREATE TABLE users(
   username VARCHAR(25) PRIMARY KEY,

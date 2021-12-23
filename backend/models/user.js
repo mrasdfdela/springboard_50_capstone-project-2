@@ -165,7 +165,7 @@ class User {
       [username]
     );
     const user = result.rows[0];
-    if (!user) throw new Error(`No user: ${username}`);
+    if (!user) throw new NotFoundError(`No user: ${username}`);
   }
 }
 

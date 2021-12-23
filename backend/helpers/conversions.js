@@ -52,46 +52,13 @@ function calcEndDt(startDt, period) {
   return newDate.toISOString().substr(0, 10);
 }
 
-function timeToSeconds(time){
-  if (typeof time !== "undefined") {
-    let seconds;
-    let timeArr = time.split(":");
-    timeArr = timeArr.map((el) => parseInt(el));
-
-    if (timeArr.length === 3) {
-      seconds = (timeArr[0] * 24 + timeArr[1]) * 3600 + timeArr[2] * 60;
-    } else if (timeArr.length === 2) {
-      seconds = timeArr[0] * 3600 + timeArr[1] * 60;
-    }
-    return seconds;
-  }
-}
-
-function secondsToTime(seconds){
-  if (typeof seconds !== "undefined" && seconds > 0) {
-  //   const hours = Math.floor(seconds / 3600);
-  //   seconds = seconds % 3600;
-
-  //   const minutes = Math.floor(seconds / 60);
-  //   seconds = seconds % 60;
-
-  //   return hours > 0
-  //     ? `${minutes}:${seconds}`
-  //     : `${hours}:${minutes}:${seconds}`;
-  // }
-  let date = new Date(0);
-  date.setSeconds(seconds);
-  return date.toISOString().substr(11,5);
-  }
-}
-
-function datesToTimePeriod(startDt, endDt){
+function datesToTimePeriod(startDt, endDt) {
   if (typeof startDt != "undefined" && typeof endDt != "undefined") {
     const timeDiff = endDt - startDt;
-    const dayDiff = timeDiff / ( 86400 * 1000); // 
+    const dayDiff = timeDiff / (86400 * 1000); //
     let timePeriod;
-    
-    switch(dayDiff) {
+
+    switch (dayDiff) {
       case 1:
         timePeriod = "day";
         break;
@@ -109,13 +76,36 @@ function datesToTimePeriod(startDt, endDt){
   }
 }
 
+function timeToSeconds(time){
+  if (typeof time !== "undefined") {
+    let seconds;
+    let timeArr = time.split(":");
+    timeArr = timeArr.map((el) => parseInt(el));
+
+    if (timeArr.length === 3) {
+      seconds = (timeArr[0] * 24 + timeArr[1]) * 3600 + timeArr[2] * 60;
+    } else if (timeArr.length === 2) {
+      seconds = timeArr[0] * 3600 + timeArr[1] * 60;
+    }
+    return seconds;
+  }
+}
+
+function secondsToTime(seconds){
+  if (typeof seconds !== "undefined" && seconds > 0) {
+    let date = new Date(0);
+    date.setSeconds(seconds);
+    return date.toISOString().substr(11,5);
+  }
+}
+
 module.exports = {
   calToKj,
   kjToCal,
   metersToMiles,
   milesToMeters,
   calcEndDt,
+  datesToTimePeriod,
   timeToSeconds,
   secondsToTime,
-  datesToTimePeriod
 };
