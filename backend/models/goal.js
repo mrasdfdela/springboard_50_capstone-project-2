@@ -148,6 +148,7 @@ class Goal {
     if (!deletedId) {
       throw new NotFoundError(`ID not found; goal not deleted`);
     }
+    return deletedId;
   }
 }
 

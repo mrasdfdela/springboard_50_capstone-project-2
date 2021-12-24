@@ -21,6 +21,46 @@ async function commonBeforeAll(){
       await bcrypt.hash("password2", BCRYPT_WORK_FACTOR)
     ]
   );
+  
+  const [username,distance,kilojoules,movingTime,startDt,endDt] = 
+    [
+      "u1", 
+      "30578", 
+      "603", 
+      "3480",
+      new Date("01/01/1970 00:00:00"),
+      new Date("01/08/1970 00:00:00")
+    ];
+
+  await db.query(
+    `INSERT INTO goals
+      (username, distance, kilojoules, moving_time, start_date, end_date)
+    VALUES
+      ($1, $2, $3, $4, $5, $6)`,
+      [username, distance, kilojoules, movingTime, startDt, endDt]
+  );
+
+  // const [
+  //   bike_id,
+  //   athlete_id,
+  //   distance,
+  //   brand_name,
+  //   model_name,
+  //   bike_description,
+  // ] = [
+  //   "b1913033",
+  //   ""
+  // ];
+  // await db.query(
+  //   `INSERT INTO bikes
+  //     (bike_id, athlete_id, distance, brand_name, model_name, bike_description)
+  //   VALUES
+  //     ($1,$2,$3,$4,$5,$6)`,
+  //     [ 
+  //       bike_id, athlete_id, distance,
+  //       brand_name, model_name, bike_description
+  //     ]
+  // )
 }
 
 async function commonBeforeEach() {

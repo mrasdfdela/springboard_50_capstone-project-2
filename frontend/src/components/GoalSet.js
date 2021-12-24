@@ -29,11 +29,8 @@ function GoalSet() {
   };
 
   const handleDate = (e)=> {
-    console.log(e.target.name);
-    console.log(e.target.value);
     let date = new Date(e.target.value);
     let currDt = date.toISOString().substr(0, 10);
-    console.log(currDt);
     setFormData({ ...formData, [e.target.name]: currDt })
   }
 
