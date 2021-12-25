@@ -41,7 +41,7 @@ class Bike {
 
   /** Finds bike by id */
   static async getById(bikeId){
-    console.log(`finding bike: ${bikeId}`);
+    // console.log(`finding bike: ${bikeId}`);
     const bikeRes = await db.query(
       `SELECT
         bike_id AS bikeId, 
@@ -53,7 +53,7 @@ class Bike {
       FROM bikes WHERE bike_id = $1`,
       [bikeId]
     );
-    console.log(bikeRes.rows);
+    // console.log(bikeRes.rows);
 
     if (!bikeRes.rows[0]) {
       throw new NotFoundError(`No bike with that ID found`);
@@ -79,29 +79,29 @@ class Bike {
   }
 
   /** Updates bike by id */
-  static async update(bikeId, data){
-    const { setCols } = sqlForPartialUpdate(data, {});
-    const bikeRes = await db.query(
-      `UPDATE bikes
-      SET ${setCols}
-      WHERE bike_id = $1
-      RETURNING 
-        bike_id AS bikeId, 
-        athlete_id AS athleteID, 
-        distance,
-        brand_name AS brand, 
-        model_name AS model, 
-        bike_description AS desc`,
-      [bikeId]
-    );
-    const bike = bikeRes.rows[0];
+  // static async update(bikeId, data){
+  //   const { setCols } = sqlForPartialUpdate(data, {});
+  //   const bikeRes = await db.query(
+  //     `UPDATE bikes
+  //     SET ${setCols}
+  //     WHERE bike_id = $1
+  //     RETURNING 
+  //       bike_id AS bikeId, 
+  //       athlete_id AS athleteID, 
+  //       distance,
+  //       brand_name AS brand, 
+  //       model_name AS model, 
+  //       bike_description AS desc`,
+  //     [bikeId]
+  //   );
+  //   const bike = bikeRes.rows[0];
 
-    if (!bike) {
-      throw new NotFoundError(`No bike with that ID found`);
-    } else {
-      return bike;
-    }
-  }
+  //   if (!bike) {
+  //     throw new NotFoundError(`No bike with that ID found`);
+  //   } else {
+  //     return bike;
+  //   }
+  // }
   /** Deletes bike by id */
   static async remove(bikeId){
     let result = await db.query(
@@ -113,6 +113,7 @@ class Bike {
     if (!deletedId) {
       throw new NotFoundError(`No bike with that ID deleted`);
     }
+    return result.rows[0];
   }
 }
 

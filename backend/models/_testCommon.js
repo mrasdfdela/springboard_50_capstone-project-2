@@ -40,27 +40,22 @@ async function commonBeforeAll(){
       [username, distance, kilojoules, movingTime, startDt, endDt]
   );
 
-  // const [
-  //   bike_id,
-  //   athlete_id,
-  //   distance,
-  //   brand_name,
-  //   model_name,
-  //   bike_description,
-  // ] = [
-  //   "b1913033",
-  //   ""
-  // ];
-  // await db.query(
-  //   `INSERT INTO bikes
-  //     (bike_id, athlete_id, distance, brand_name, model_name, bike_description)
-  //   VALUES
-  //     ($1,$2,$3,$4,$5,$6)`,
-  //     [ 
-  //       bike_id, athlete_id, distance,
-  //       brand_name, model_name, bike_description
-  //     ]
-  // )
+  const [bike_id,athlete_id,bike_distance,brand_name,model_name,bike_description,] = 
+    ["b1913033","5468108",20000000,"CAAD 10","CAAD 10","CAAD 10"];
+  await db.query(
+    `INSERT INTO bikes
+      (bike_id, athlete_id, distance, brand_name, model_name, bike_description)
+    VALUES
+      ($1,$2,$3,$4,$5,$6)`,
+    [
+      bike_id,
+      athlete_id,
+      bike_distance,
+      brand_name,
+      model_name,
+      bike_description,
+    ]
+  );
 }
 
 async function commonBeforeEach() {

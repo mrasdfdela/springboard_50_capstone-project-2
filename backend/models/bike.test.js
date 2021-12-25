@@ -14,148 +14,90 @@ const {
   commonAfterEach,
   commonAfterAll
 } = require("./_testCommon");
+const { fail } = require("assert");
 
 beforeAll(commonBeforeAll);
 beforeEach(commonBeforeEach);
 afterEach(commonAfterEach);
 afterAll(commonAfterAll);
 
-/** save new bike */
-describe("new", function () {
-  const [bikeId,distance,brand,model,desc] = 
-    [ "b1913033",20000000,"CAAD 10","CAAD 10","CAAD 10" ];
-  test("works", async function () {
-      let user = await User.getDetails("u1");
-      let res = await Bike.new(
-        bikeId,
-        user.athlete_id,
-        distance,
-        brand,
-        model,
-        desc
-      );
-    
-      expect(res).toEqual({
-        bikeid: "b1913033",
-        athleteid: user.athlete_id,
-        distance: 20000000,
-        brand: "CAAD 10",
-        model: "CAAD 10",
-        desc: "CAAD 10",
-      });
+const newBike = {
+  bikeid:"b4311939",
+  athleteid:"5468108",
+  distance:10000000,
+  brand:"Masi CX",
+  model:"Masi CX",
+  desc:"Masi CX"
+}
+
+const oldBike = {
+  bikeid:"b1913033",
+  athleteid:"5468108",
+  distance:20000000,
+  brand:"CAAD 10",
+  model:"CAAD 10",
+  desc:"CAAD 10"
+}
+
+describe("Test Bike.new", function () {
+  test("create & return new bike object", async function () {
+    const args = Object.values(newBike)
+    let res = await Bike.new(...args);
+    expect(res).toEqual(newBike);
+  });
+});
+
+describe("Test Bike.bikeExists", function () {
+  test("returns true when searching for an existing bike", async function () {
+    const bikeRes = await Bike.bikeExists(oldBike.bikeid);
+    expect(bikeRes).toEqual(true);
+  });
+  test("returns false when searching for an non-existing bike", async function () {
+    const noBikeRes = await Bike.bikeExists(newBike.bikeid);
+    expect(noBikeRes).toEqual(false);
   });
 
-  // test("works without kilojoules or time", async function () {
-  //   let res = await Goal.new(
-  //     username,
-  //     distance,
-  //     0,
-  //     0,
-  //     startDt,
-  //     endDt
-  //   );
-  //   expect(res).toEqual({
-  //     username: username,
-  //     distance: "48280.0",
-  //     kilojoules: "0.0",
-  //     time: 0,
-  //     startdt: startDt,
-  //     enddt: endDt,
-  //   });
-  // });
 });
 
-// // ************************************** Bike Exists */
-describe("bikeExists", function () {
-  //   const username = "u1";
-  //   const distance = "30578";
-  //   const kilojoules = "603";
-  //   const movingTime = "3480";
-  //   const startDt = new Date("01/01/1970 00:00:00");
-  //   const endDt = new Date("01/08/1970 00:00:00");
-  // test("works", async function () {
-  //   let noGoalRes = await Goal.getUserGoalCount(username);
-  //   expect(noGoalRes.count).toEqual("1");
-  //   await Goal.new(username, distance, kilojoules, movingTime, startDt, endDt);
-  //   let goalRes = await Goal.getUserGoalCount(username);
-  //   expect(goalRes.count).toEqual("2");
-  // });
+describe("Test Bike.getById", function () {
+  test("returns bike object", async function () {
+    const bikeRes = await Bike.getById(oldBike.bikeid);
+    expect(bikeRes).toEqual(oldBike);
+  });
 });
 
-// // ************************************** getById */
+describe("Test Bike.getByAthleteId", function () {
+  test("returns an array of athlete's bikes", async function() {
+    const bikeRes = await Bike.getByAthleteId(oldBike.athleteid);
+    expect(bikeRes.length).toEqual(1);
+    expect(bikeRes[0]).toEqual(oldBike);
+  });
 
-describe("getById", function () {
-  // test("works", async function () {
-  //   const goal = {
-  //     goalid: expect.any(Number),
-  //     username: "u1",
-  //     distance: "30578.0",
-  //     kilojoules: "603.0",
-  //     time: 3480,
-  //     startdt: new Date("01/01/1970 00:00:00"),
-  //     enddt: new Date("01/08/1970 00:00:00")};
-  //   const goalRes = await Goal.getUserGoals("u1", 2, 0);
-  //   expect(goalRes[0]).toEqual(goal);
-  //   const goalByIdRes = await Goal.getById(goalRes[0].goalid);
-  //   expect(goalByIdRes).toEqual(goal);
-  // });
+  test("add a bike and return array of bikes", async function() {
+    const args = Object.values(newBike);
+    let res = await Bike.new(...args);
+
+    const bikeRes = await Bike.getByAthleteId(oldBike.athleteid);
+    expect(bikeRes.length).toEqual(2);
+    expect(bikeRes).toEqual([oldBike,newBike]);
+  });
 });
 
-// // ************************************** getByAthleteId */
+describe("Test Bike.remove", function () {
+  test("first checks if a bike exists", async function () {
+    let bikeRes = await Bike.getById(oldBike.bikeid);
+    expect(bikeRes).toEqual(oldBike);
+  });
 
-describe("getByAthleteId", function () {
-  // test("works", async function () {
-  //   const goal = {
-  //     goalid: expect.any(Number),
-  //     username: "u1",
-  //     distance: "30578.0",
-  //     kilojoules: "603.0",
-  //     time: 3480,
-  //     startdt: new Date("01/01/1970 00:00:00"),
-  //     enddt: new Date("01/08/1970 00:00:00")};
-  //   const goalRes = await Goal.getUserGoals("u1", 2, 0);
-  //   expect(goalRes[0]).toEqual(goal);
-  //   const goalByIdRes = await Goal.getById(goalRes[0].goalid);
-  //   expect(goalByIdRes).toEqual(goal);
-  // });
-});
+  test("removes a bike and re-checks if it exists", async function () {
+    const removedRes = await Bike.remove(oldBike.bikeid);
+    expect(removedRes.bike_id).toEqual(oldBike.bikeid);
 
-// /*********************************** update */
-
-describe("update", function () {
-  // test("works", async function () {
-  //   const goalRes = await Goal.getUserGoals("u1", 2, 0);
-  //   const goalId = goalRes[0].goalid;
-  //   const updatedGoalRes = await Goal.update(goalId, {
-  //     distance: "32000",
-  //   });
-  //   expect(updatedGoalRes).toEqual({
-  //     goal_id: goalId,
-  //     username: "u1",
-  //     distance: "32000.0",
-  //     kilojoules: "603.0",
-  //     moving_time: 3480,
-  //     start_date: new Date("01/01/1970 00:00:00"),
-  //     end_date: new Date("01/08/1970 00:00:00")});
-  // });
-});
-
-// /************************************** remove */
-
-describe("remove", function () {
-  // test("works", async function () {
-  //   const goalRes = await Goal.getUserGoals("u1", 2, 0);
-  //   const goalId = goalRes[0].goalid;
-  //   const deleteRes = await Goal.remove(goalId);
-  //   expect(deleteRes.goal_id).toEqual(goalId);
-  // });
-
-  // test("not found", async function () {
-  //   try {
-  //     await Goal.remove(-1);
-  //     fail();
-  //   } catch (err) {
-  //     expect(err instanceof NotFoundError).toBeTruthy();
-  //   }
-  // });
+    try {
+      bikeRes = await Bike.getById(oldBike.bikeid);
+      fail();
+    } catch (err) {
+      expect(err instanceof NotFoundError).toBeTruthy();
+    }
+  });
 });

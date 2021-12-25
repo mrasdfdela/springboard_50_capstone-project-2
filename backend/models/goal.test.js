@@ -19,118 +19,112 @@ beforeEach(commonBeforeEach);
 afterEach(commonAfterEach);
 afterAll(commonAfterAll);
 
-/** register */
-describe("new", function () {
-  const [username, distance, kilojoules, movingTime, startDt, endDt] = [
-    "u1",
-    "48280",
-    "1044",
-    "4000",
-    new Date("12/01/2021 00:00:00"),
-    new Date("12/08/2021 00:00:00"),
-  ];
+const newGoal = {
+  username: "u1",
+  distance: "48280.0",
+  kilojoules: "1044.0",
+  time: parseInt(4000),
+  startdt: new Date("12/01/2021 00:00:00"),
+  enddt: new Date("12/08/2021 00:00:00"),
+};
 
-    test("works", async function () {
-    let res = await Goal.new(username, distance, kilojoules, movingTime, startDt, endDt);
-    expect(res).toEqual({
-      username: username,
-      distance: "48280.0",
-      kilojoules: "1044.0",
-      time: parseInt(movingTime),
-      startdt: startDt,
-      enddt: endDt,
-    });
+const oldGoal = {
+  username: "u1",
+  distance: "30578.0",
+  kilojoules: "603.0",
+  time: parseInt("3480"),
+  startdt: new Date("01/01/1970 00:00:00"),
+  enddt: new Date("01/08/1970 00:00:00"),
+};
+
+describe("Test Goal.new", function () {
+  test("creates new goals", async function () {
+    let args = Object.values(newGoal);
+    let res = await Goal.new(...args);
+    expect(res).toEqual(newGoal);
   });
 
-  test("works without kilojoules or time", async function () {
-    let res = await Goal.new(
-      username,
-      distance,
-      0,
-      0,
-      startDt,
-      endDt
-    );
+  test("creates new goals without kilojoules or time", async function () {
+    newGoal.kilojoules = 0;
+    newGoal.time = 0;
+    let args = Object.values(newGoal);
+    let res = await Goal.new(...args);
     expect(res).toEqual({
-      username: username,
-      distance: "48280.0",
+      username: newGoal.username,
+      distance: newGoal.distance,
       kilojoules: "0.0",
       time: 0,
-      startdt: startDt,
-      enddt: endDt,
+      startdt: newGoal.startdt,
+      enddt: newGoal.enddt,
     });
   });
 });
 
-// // ************************************** Goal Count */
-describe("goalCount", function () {
-    const username = "u1";
-    const distance = "30578";
-    const kilojoules = "603";
-    const movingTime = "3480";
-    const startDt = new Date("01/01/1970 00:00:00");
-    const endDt = new Date("01/08/1970 00:00:00");
-
-  test("works", async function () {
-    let noGoalRes = await Goal.getUserGoalCount(username);
+describe("Test Goal.goalCount", function () {
+  test("gets the current goal count", async function () {
+    let noGoalRes = await Goal.getUserGoalCount(oldGoal.username);
     expect(noGoalRes.count).toEqual("1");
-    await Goal.new(username, distance, kilojoules, movingTime, startDt, endDt);
-    let goalRes = await Goal.getUserGoalCount(username);
+  });
+  test("adds a goal and gets new goal count", async function() {
+    let args = Object.values(newGoal);
+    await Goal.new(...args);
+    let goalRes = await Goal.getUserGoalCount(oldGoal.username);
     expect(goalRes.count).toEqual("2");
   });
 });
 
-// // ************************************** getUserGoals & getById */
+describe("Test Goal.getUserGoals & Goal.getById", function () {
+  const expectedGoal = {
+    goalid: expect.any(Number),
+    ...oldGoal,
+  };
+  test("gets all user goals & uses a goal id to query a goal by ID", async function () {
+    const goalRes = await Goal.getUserGoals("u1", 3, 0);
+    expect(goalRes.length).toEqual(1);
+    expect(goalRes[0]).toEqual(expectedGoal);
 
-describe("getUserGoals & getById", function () {
-  test("works", async function () {
-    const goal = {
-      goalid: expect.any(Number),
-      username: "u1",
-      distance: "30578.0",
-      kilojoules: "603.0",
-      time: 3480,
-      startdt: new Date("01/01/1970 00:00:00"),
-      enddt: new Date("01/08/1970 00:00:00")};
-
-    const goalRes = await Goal.getUserGoals("u1", 2, 0);
-    expect(goalRes[0]).toEqual(goal);
     const goalByIdRes = await Goal.getById(goalRes[0].goalid);
-    expect(goalByIdRes).toEqual(goal);
+    expect(goalByIdRes).toEqual(expectedGoal);
   });
 });
 
-// /*********************************** update */
-
-describe("update", function () {
-  test("works", async function () {
-    const goalRes = await Goal.getUserGoals("u1", 2, 0);
-    const goalId = goalRes[0].goalid;
-    const updatedGoalRes = await Goal.update(goalId, {
-      distance: "32000",
-    });
+describe("Test Goal.update", function () {
+  let updatedGoalRes;
+  let goalId;
+  test("Updates distance of an existing goal", async function () {
+    const goalRes = await Goal.getUserGoals("u1",3,0);
+    goalId = goalRes[0].goalid;
+    updatedGoalRes = await Goal.update(
+      goalId, { distance: "35000.0" } );
     expect(updatedGoalRes).toEqual({
-      goal_id: goalId,
-      username: "u1",
-      distance: "32000.0",
-      kilojoules: "603.0",
-      moving_time: 3480,
-      start_date: new Date("01/01/1970 00:00:00"),
-      end_date: new Date("01/08/1970 00:00:00")});
+      goalid: expect.any(Number),
+      ...oldGoal, distance: "35000.0" });
+  });
+  test("Updates kilojoules of an existing goal", async function () {
+    updatedGoalRes = await Goal.update(
+      goalId, { kilojoules: "650.0"} );
+    expect(updatedGoalRes).toEqual({
+      goalid: expect.any(Number),
+      ...oldGoal, kilojoules: "650.0"});
+  });
+  test("Updates moving time of an existing goal", async function () {
+    updatedGoalRes = await Goal.update(
+      goalId, { moving_time: 4000} );
+    expect(updatedGoalRes).toEqual({
+      goalid: expect.any(Number),
+      ...oldGoal, time: 4000 });
   });
 });
 
-// /************************************** remove */
-
-describe("remove", function () {
-  test("works", async function () {
+describe("Test Goal.remove", function () {
+  test("removes the user goal", async function () {
     const goalRes = await Goal.getUserGoals("u1", 2, 0);
     const goalId = goalRes[0].goalid;
     const deleteRes = await Goal.remove(goalId);
     expect(deleteRes.goal_id).toEqual(goalId);
   });
 
-  test("not found", async function () {
+  test("throw error if goalId does not exist", async function () {
     try {
       await Goal.remove(-1);
       fail();

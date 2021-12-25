@@ -119,13 +119,13 @@ class Goal {
         SET ${setCols}
         WHERE goal_id = $${goalVals.length + 1}
         RETURNING 
-          goal_id,
+          goal_id as goalId,
           username,
           distance,
           kilojoules,
-          moving_time,
-          start_date,
-          end_date`,
+          moving_time as time,
+          start_date as startDt,
+          end_date as endDt`,
       [ ...goalVals, goalId]
     );
     const activity = result.rows[0];
