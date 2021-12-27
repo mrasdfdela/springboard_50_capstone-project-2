@@ -1,54 +1,48 @@
 "use strict";
+const User = require("./user.js");
+const db = require("../db.js");
 
 const {
   NotFoundError,
   BadRequestError,
   UnauthorizedError,
 } = require("../expressError");
-const db = require("../db.js");
-const User = require("./user.js");
+
 const {
+  user1, user2,
   commonBeforeAll,
   commonBeforeEach,
   commonAfterEach,
   commonAfterAll
-} = require("./_testCommon");
+} = require("./_testCommon.js");
 
 beforeAll(commonBeforeAll);
 beforeEach(commonBeforeEach);
 afterEach(commonAfterEach);
 afterAll(commonAfterAll);
 
-/** register */
-describe("register", function () {
-  const newUser = {
-    username: "uNew",
-    firstName: "uNewF",
-    lastName: "uNewL",
-    email: "uNew@email.com"
-  };
+let user3 = {
+  username: "uNew",
+  firstName: "uNewF",
+  lastName: "uNewL",
+  email: "uNew@email.com",
+};
 
-  test("works", async function () {
-    let user = await User.register({
-      ...newUser,
-      password: "passwordNew",
-    });
-    expect(user).toEqual(newUser);
-    const found = await db.query("SELECT * FROM users WHERE username = 'uNew'");
+describe("User.new", function () {
+  test("creates a new user", async function () {
+    let user = await User.register({...user3, password:"password"});
+    const found = await db.query(
+      `SELECT * FROM users 
+      WHERE username = '${user3.username}'`);
+    expect(user).toEqual({ ...user3 });
     expect(found.rows.length).toEqual(1);
     expect(found.rows[0].password.startsWith("$2b$")).toEqual(true);
   });
 
   test("bad request with dup data", async function () {
     try {
-      await User.register({
-        ...newUser,
-        password: "passwordNew",
-      });
-      await User.register({
-        ...newUser,
-        password: "passwordDuplicate",
-      });
+      await User.register({ ...user3, password: "password" });
+      await User.register({ ...user3, password: "otherPwd" });
       fail();
     } catch (err) {
       expect(err instanceof BadRequestError).toBeTruthy();
@@ -56,19 +50,18 @@ describe("register", function () {
   });
 });
 
-/** authenticate */
-describe("authenticate", function () {
-  test("works", async function () {
+describe("User.authenticate", function () {
+  test("authenticates user & password", async function () {
     const user = await User.authenticate("u1", "password1");
     expect(user).toEqual({
-      username: "u1",
-      firstName: "U1F",
-      lastName: "U1L",
-      email: "u1@email.com"
+      username: user1.username,
+      firstName: user1.first_name,
+      lastName: user1.last_name,
+      email: user1.email
     });
   });
 
-  test("unauth if no such user", async function () {
+  test("denies authentication if no such user", async function () {
     try {
       await User.authenticate("u3", "password3");
       fail();
@@ -77,7 +70,7 @@ describe("authenticate", function () {
     }
   });
 
-  test("unauth if wrong password", async function () {
+  test("denies authentication if wrong password", async function () {
     try {
       await User.authenticate("u1", "wrong_password");
       fail();
@@ -87,43 +80,38 @@ describe("authenticate", function () {
   });
 });
 
-/************************************** findAll */
-
-describe("findAll", function () {
-  test("works", async function () {
+describe("User.findAll", function () {
+  test("returns all users in database", async function () {
     const users = await User.findAll();
-    expect(users).toEqual([
+    expect(users).toEqual(
+      [{
+        username: user1.username,
+        firstName: user1.first_name,
+        lastName: user1.last_name,
+        email: user1.email,
+      }, 
       {
-        username: "u1",
-        firstName: "U1F",
-        lastName: "U1L",
-        email: "u1@email.com"
-      },
-      {
-        username: "u2",
-        firstName: "U2F",
-        lastName: "U2L",
-        email: "u2@email.com"
-      },
-    ]);
+        username: user2.username,
+        firstName: user2.first_name,
+        lastName: user2.last_name,
+        email: user2.email,
+      }]);
   });
 });
 
-/************************************** get */
-
-describe("get", function () {
-  test("works", async function () {
-    let user = await User.get("u1");
+describe("User.get", function () {
+  test("returns user information", async function () {
+    let user = await User.get(user1.username);
     expect(user).toEqual({
-      username: "u1",
-      firstName: "U1F",
-      lastName: "U1L",
-      email: "u1@email.com",
-      athlete_id: "5468108"
+      username: user1.username,
+      firstName: user1.first_name,
+      lastName: user1.last_name,
+      email: user1.email,
+      athlete_id: user1.athlete_id
     });
   });
 
-  test("not found if no such user", async function () {
+  test("returns an error if user is not found", async function () {
     try {
       await User.get("fakeUser");
       fail();
@@ -133,27 +121,25 @@ describe("get", function () {
   });
 });
 
-/****************************** get details*/
-
-describe("getDetails", function () {
-  test("works", async function () {
-    let user = await User.getDetails("u1");
+describe("User.getDetails", function () {
+  test("returns user details, access code and strava tokens", async function () {
+    let user = await User.getDetails(user1.username);
     expect(user).toEqual({
-      username: "u1",
-      firstName: "U1F",
-      lastName: "U1L",
-      email: "u1@email.com",
-      athlete_id: "5468108",
-      strava_auth_code: null,
-      strava_access_token: null,
-      strava_refresh_token: null,
-      last_refresh: null,
+      username: user1.username,
+      firstName: user1.first_name,
+      lastName: user1.last_name,
+      email: user1.email,
+      athlete_id: user1.athlete_id,
+      strava_auth_code: expect.any(Object),
+      strava_access_token: expect.any(Object),
+      strava_refresh_token: expect.any(Object),
+      last_refresh: expect.any(Object),
     });
   });
 
   test("not found if no such user", async function () {
     try {
-      await User.get("fakeUser");
+      await User.getDetails("fakeUser");
       fail();
     } catch (err) {
       expect(err instanceof NotFoundError).toBeTruthy();
@@ -161,40 +147,37 @@ describe("getDetails", function () {
   });
 });
 
-/************************************** update */
-
-describe("update", function () {
+describe("User.update", function () {
   const updateData = {
     firstName: "NewF",
     lastName: "NewF",
-    email: "new@email.com"
+    email: "new@email.com",
   };
 
-  test("works", async function () {
-    let job = await User.update("u1", updateData);
-    expect(job).toEqual({
-      username: "u1",
-      ...updateData,
-    });
+  test("updates user information", async function () {
+    let job = await User.update(user1.username, updateData);
+    expect(job).toEqual({ username: user1.username, ...updateData });
   });
 
-  test("works: set password", async function () {
-    let job = await User.update("u1", {
-      password: "password1",
-      newPassword: "newPassword1",
-    });
+  test("updates user password", async function () {
+    let job = await User.update(
+      user1.username, {
+        password: "password1",
+        newPassword: "newPassword1" 
+      });
     expect(job).toEqual({
-      username: "u1",
-      firstName: "U1F",
-      lastName: "U1L",
-      email: "u1@email.com"
+      username: user1.username,
+      firstName: user1.first_name,
+      lastName: user1.last_name,
+      email: user1.email
     });
-    const found = await db.query("SELECT * FROM users WHERE username = 'u1'");
+    const found = await db.query(
+      `SELECT * FROM users WHERE username = '${user1.username}'`);
     expect(found.rows.length).toEqual(1);
     expect(found.rows[0].password.startsWith("$2b$")).toEqual(true);
   });
 
-  test("not found if no such user", async function () {
+  test("returns an error if no such user", async function () {
     try {
       await User.update("nope", {
         firstName: "test",
@@ -205,7 +188,7 @@ describe("update", function () {
     }
   });
 
-  test("bad request if no data", async function () {
+  test("returns another error if no data is passed in", async function () {
     expect.assertions(1);
     try {
       await User.update("c1", {});
@@ -216,17 +199,25 @@ describe("update", function () {
   });
 });
 
-/************************************** remove */
-
-describe("remove", function () {
-  test("works", async function () {
-    await User.remove("u1");
-    const res = await db.query(
-        "SELECT * FROM users WHERE username='u1'");
-    expect(res.rows.length).toEqual(0);
+describe("User.remove", function () {
+  test("creates, deletes, & confirms user has been removed", async function () {
+    const newUser = await User.register({...user3, password: "password" });
+    expect(newUser).toEqual({
+      username: user3.username,
+      firstName: user3.firstName,
+      lastName: user3.lastName,
+      email: user3.email,
+    });
+    await User.remove(user3.username);
+    try {
+      await User.get(user3.username);
+      fail();
+    } catch (err) {
+      expect(err instanceof NotFoundError).toBeTruthy();
+    }
   });
 
-  test("not found if no such user", async function () {
+  test("returns an error if no such user", async function () {
     try {
       await User.remove("u3");
       fail();

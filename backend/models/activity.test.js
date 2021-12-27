@@ -6,79 +6,117 @@ const {
   UnauthorizedError,
 } = require("../expressError");
 const db = require("../db.js");
-const User = require("./user.js");
-const Bike = require("./bike.js");
+const Activity = require("./activity.js");
 const {
+  oldActivity,
   commonBeforeAll,
   commonBeforeEach,
   commonAfterEach,
-  commonAfterAll
+  commonAfterAll,
 } = require("./_testCommon");
+const { fail } = require("assert");
 
 beforeAll(commonBeforeAll);
 beforeEach(commonBeforeEach);
 afterEach(commonAfterEach);
 afterAll(commonAfterAll);
 
-/** save new bike */
-describe("new", function () {
-  const [bikeId, athleteId, distance, brand, model, desc] = 
-  ["b1913033","5468108",20000000,"CAAD 10","CAAD 10","CAAD 10"];
+const newActivity = {
+    activity_id: "000000002",
+    athlete_id: "5468108",
+    start_date: new Date("12/01/2021 00:00:00"),
+    type: "Ride",
+    distance: "30000.0",
+    kilojoules: "700.0",
+    moving_time: 3900,
+    description: "Morning Ride",
+    trainer: false,
+  };
 
-  test("works", async function () {
-    let res = await Bike.new(bikeId, athleteId, distance, brand, model, desc);
-  
-    expect(res).toEqual({
-      bikeid: "b1913033",
-      athleteid: "5468108",
-      distance: 20000000,
-      brand: "CAAD 10",
-      model: "CAAD 10",
-      desc: "CAAD 10",
+describe("Activity.new", function () {
+  test("create a new activity", async function(){
+    const args = Object.values(newActivity);
+    let res = await Activity.new(...args);
+    expect(res).toEqual(newActivity);
+  })
+});
+
+describe("Activity.activityExists", function () {
+  test("checks if activity exists --> true", async function(){
+    const actRes = await Activity.activityExists(oldActivity.activity_id);
+    expect(actRes.exists).toEqual(true);
+  });
+
+  test("checks if activity exists --> false", async function(){
+    const actRes = await Activity.activityExists("12345");
+    expect(actRes.exists).toEqual(false);
+  });
+});
+
+describe("Activity.getCount", function () {
+  test("returns the activity count for a userId", async function () {
+    const cntRes = await Activity.getCount(oldActivity.athlete_id);
+    expect(parseInt(cntRes.count)).toEqual(1);
+  });
+
+  test("create new activity & check activity count for a userId", async function () {
+    const args = Object.values(newActivity);
+    await Activity.new(...args);
+    const cntRes = await Activity.getCount(oldActivity.athlete_id);
+    expect(parseInt(cntRes.count)).toEqual(2);
+  });
+
+});
+describe("Activity.getById", function () {
+  test("gets an activity by ID", async function() {
+    const res = await Activity.getById(oldActivity.activity_id);
+    expect({ ...res, trainer: true }).toEqual(oldActivity);
+  });
+
+  test("returns error when searching for invalid activityId", async function() {
+    try {
+      const res = await Activity.getById("12345");
+      fail();
+    } catch(err) {
+      expect(err instanceof NotFoundError);
+    }
+  });
+});
+
+describe("Activity.getByDates", function () {
+  /** no tests; my_strava app does not search using dates */
+});
+
+describe("Activity.getByAthlete", function () {
+  test("get all athlete activities", async function(){
+    const res = await Activity.getByAthlete(oldActivity.athlete_id, 1, 0);
+    expect(res.length).toEqual(1);
+    expect(res[0]).toEqual({
+      activityid: oldActivity.activity_id,
+      athleteid: oldActivity.athlete_id,
+      date: oldActivity.start_date,
+      meters: oldActivity.distance,
+      time: oldActivity.moving_time,
+      description: oldActivity.description,
+      kilojoules: oldActivity.kilojoules,
+      trainer: oldActivity.trainer,
+      type: oldActivity.type
     });
   });
-});
-
-// // ************************************** Bike Exists */
-describe("bikeExists", function () {
-  test("works", async function () {
-    const bikeRes = await Bike.bikeExists("b1913033");
-    const noBikeRes = await Bike.bikeExists("b12345")
-    expect(bikeRes).toEqual(true);
-    expect(noBikeRes).toEqual(false);
+  
+  test("returns empty array when searching for invalid athleteId", async function () {
+    const res = await Activity.getByAthlete("12345", 1, 0);
+    expect(res.length).toEqual(0);
   });
 });
 
-// // ************************************** getById */
-
-describe("getById", function () {
-  test("works", async function () {
-    const bikeRes = await Bike.getById("b1913033");
-    expect(bikeRes).toEqual(newBike);
-  });
+describe("Activity.update", function () {
+  /** no tests; my_strava app does not update activities */
 });
 
-// // ************************************** getByAthleteId */
-
-describe("getByAthleteId", function () {
-  test("works", async function () {
-    const bikeRes = await Bike.getByAthleteId("5468108");
-    expect(bikeRes.length).toEqual(1);
-    expect(bikeRes[0]).toEqual(newBike);
-  });
-});
-
-// /************************************** remove */
-
-describe("remove", function () {
-  test("works", async function () {
-    let bikeRes = await Bike.getByAthleteId("5468108");
-    expect(bikeRes.length).toEqual(1);
-    
-    const removedRes = await Bike.remove("5468108");
-    expect(removedRes.bike_id).toEqual("5468108");
-
-    bikeRes = await Bike.getByAthleteId("5468108");
-    expect(bikeRes.length).toEqual(0);
+describe("Activity.remove", function () {
+  test("removes activity", async function(){
+    const res = await Activity.remove(oldActivity.activity_id);
+    expect(res.activity_id).toEqual(oldActivity.activity_id);
   });
 });

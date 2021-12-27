@@ -7,15 +7,8 @@ const { NotFoundError, BadRequestError } = require("../expressError");
 class Activity {
   /** Post activity */
   static async new(
-    activityId,
-    atheleteId,
-    startDt,
-    type,
-    distance,
-    kilojoules,
-    movingTime,
-    desc,
-    trainer
+    activityId, atheleteId, startDt, type, distance,
+    kilojoules, movingTime, desc, trainer
   ) {
     // First checks if the activity/activity_id exists in the database
     const duplicateCheck = await db.query(
@@ -29,37 +22,14 @@ class Activity {
 
     const result = await db.query(
       `INSERT INTO activities
-        (activity_id,
-          athlete_id,
-          start_date,
-          type,
-          distance,
-          kilojoules,
-          moving_time,
-          description,
-          trainer)
+        ( activity_id, athlete_id,start_date,type,distance,
+          kilojoules,moving_time,description,trainer )
       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
       RETURNING 
-        activity_id, 
-        athlete_id, 
-        start_date, 
-        type, 
-        distance, 
-        kilojoules,
-        moving_time, 
-        description,
-        trainer`,
-      [
-        activityId,
-        atheleteId,
-        startDt,
-        type,
-        distance,
-        kilojoules,
-        movingTime,
-        desc,
-        trainer
-      ]
+        activity_id, athlete_id, start_date, type, distance, 
+        kilojoules, moving_time, description, trainer`,
+      [ activityId, atheleteId, startDt, type, distance,
+        kilojoules, movingTime, desc, trainer ]
     );
     const activity = result.rows[0];
     return activity;
@@ -71,7 +41,8 @@ class Activity {
       `SELECT activity_id FROM activities WHERE activity_id = $1`,
       [activityId]
     );
-    return actRes.rowCount === 0 ? false : true;
+    const exists = actRes.rowCount === 0 ? false : true;
+    return { exists: exists };
   }
 
   static async getCount(athleteId){
@@ -79,7 +50,7 @@ class Activity {
       `SELECT COUNT(*) FROM activities WHERE athlete_id = $1`,
       [athleteId]
     );
-    return countRes;
+    return countRes.rows[0];
   }
 
   /** Finds activity by id */
@@ -172,10 +143,10 @@ class Activity {
       RETURNING activity_id`,
       [activityId]
     );
-    const deletedId = result.rows[0];
-    if (!deletedId) {
+    if (!result.rows[0].activity_id) {
       throw new NotFoundError(`No activity with that ID deleted`);
     }
+    return result.rows[0];
   }
 }
 

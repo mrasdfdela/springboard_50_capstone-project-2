@@ -8,6 +8,7 @@ const {
 const db = require("../db.js");
 const Goal = require("./goal.js");
 const {
+  oldGoal,
   commonBeforeAll,
   commonBeforeEach,
   commonAfterEach,
@@ -28,16 +29,7 @@ const newGoal = {
   enddt: new Date("12/08/2021 00:00:00"),
 };
 
-const oldGoal = {
-  username: "u1",
-  distance: "30578.0",
-  kilojoules: "603.0",
-  time: parseInt("3480"),
-  startdt: new Date("01/01/1970 00:00:00"),
-  enddt: new Date("01/08/1970 00:00:00"),
-};
-
-describe("Test Goal.new", function () {
+describe("Goal.new", function () {
   test("creates new goals", async function () {
     let args = Object.values(newGoal);
     let res = await Goal.new(...args);
@@ -60,7 +52,7 @@ describe("Test Goal.new", function () {
   });
 });
 
-describe("Test Goal.goalCount", function () {
+describe("Goal.goalCount", function () {
   test("gets the current goal count", async function () {
     let noGoalRes = await Goal.getUserGoalCount(oldGoal.username);
     expect(noGoalRes.count).toEqual("1");
@@ -73,7 +65,7 @@ describe("Test Goal.goalCount", function () {
   });
 });
 
-describe("Test Goal.getUserGoals & Goal.getById", function () {
+describe("Goal.getUserGoals & Goal.getById", function () {
   const expectedGoal = {
     goalid: expect.any(Number),
     ...oldGoal,
@@ -88,7 +80,7 @@ describe("Test Goal.getUserGoals & Goal.getById", function () {
   });
 });
 
-describe("Test Goal.update", function () {
+describe("Goal.update", function () {
   let updatedGoalRes;
   let goalId;
   test("Updates distance of an existing goal", async function () {
@@ -116,7 +108,7 @@ describe("Test Goal.update", function () {
   });
 });
 
-describe("Test Goal.remove", function () {
+describe("Goal.remove", function () {
   test("removes the user goal", async function () {
     const goalRes = await Goal.getUserGoals("u1", 2, 0);
     const goalId = goalRes[0].goalid;
@@ -124,7 +116,7 @@ describe("Test Goal.remove", function () {
     expect(deleteRes.goal_id).toEqual(goalId);
   });
 
-  test("throw error if goalId does not exist", async function () {
+  test("throws error if goalId does not exist", async function () {
     try {
       await Goal.remove(-1);
       fail();

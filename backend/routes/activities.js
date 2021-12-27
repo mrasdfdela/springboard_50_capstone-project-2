@@ -19,17 +19,10 @@ router.post("/", async function(req,res,next){
       // Checks if activity exists before populating activity
       const activityExists = await Activity.activityExists(activity.id);
       // Creates activity if it exists
-      if (!activityExists) {
+      if (!activityExists.exists) {
         const {
-          id,
-          athlete,
-          start_date,
-          type,
-          distance,
-          kilojoules,
-          moving_time,
-          name,
-          trainer
+          id, athlete, start_date, type, distance,
+          kilojoules, moving_time, name, trainer,
         } = activity;
 
         await Activity.new(
@@ -75,7 +68,7 @@ router.get("/count", async function(req,res,next){
   try {
     const athleteId = req.query.athleteId;
     const countRes = await Activity.getCount(athleteId);
-    return res.json(countRes.rows[0]);
+    return res.json(countRes);
   } catch(err) {
     return next(err);
   }

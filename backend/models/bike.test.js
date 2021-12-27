@@ -6,13 +6,13 @@ const {
   UnauthorizedError,
 } = require("../expressError");
 const db = require("../db.js");
-const User = require("./user.js");
 const Bike = require("./bike.js");
 const {
+  oldBike,
   commonBeforeAll,
   commonBeforeEach,
   commonAfterEach,
-  commonAfterAll
+  commonAfterAll,
 } = require("./_testCommon");
 const { fail } = require("assert");
 
@@ -30,16 +30,7 @@ const newBike = {
   desc:"Masi CX"
 }
 
-const oldBike = {
-  bikeid:"b1913033",
-  athleteid:"5468108",
-  distance:20000000,
-  brand:"CAAD 10",
-  model:"CAAD 10",
-  desc:"CAAD 10"
-}
-
-describe("Test Bike.new", function () {
+describe("Bike.new", function () {
   test("create & return new bike object", async function () {
     const args = Object.values(newBike)
     let res = await Bike.new(...args);
@@ -47,7 +38,7 @@ describe("Test Bike.new", function () {
   });
 });
 
-describe("Test Bike.bikeExists", function () {
+describe("Bike.bikeExists", function () {
   test("returns true when searching for an existing bike", async function () {
     const bikeRes = await Bike.bikeExists(oldBike.bikeid);
     expect(bikeRes).toEqual(true);
@@ -59,14 +50,14 @@ describe("Test Bike.bikeExists", function () {
 
 });
 
-describe("Test Bike.getById", function () {
+describe("Bike.getById", function () {
   test("returns bike object", async function () {
     const bikeRes = await Bike.getById(oldBike.bikeid);
     expect(bikeRes).toEqual(oldBike);
   });
 });
 
-describe("Test Bike.getByAthleteId", function () {
+describe("Bike.getByAthleteId", function () {
   test("returns an array of athlete's bikes", async function() {
     const bikeRes = await Bike.getByAthleteId(oldBike.athleteid);
     expect(bikeRes.length).toEqual(1);
@@ -83,7 +74,7 @@ describe("Test Bike.getByAthleteId", function () {
   });
 });
 
-describe("Test Bike.remove", function () {
+describe("Bike.remove", function () {
   test("first checks if a bike exists", async function () {
     let bikeRes = await Bike.getById(oldBike.bikeid);
     expect(bikeRes).toEqual(oldBike);
