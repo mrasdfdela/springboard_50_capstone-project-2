@@ -25,7 +25,7 @@ router.post("/", async function(req,res,next){
           kilojoules, moving_time, name, trainer,
         } = activity;
 
-        await Activity.new(
+        const resp = await Activity.new(
           String(id),
           String(athlete.id),
           start_date,
@@ -82,8 +82,6 @@ router.get("/:activity_id", async function (req, res, next) {
     activities.time = secondsToTime(activities.moving_time);
     activities.calories = kjToCal(activities.kilojoules);
     
-    console.log(`activities routes, /:activity_id`)
-    console.log(activities);
     return res.status(200).json({ activities });
   } catch (err) {
     return next(err);
@@ -94,7 +92,7 @@ router.get("/:activity_id", async function (req, res, next) {
 router.delete("/:activity_id", async function (req, res, next) {
   try {
     await Activity.remove(req.params.activity_id);
-    return res.status(204).json({ deleted: req.params.activity_id });
+    return res.status(204);
   } catch(err) {
     return next(err);
   }

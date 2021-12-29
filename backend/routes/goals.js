@@ -67,11 +67,11 @@ router.get("/:goal_id", async function (req, res, next) {
 });
 
 // PATCHES goals by ID
-router.patch("/:goals_id", 
+router.patch("/:goal_id", 
   // ensureCorrectUser,
   async function (req, res, next) {
     try {
-      const goalId = parseInt(req.params.goals_id);
+      const goalId = parseInt(req.params.goal_id);
       
       let goalUpdated = {};
       const miles = parseInt(req.body.miles);
@@ -91,10 +91,10 @@ router.patch("/:goals_id",
 });
 
 // DELETES goals by ID
-router.delete("/:goals_id", async function (req, res, next) {
+router.delete("/:goal_id", async function (req, res, next) {
   try {
-    await Goal.remove(req.params.goals_id);
-    return res.status(204).json({ deleted: req.params.goals_id });
+    await Goal.remove(req.params.goal_id);
+    return res.status(204).json({ deleted: req.params.goal_id });
   } catch(err) {
     return next(err);
   }

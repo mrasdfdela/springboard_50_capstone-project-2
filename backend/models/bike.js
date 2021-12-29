@@ -63,7 +63,7 @@ class Bike {
   }
 
   /** Finds all bikes by athlete_id*/
-  static async getByAthleteId(athleteId){
+  static async getByAthleteId(athleteId, startDt, endDt){
     const bikeRes = await db.query(
       `SELECT
         bike_id AS bikeId, 
@@ -113,7 +113,7 @@ class Bike {
     if (!deletedId) {
       throw new NotFoundError(`No bike with that ID deleted`);
     }
-    return result.rows[0];
+    return deletedId;
   }
 }
 

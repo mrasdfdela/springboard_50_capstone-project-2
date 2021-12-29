@@ -92,8 +92,6 @@ router.post('/strava/tokens', async function(req,res){
         athlete_id: athlete_id,
         last_refresh: last_refresh
       });
-    console.log(`strava/tokens`)
-    console.log(user);
     return res.json({ user });
   } catch(err) {
     return next(err);
@@ -129,7 +127,6 @@ router.post("/token", async function (req, res, next) {
  * Authorization required: none
  */
 router.post("/register", async function (req, res, next) {
-  console.log(req.body);
   try {
     const validator = jsonschema.validate(req.body, userRegisterSchema);
     if (!validator.valid) {

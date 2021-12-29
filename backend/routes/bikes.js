@@ -20,9 +20,9 @@ router.post("/", async function(req,res,next){
       // Checks if bikes exists, then populates bikes
       const bikeExists = await Bike.bikeExists(bike.id);
       if (!bikeExists) {
-        console.log(`inserting bike: ${bike.id}`);
+        // console.log(`inserting bike: ${bike.id}`);
         const { id, distance, name, nickname } = bike;
-        await Bike.new(id, athleteId, distance, name, name, nickname);
+        const resp = await Bike.new(id, athleteId, distance, name, name, nickname);
       } else {
         console.log(`Duplicate bike id: ${bike.id}`);
       }
@@ -49,7 +49,7 @@ router.get("/", async function(req, res, next) {
   try {
     const { athleteId, startDt, endDt } = req.body;
     if (athleteId && startDt) {
-      const bikes = await Bike.getByDates(athleteId, startDt, endDt);
+      const bikes = await Bike.getByAthleteId(athleteId, startDt, endDt);
       return res.status(200).json({bikes});
     } else {
       return res.status(204).json({ "msg":"missing athlete id or start date" });
@@ -60,10 +60,10 @@ router.get("/", async function(req, res, next) {
 });
 
 // DELETES bikes by ID
-router.delete("/:bikes_id", async function (req, res, next) {
+router.delete("/:bike_id", async function (req, res, next) {
   try {
-    await Bike.remove(req.params.bikes_id);
-    return res.status(204).json({ deleted: req.params.bikes_id });
+    const resp = await Bike.remove(req.params.bike_id);
+    return res.status(204).json(resp);
   } catch(err) {
     return next(err);
   }
