@@ -21,8 +21,8 @@ let user2 = {
   email: "u2@email.com",
   athlete_id: "NULL",
 };
-const u1Token = createToken(user1.username);
-const u2Token = createToken(user2.username);
+const u1Token = createToken(user1);
+const u2Token = createToken(user2);
 
 const oldActivity = {
   activity_id: "000000001",

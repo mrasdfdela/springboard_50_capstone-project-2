@@ -91,8 +91,6 @@ describe("DELETE /bikes/:bike_id", function () {
   test("deletes a bike", async function (){
     const resp = await request(app)
       .delete(`/bikes/${oldBike.bikeid}`);
-    // console.log(`bikes test:`)
-    // console.log(resp)
     expect(resp.statusCode).toEqual(204);
   });
 });
