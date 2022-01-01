@@ -1,43 +1,57 @@
 "use strict";
 const request = require("supertest");
+const db = require("../db.js");
 const app = require("../app");
 
 const {
-  NotFoundError,
-  BadRequestError,
-  UnauthorizedError,
+  NotFoundError, BadRequestError, UnauthorizedError,
 } = require("../expressError");
-const db = require("../db.js");
-const Activity = require("../models/activity.js");
+
 const {
   user1, user2,
-  u1Token, u2Token,
-  oldActivity,
   commonBeforeAll,
   commonBeforeEach,
   commonAfterEach,
   commonAfterAll,
-} = require("../models/_testCommon");
-const { fail } = require("assert");
+} = require("./_testCommon");
+
+const oldActivity = {
+  activity_id: "000000001",
+  athlete_id: "5468108",
+  start_date: new Date("11/29/2021 00:00:00"),
+  type: "Ride",
+  distance: "29000.0",
+  kilojoules: "650.0",
+  moving_time: 3630,
+  description: "Morning Ride",
+  trainer: true,
+};
+const newActivity = {
+  id: "000000002",
+  athlete: { id: "5468108" },
+  start_date: new Date("12/01/2021 00:00:00"),
+  type: "Ride",
+  distance: "30000.0",
+  kilojoules: "700.0",
+  moving_time: 3900,
+  name: "Morning Ride",
+  trainer: false,
+};
 
 beforeAll(commonBeforeAll);
-beforeEach(commonBeforeEach);
+beforeEach(async ()=> {
+  commonBeforeEach();
+  const activityArgs = Object.values(oldActivity);
+  await db.query(
+    `INSERT INTO activities
+    (activity_id, athlete_id, start_date, type, distance, kilojoules, moving_time, description, trainer)
+  VALUES
+    ($1,$2,$3,$4,$5,$6,$7,$8,$9)`,
+    [...activityArgs]
+  );
+});
 afterEach(commonAfterEach);
 afterAll(commonAfterAll);
-
-const newActivity = {
-    id: "000000002",
-    athlete: {
-      id: "5468108"
-    },
-    start_date: new Date("12/01/2021 00:00:00"),
-    type: "Ride",
-    distance: "30000.0",
-    kilojoules: "700.0",
-    moving_time: 3900,
-    name: "Morning Ride",
-    trainer: false,
-  };
 
 describe("POST /activities", function () {
   test("creates an activity", async function(){

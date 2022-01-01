@@ -1,7 +1,6 @@
 "use strict";
 
 const request = require("supertest");
-
 const app = require("../app");
 
 const {
@@ -18,7 +17,9 @@ afterAll(commonAfterAll);
 
 describe("POST /auth/register", function () {
   test("works for anon", async function () {
-    const resp = await request(app).post("/auth/register").send({
+    const resp = await request(app)
+    .post("/auth/register")
+    .send({
       username: "newUser",
       firstName: "newFirst",
       lastName: "newLast",

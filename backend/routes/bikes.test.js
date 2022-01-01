@@ -1,29 +1,28 @@
 "use strict";
 const request = require("supertest");
+const db = require("../db.js");
 const app = require("../app");
 
 const {
-  NotFoundError,
-  BadRequestError,
-  UnauthorizedError,
+  NotFoundError, BadRequestError, UnauthorizedError,
 } = require("../expressError");
-const db = require("../db.js");
-const Bike = require("../models/bike.js");
+
 const {
   user1, user2,
-  oldBike,
   commonBeforeAll,
   commonBeforeEach,
   commonAfterEach,
   commonAfterAll,
-} = require("../models/_testCommon");
-const { fail } = require("assert");
+} = require("./_testCommon");
 
-beforeAll(commonBeforeAll);
-beforeEach(commonBeforeEach);
-afterEach(commonAfterEach);
-afterAll(commonAfterAll);
-
+const oldBike = {
+  bikeid: "b1913033",
+  athleteid: "5468108",
+  distance: 20000000,
+  brand: "CAAD 10",
+  model: "CAAD 10",
+  desc: "CAAD 10",
+};
 const newBike = {
   bikeid: "b4311939",
   athleteid: "5468108",
@@ -32,6 +31,21 @@ const newBike = {
   model: "Masi CX",
   desc: "Masi CX",
 };
+
+beforeAll(commonBeforeAll);
+beforeEach( async ()=>{
+  commonBeforeEach();
+  const bikeArgs = Object.values(oldBike);
+  await db.query(
+    `INSERT INTO bikes
+    (bike_id, athlete_id, distance, brand_name, model_name, bike_description)
+  VALUES
+    ($1,$2,$3,$4,$5,$6)`,
+    [...bikeArgs]
+  );
+});
+afterEach(commonAfterEach);
+afterAll(commonAfterAll);
 
 describe("POST /bikes", function () {
   test("create a new bike", async function () {
@@ -60,7 +74,7 @@ describe("GET /bikes/:bike_id", function () {
   });
 });
 
-describe("GET /bikes/bike_id", function () {
+describe("GET /bikes/:athlete_id", function () {
   test("returns bike by athlete id", async function () {
     const resp = await request(app)
       .get(`/bikes/`)

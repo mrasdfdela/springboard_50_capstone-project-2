@@ -8,7 +8,6 @@ const {
 const db = require("../db.js");
 const Bike = require("./bike.js");
 const {
-  oldBike,
   commonBeforeAll,
   commonBeforeEach,
   commonAfterEach,
@@ -16,19 +15,36 @@ const {
 } = require("./_testCommon");
 const { fail } = require("assert");
 
-beforeAll(commonBeforeAll);
+const oldBike = {
+  bikeid: "b1913033",
+  athleteid: "5468108",
+  distance: 20000000,
+  brand: "CAAD 10",
+  model: "CAAD 10",
+  desc: "CAAD 10",
+};
+const newBike = {
+  bikeid: "b4311939",
+  athleteid: "5468108",
+  distance: 10000000,
+  brand: "Masi CX",
+  model: "Masi CX",
+  desc: "Masi CX",
+};
+
+beforeAll( async ()=>{
+  await commonBeforeAll();
+  await db.query(
+    `INSERT INTO bikes
+    (bike_id, athlete_id, distance, brand_name, model_name, bike_description)
+  VALUES
+    ($1,$2,$3,$4,$5,$6)`,
+    Object.values(oldBike)
+  );
+});
 beforeEach(commonBeforeEach);
 afterEach(commonAfterEach);
 afterAll(commonAfterAll);
-
-const newBike = {
-  bikeid:"b4311939",
-  athleteid:"5468108",
-  distance:10000000,
-  brand:"Masi CX",
-  model:"Masi CX",
-  desc:"Masi CX"
-}
 
 describe("Bike.new", function () {
   test("create & return new bike object", async function () {

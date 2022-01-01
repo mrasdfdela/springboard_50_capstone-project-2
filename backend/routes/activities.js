@@ -92,7 +92,7 @@ router.get("/:activity_id", async function (req, res, next) {
 router.delete("/:activity_id", async function (req, res, next) {
   try {
     await Activity.remove(req.params.activity_id);
-    return res.status(204);
+    return res.status(204).json({ removed: req.params.activity_id });
   } catch(err) {
     return next(err);
   }

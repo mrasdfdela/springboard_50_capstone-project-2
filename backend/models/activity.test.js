@@ -8,7 +8,6 @@ const {
 const db = require("../db.js");
 const Activity = require("./activity.js");
 const {
-  oldActivity,
   commonBeforeAll,
   commonBeforeEach,
   commonAfterEach,
@@ -16,22 +15,42 @@ const {
 } = require("./_testCommon");
 const { fail } = require("assert");
 
-beforeAll(commonBeforeAll);
+const oldActivity = {
+  activity_id: "000000001",
+  athlete_id: "5468108",
+  start_date: new Date("11/29/2021 00:00:00"),
+  type: "Ride",
+  distance: "29000.0",
+  kilojoules: "650.0",
+  moving_time: 3630,
+  description: "Morning Ride",
+  trainer: true,
+};
+const newActivity = {
+  activity_id: "000000002",
+  athlete_id: "5468108",
+  start_date: new Date("12/01/2021 00:00:00"),
+  type: "Ride",
+  distance: "30000.0",
+  kilojoules: "700.0",
+  moving_time: 3900,
+  description: "Morning Ride",
+  trainer: false,
+};
+
+beforeAll( async ()=>{
+  await commonBeforeAll();
+  await db.query(
+    `INSERT INTO activities
+      (activity_id, athlete_id, start_date, type, distance, kilojoules, moving_time, description, trainer)
+    VALUES
+      ($1,$2,$3,$4,$5,$6,$7,$8,$9)`,
+    Object.values(oldActivity)
+  );
+});
 beforeEach(commonBeforeEach);
 afterEach(commonAfterEach);
 afterAll(commonAfterAll);
-
-const newActivity = {
-    activity_id: "000000002",
-    athlete_id: "5468108",
-    start_date: new Date("12/01/2021 00:00:00"),
-    type: "Ride",
-    distance: "30000.0",
-    kilojoules: "700.0",
-    moving_time: 3900,
-    description: "Morning Ride",
-    trainer: false,
-  };
 
 describe("Activity.new", function () {
   test("create a new activity", async function(){

@@ -1,35 +1,23 @@
 "use strict";
 const request = require("supertest");
+const db = require("../db");
 const app = require("../app");
 
 const {
-  calToKj,
-  milesToMeters,
-  calcEndDt,
-  timeToSeconds
-} = require("../helpers/conversions");
-const {
-  NotFoundError,
-  BadRequestError,
-  UnauthorizedError,
+  NotFoundError, BadRequestError, UnauthorizedError,
 } = require("../expressError");
-const db = require("../db.js");
-const Goal = require("../models/goal.js");
-const User = require("../models/user.js");
-
 const {
-  oldGoal,
-  commonBeforeAll,
-  commonBeforeEach,
-  commonAfterEach,
-  commonAfterAll
-} = require("../models/_testCommon");
+  calToKj, milesToMeters, calcEndDt, timeToSeconds
+} = require("../helpers/conversions");
 
-beforeAll(commonBeforeAll);
-beforeEach(commonBeforeEach);
-afterEach(commonAfterEach);
-afterAll(commonAfterAll);
-
+const oldGoal = {
+  username: "u1",
+  distance: "30578.0",
+  kilojoules: "603.0",
+  time: parseInt("3480"),
+  startdt: new Date("01/01/1970 00:00:00"),
+  enddt: new Date("01/08/1970 00:00:00"),
+};
 const newGoal = {
   calories: "655.0",
   date: new Date(),
@@ -38,6 +26,28 @@ const newGoal = {
   timePeriod: "week",
   username: "u1",
 };
+
+const {
+  commonBeforeAll,
+  commonBeforeEach,
+  commonAfterEach,
+  commonAfterAll
+} = require("./_testCommon");
+
+beforeAll(commonBeforeAll);
+beforeEach( async ()=>{
+  commonBeforeEach();
+  const goalArgs = Object.values(oldGoal);
+  await db.query(
+    `INSERT INTO goals
+      (username, distance, kilojoules, moving_time, start_date, end_date)
+    VALUES
+      ($1, $2, $3, $4, $5, $6)`,
+    [...goalArgs]
+  );
+});
+afterEach(commonAfterEach);
+afterAll(commonAfterAll);
 
 describe("POST /goals", function () {
   test("creates a new goal", async function () {

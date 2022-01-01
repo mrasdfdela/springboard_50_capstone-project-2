@@ -7,19 +7,15 @@ const {
 } = require("../expressError");
 const db = require("../db.js");
 const Goal = require("./goal.js");
-const {
-  oldGoal,
-  commonBeforeAll,
-  commonBeforeEach,
-  commonAfterEach,
-  commonAfterAll
-} = require("./_testCommon");
 
-beforeAll(commonBeforeAll);
-beforeEach(commonBeforeEach);
-afterEach(commonAfterEach);
-afterAll(commonAfterAll);
-
+const oldGoal = {
+  username: "u1",
+  distance: "30578.0",
+  kilojoules: "603.0",
+  time: parseInt("3480"),
+  startdt: new Date("01/01/1970 00:00:00"),
+  enddt: new Date("01/08/1970 00:00:00"),
+};
 const newGoal = {
   username: "u1",
   distance: "48280.0",
@@ -28,6 +24,27 @@ const newGoal = {
   startdt: new Date("12/01/2021 00:00:00"),
   enddt: new Date("12/08/2021 00:00:00"),
 };
+
+const {
+  commonBeforeAll,
+  commonBeforeEach,
+  commonAfterEach,
+  commonAfterAll
+} = require("./_testCommon");
+
+beforeAll( async ()=> {
+  await commonBeforeAll();
+  await db.query(
+    `INSERT INTO goals
+      (username, distance, kilojoules, moving_time, start_date, end_date)
+    VALUES
+      ($1, $2, $3, $4, $5, $6)`,
+    Object.values(oldGoal)
+  );
+});
+beforeEach(commonBeforeEach);
+afterEach(commonAfterEach);
+afterAll(commonAfterAll);
 
 describe("Goal.new", function () {
   test("creates new goals", async function () {
