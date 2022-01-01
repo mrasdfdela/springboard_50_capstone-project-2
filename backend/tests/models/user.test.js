@@ -1,12 +1,12 @@
 "use strict";
-const User = require("./user.js");
-const db = require("../db.js");
+const User = require("../../models/user.js");
+const db = require("../../db.js");
 
 const {
   NotFoundError,
   BadRequestError,
   UnauthorizedError,
-} = require("../expressError");
+} = require("../../expressError");
 
 const {
   user1, user2,

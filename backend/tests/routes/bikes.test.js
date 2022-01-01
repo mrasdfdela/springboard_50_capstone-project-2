@@ -1,11 +1,11 @@
 "use strict";
 const request = require("supertest");
-const db = require("../db.js");
-const app = require("../app");
+const db = require("../../db.js");
+const app = require("../../app");
 
 const {
   NotFoundError, BadRequestError, UnauthorizedError,
-} = require("../expressError");
+} = require("../../expressError");
 
 const {
   user1, user2,

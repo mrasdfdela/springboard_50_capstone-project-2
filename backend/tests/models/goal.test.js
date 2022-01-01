@@ -4,9 +4,9 @@ const {
   NotFoundError,
   BadRequestError,
   UnauthorizedError,
-} = require("../expressError");
-const db = require("../db.js");
-const Goal = require("./goal.js");
+} = require("../../expressError");
+const db = require("../../db.js");
+const Goal = require("../../models/goal.js");
 
 const oldGoal = {
   username: "u1",

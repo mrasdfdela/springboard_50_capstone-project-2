@@ -1,14 +1,14 @@
 "use strict";
 const request = require("supertest");
-const db = require("../db");
-const app = require("../app");
+const db = require("../../db");
+const app = require("../../app");
 
 const {
   NotFoundError, BadRequestError, UnauthorizedError,
-} = require("../expressError");
+} = require("../../expressError");
 const {
   calToKj, milesToMeters, calcEndDt, timeToSeconds
-} = require("../helpers/conversions");
+} = require("../../helpers/conversions");
 
 const oldGoal = {
   username: "u1",

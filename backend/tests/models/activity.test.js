@@ -4,9 +4,9 @@ const {
   NotFoundError,
   BadRequestError,
   UnauthorizedError,
-} = require("../expressError");
-const db = require("../db.js");
-const Activity = require("./activity.js");
+} = require("../../expressError");
+const db = require("../../db.js");
+const Activity = require("../../models/activity.js");
 const {
   commonBeforeAll,
   commonBeforeEach,

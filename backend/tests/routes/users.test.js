@@ -1,13 +1,13 @@
 "use strict";
 const request = require("supertest");
-const db = require("../db")
-const app = require("../app");
+const db = require("../../db");
+const app = require("../../app");
 
 const {
   NotFoundError,
   BadRequestError,
   UnauthorizedError,
-} = require("../expressError");
+} = require("../../expressError");
 
 const {
   calToKj,
@@ -18,12 +18,10 @@ const {
   datesToTimePeriod,
   timeToSeconds,
   secondsToTime,
-} = require("../helpers/conversions.js");
+} = require("../../helpers/conversions.js");
 const {
   user1, user2,
   u1Token, u2Token,
-  // oldBike,
-  // oldGoal,
   commonBeforeAll,
   commonBeforeEach,
   commonAfterEach,

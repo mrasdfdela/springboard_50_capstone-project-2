@@ -1,10 +1,10 @@
 "use strict";
 const bcrypt = require("bcrypt");
-const { BCRYPT_WORK_FACTOR } = require("../config");
+const { BCRYPT_WORK_FACTOR } = require("../../config");
 
-const db = require("../db.js");
-const { createToken } = require("../helpers/tokens");
-const User = require("../models/user");
+const db = require("../../db.js");
+const { createToken } = require("../../helpers/tokens");
+const User = require("../../models/user");
 
 let user1 = {
   username: "u1",
