@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, CardBody, CardTitle } from "reactstrap";
+import { Card, CardBody, CardHeader, CardTitle } from "reactstrap";
 
 function Activity({activity}){
   const actName = activity.description;
@@ -12,9 +12,11 @@ function Activity({activity}){
   return (
     <>
       <Card>
-        <a href={url}>
-          {actName} - {date}
-        </a>
+        <CardHeader>
+          <a href={url}>
+            {actName}: {date}
+          </a>
+        </CardHeader>
         <CardBody>
           <p>Miles: {miles}</p>
           <p>Moving Time: {time}</p>

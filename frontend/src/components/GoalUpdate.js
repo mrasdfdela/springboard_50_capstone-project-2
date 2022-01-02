@@ -8,6 +8,7 @@ import {
   Button,
   Card,
   CardBody,
+  CardHeader,
   CardTitle,
   Form,
   FormGroup,
@@ -16,6 +17,7 @@ import {
 } from "reactstrap";
 // import UserContext from "../contexts/UserContext";
 import MyStravaApi from "../services/api.js";
+import "./GoalSet.css";
 
 function GoalUpdate() {
   const { goalId } = useParams();
@@ -58,7 +60,7 @@ function GoalUpdate() {
     <>
       <div className="d-flex justify-content-center">
         <Card className="col-sm-6">
-          <CardTitle>Update Goal</CardTitle>
+          <CardHeader>Update Goal</CardHeader>
           <CardBody>
             <Form className="form" onSubmit={handleSubmit}>
               <FormGroup>

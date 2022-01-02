@@ -35,7 +35,7 @@ function ActivityDetail() {
         <h6>...loading activity...</h6>
       ) : (
         <>
-          <Card>
+          <Card className="border-0">
             <CardTitle>{actName}</CardTitle>
             <CardSubtitle>{date}</CardSubtitle>
             <CardBody>

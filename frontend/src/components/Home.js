@@ -6,7 +6,7 @@ import Activities from "./Activities";
 import Goals from "./Goals";
 import UserContext from "../contexts/UserContext";
 import StravaApiContext from "../contexts/StravaApiContext";
-// import MyStravaApi from "../services/api.js";
+import "./Home.css";
 
 function Home() {
   const [loading, setLoading] = useState(true);
@@ -38,12 +38,12 @@ function Home() {
         </>
       ) : (
         <>
-          <h3>{currentUser}'s Latest Activity</h3>
+          <h3>{currentUser}'s Latest User Activity</h3>
           <div className="d-flex justify-content-center">
-            <Card className="col-sm-6">
+            <Card className="col-sm-6 border-0">
               <Activities homePage={true}/>
             </Card>
-            <Card className="col-sm-6">
+            <Card className="col-sm-6 border-0">
               <Goals homePage={true}/>
             </Card>
           </div>

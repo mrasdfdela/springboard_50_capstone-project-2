@@ -1,0 +1,20 @@
+.card {
+  margin: 0.5em;
+}
+
+.card-header > a {
+  font-size: 1.2rem;
+  text-decoration: none;
+}
+
+.card-header > a:hover {
+  color: #CA4200;
+}
+
+.card-title {
+  font-size: 1.5em;
+}
+
+.card-body > p {
+  margin: 0em;
+}

@@ -1,6 +1,6 @@
 import React  from "react";
 import { Link } from "react-router-dom";
-import { Card, CardBody, CardTitle } from "reactstrap";
+import { Card, CardBody, CardHeader, CardTitle } from "reactstrap";
 
 function Goal({userGoal}){
   const startDt = userGoal.startdt.substr(0, 10);
@@ -9,16 +9,19 @@ function Goal({userGoal}){
   return (
     <>
       <Card>
-        <CardTitle>
-          Start: {startDt}
-          {endDt ? <div>End: {endDt}</div> : <div></div>}
-        </CardTitle>
+        <CardHeader>
+          <a href={userGoalLink}>
+            { endDt ? `Goal Date: ${endDt}` : <div></div> }
+          </a>
+        </CardHeader>
+        {/* <CardTitle></CardTitle> */}
         <CardBody>
+          <p>Start: {startDt}</p>
           {userGoal.distance > 0 ? <p>{userGoal.miles} miles</p> : <div></div>}
           {userGoal.kilojoules > 0 ? <p>{userGoal.calories} calories</p> : <div></div>}
           {userGoal.time !== undefined ? <p>{userGoal.time}</p> : <div></div>}
         </CardBody>
-        <Link to={userGoalLink}>Details</Link>
+        {/* // <Link to={userGoalLink}>Details</Link> */}
       </Card>
     </>
   );

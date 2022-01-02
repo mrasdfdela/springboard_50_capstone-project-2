@@ -1,3 +1,12 @@
+.navbar-brand, .nav-item>a {
+  color: #FC5200;
+  text-decoration: none;
+  font-weight: 500;
+}
+.navbar-brand:hover, .nav-item>a:hover {
+  color: #CA4200;
+}
+
 .nav-item {
   margin: auto 0.25em;
 }

@@ -30,7 +30,7 @@ function GoalDetail() {
         <h6>...loading goal...</h6>
       ) : (
         <>
-          <Card key={goalId}>
+          <Card className="border-0" key={goalId}>
             <CardTitle>Goal for: {goal.enddt.substr(0, 10)}</CardTitle>
             <CardSubtitle>
               Start: {goal.startdt.substr(0, 10)} - End:{" "}
@@ -47,10 +47,10 @@ function GoalDetail() {
               <p>Goal Id: {goal.goalId}</p>
             </CardBody>
           </Card>
-          <Link className="btn btn-primary" to="./">
+          <Link className="btn btn-secondary m-1" to="./">
             &#8592; Back to Goals
           </Link>
-          <Link className="btn btn-primary" to={goalEditLink}>
+          <Link className="btn btn-primary m-1" to={goalEditLink}>
             Edit this goal
           </Link>
         </>

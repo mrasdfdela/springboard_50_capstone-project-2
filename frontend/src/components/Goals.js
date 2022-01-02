@@ -51,7 +51,6 @@ function Goals({ homePage=false }){
           Set a New Goal
         </Link>
       )}
-      <div className="form-inline d-flex justify-content-center">
         
         {loading ? (
           <p>...loading goals...</p>
@@ -59,7 +58,7 @@ function Goals({ homePage=false }){
           <>
             {goals.length > 0 ? (
               <div className="form-inline d-flex justify-content-center">
-                <div className="col-sm-12">
+                <div className="col-sm-8">
                   {goals.map((g) => {
                     return <Goal userGoal={g} key={uuidv4()} />;
                   })}
@@ -93,7 +92,6 @@ function Goals({ homePage=false }){
             )}       
           </>
         )}
-      </div>
     </>
   );
 }

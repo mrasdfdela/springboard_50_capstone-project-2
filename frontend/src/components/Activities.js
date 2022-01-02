@@ -4,8 +4,8 @@ import { Button } from "reactstrap";
 
 import UserContext from "../contexts/UserContext";
 import Activity from "./Activity";
-
 import MyStravaApi from "../services/api";
+import "./Activities.css";
 
 function Activities({ homePage=false }) {
   const history = useHistory();
@@ -51,7 +51,7 @@ function Activities({ homePage=false }) {
         <div>
           {activities.length > 0 ? (
             <div className="form-inline d-flex justify-content-center">
-              <div className="col-sm-6">
+              <div className="col-sm-8">
                 {activities.map((a) => {
                   return <Activity activity={a} key={a.activityid} />;
                 })}
@@ -67,14 +67,20 @@ function Activities({ homePage=false }) {
                     { page <= 1 ? (
                       <div></div>
                     ) : (
-                      <Button onClick={()=>prevPage()}>
+                      <Button 
+                        onClick={()=>prevPage()}
+                        color="primary"
+                      >
                         &#8592; Previous Page
                       </Button>
                     )}
                     { page * actPerPage >= actCount ? (
                       <></>
                     ) : (
-                      <Button onClick={()=>nextPage()}>
+                      <Button 
+                        onClick={()=>nextPage()}
+                        color="primary"
+                      >
                         Next Page &#8594;
                       </Button>
                     )}

@@ -1,6 +1,4 @@
 import React, { 
-  // useContext, 
-  // useEffect, 
   useState 
   } from "react";
 import { useHistory } from "react-router-dom";
@@ -8,14 +6,15 @@ import {
   Button,
   Card,
   CardBody,
+  CardHeader,
   CardTitle,
   Form,
   FormGroup,
   Input,
   Label,
 } from "reactstrap";
-// import UserContext from "../contexts/UserContext";
 import MyStravaApi from "../services/api.js";
+import "./GoalSet.css";
 
 function GoalSet() {
   const history = useHistory();
@@ -49,7 +48,7 @@ function GoalSet() {
     <>
       <div className="d-flex justify-content-center">
         <Card className="col-sm-6">
-          <CardTitle>Create New Goal</CardTitle>
+          <CardHeader>Create New Goal</CardHeader>
           <CardBody>
             <Form className="form" onSubmit={handleSubmit}>
               <FormGroup>
