@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { Redirect, useHistory } from "react-router-dom";
-import { Button, Card, CardBody, Form, Input, Label } from "reactstrap";
+import { Button, Card, CardBody, Col, Form, FormGroup, Input, Label } from "reactstrap";
 
 import UserContext from "../contexts/UserContext";
 import StravaApiContext from "../contexts/StravaApiContext";
@@ -48,27 +48,35 @@ function Login(){
         <>
           <h3>Login</h3>
           <div className="d-flex justify-content-center">
-            <Card className="col-sm-6">
+            <Card className="col-md-6 col-sm-10">
               <CardBody>
                 <Form className="form" onSubmit={handleSubmit}>
-                  <Label for="username"></Label>
-                  <Input
-                    id="username"
-                    name="username"
-                    type="text"
-                    placeholder="username"
-                    autoComplete="on"
-                    onChange={handleChange}
-                  />
-                  <Label for="password"></Label>
-                  <Input
-                    id="password"
-                    name="password"
-                    type="password"
-                    placeholder="password"
-                    autoComplete="on"
-                    onChange={handleChange}
-                  />
+                  <FormGroup row className="mb-1">
+                    <Label for="username" sm={3}>Username</Label>
+                    <Col sm={9}>
+                      <Input
+                        id="username"
+                        name="username"
+                        type="text"
+                        placeholder="username"
+                        autoComplete="on"
+                        onChange={handleChange}
+                      />
+                    </Col>
+                  </FormGroup>
+                  <FormGroup row className="mb-1">
+                    <Label for="password" sm={3}>Password</Label>
+                    <Col sm={9}>
+                      <Input
+                        id="password"
+                        name="password"
+                        type="password"
+                        placeholder="password"
+                        autoComplete="on"
+                        onChange={handleChange}
+                      />
+                    </Col>
+                  </FormGroup>
                   <Button color="primary" className="mt-1">
                     Login
                   </Button>

@@ -4,6 +4,7 @@ import { useHistory } from "react-router-dom";
 
 import UserContext from "../contexts/UserContext";
 import StravaApiContext from "../contexts/StravaApiContext";
+import "./Athlete.css";
 
 function Athlete({ athleteId, bikes, activityCount }) {
   const history = useHistory();
@@ -43,55 +44,51 @@ function Athlete({ athleteId, bikes, activityCount }) {
       <div className="d-flex justify-content-center">
         <Card className="col-sm-6">
           <CardBody>
-            <Form onSubmit={handleUserConnect}>
+            <div className="user-info">
               {athleteId ? (
                 <>
-                  <h6>Athlete ID:</h6>
+                  <h6 className="mb-0">Athlete ID:</h6>
                   <p>{athleteId}</p>
                 </>
               ) : (
-                <>
-                  <p>Strava not connected</p>
-                  <Button>Connect Strava</Button>
-                </>
+                <Form onSubmit={handleUserConnect}>
+                  <p className="mb-1">Strava not connected</p>
+                  <Button className="mb-4">Connect Strava</Button>
+                </Form>
               )}
-            </Form>
-            <Form onSubmit={handleUserBikes}>
-              {userBikes.length > 0 ? (
+            </div>
+            <div className="user-info">
+              {activityCount > 0 ? (
                 <>
-                  <h6>Bikes:</h6>
-                  <ul>
-                    {userBikes.map((b) => {
-                      return (
-                        <li key={b.bikeid}>
-                          {b.desc}, <em>bike id: {b.bikeid}</em>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </>
-              ) : (
-                <>
-                  <p>No bikes stored!</p>
-                  <Button>Download Strava Bikes</Button>
-                </>
-              )}
-            </Form>
-            <Form onSubmit={handleUserActivities}>
-              {activityCount === 0 ? (
-                <>
-                  <p>No rides stored!</p>
-                  <Button>Download user activities</Button>
-                </>
-              ) : (
-                <>
-                  <h6>Rides:</h6>
+                  <h6 className="mb-0">Rides:</h6>
                   <p>{activityCount}</p>
                 </>
+              ) : (
+                <Form onSubmit={handleUserActivities}>
+                  <p className="mb-1">No rides stored!</p>
+                  <Button className="mb-4">Download user activities</Button>
+                </Form>
               )}
-            </Form>
-            <Form className="mt-2">
-            </Form>
+            </div>
+            <div className="user-info">
+              {userBikes.length > 0 ? (
+                <>
+                  <h6 className="mb-0">Bikes:</h6>
+                  {userBikes.map((b) => {
+                    return (
+                      <p key={b.bikeid} className="mb-0">
+                        {b.desc}, <em>bike id: {b.bikeid}</em>
+                      </p>
+                    );
+                  })}
+                </>
+              ) : (
+                <Form onSubmit={handleUserBikes}>
+                  <p className="mb-1">No bikes stored!</p>
+                  <Button className="mb-4">Download Strava Bikes</Button>
+                </Form>
+              )}
+            </div>
           </CardBody>
         </Card>
       </div>

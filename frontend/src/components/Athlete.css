@@ -1,0 +1,6 @@
+.user-info button {
+  background-color: #FC5200 !important;
+}
+.user-info button:hover {
+  background-color: #CA4200 !important;
+}

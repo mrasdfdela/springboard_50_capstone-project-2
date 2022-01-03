@@ -27,18 +27,18 @@ function NavBar() {
         </NavLink>
         {currentUser ? (
           <Nav className="ml-auto navbar">
-            <NavItem>
+            <NavItem className="mx-2">
               <NavLink to="/activities">
                 {currentUser}'s Activities
               </NavLink>
             </NavItem>
-            <NavItem>
+            <NavItem className="mx-2">
               <NavLink to="/goals">Goals</NavLink>
             </NavItem>
-            <NavItem>
+            <NavItem className="mx-2">
               <NavLink to="/user-update">{currentUser}</NavLink>
             </NavItem>
-            <NavItem>
+            <NavItem className="mx-2">
               <Link 
                 to="/login"
                 onClick={ ()=> handleLogout() }>
@@ -48,10 +48,10 @@ function NavBar() {
           </Nav>
         ) : (
           <Nav className="mr-auto navbar">
-            <NavItem>
+            <NavItem className="mx-2">
               <NavLink to="/login">Login</NavLink>
             </NavItem>
-            <NavItem>
+            <NavItem className="mx-2">
               <NavLink to="/signup">Signup</NavLink>
             </NavItem>
           </Nav>

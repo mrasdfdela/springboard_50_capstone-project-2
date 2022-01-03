@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { Button, Card, CardBody, CardTitle, Form, Input, Label } from "reactstrap";
+import { Button, Card, CardBody, CardTitle, Col, Form, FormGroup, Input, Label } from "reactstrap";
 
 import Athlete from "./Athlete";
 
@@ -96,60 +96,93 @@ function UserUpdate() {
       {userLoaded ? (
         <>
           <div className="d-flex justify-content-center">
-            <Card className="col-sm-6">
+            <Card className="col-sm-10 col-md-6">
               <CardBody>
                 <CardTitle>
                   Update <em>{currentUser}</em>
                 </CardTitle>
-                <Form className="form" onSubmit={handleSubmit}>
-                  <Label for="firstName"></Label>
-                  <Input
-                    id="firstName"
-                    name="firstName"
-                    type="text"
-                    placeholder="First Name"
-                    defaultValue={formData.firstName}
-                    onChange={handleChange}
-                  />
-                  <Label for="lastName"></Label>
-                  <Input
-                    id="lastName"
-                    name="lastName"
-                    type="text"
-                    placeholder="Last Name"
-                    defaultValue={formData.lastName}
-                    onChange={handleChange}
-                  />
-                  <Label for="email"></Label>
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    placeholder="E-Mail"
-                    defaultValue={formData.email}
-                    onChange={handleChange}
-                  />
-                  <Label for="password"></Label>
-                  <Input
-                    id="newPassword"
-                    name="newPassword"
-                    type="password"
-                    placeholder="New Password"
-                    autoComplete="off"
-                    onChange={handleChange}
-                  />
-                  <Label for="password" className="mt-4">
-                    Confirm Password To Update:
-                  </Label>
-                  <Input
-                    id="password"
-                    name="password"
-                    type="password"
-                    placeholder="Current Password"
-                    autoComplete="off"
-                    onChange={handleChange}
-                  />
-                  <Button color="primary" className="mt-3">
+                <Form onSubmit={handleSubmit}>
+                  <FormGroup row className="mb-0">
+                    <Label
+                      for="firstName"
+                      className="mb-0 justify-content-left"
+                      sm={3}
+                    >
+                      First Name
+                    </Label>
+                    <Col sm={9}>
+                      <Input
+                        id="firstName"
+                        name="firstName"
+                        type="text"
+                        placeholder="First Name"
+                        defaultValue={formData.firstName}
+                        onChange={handleChange}
+                        className="col-sm-10"
+                      />
+                    </Col>
+                  </FormGroup>
+                  <FormGroup row className="mb-0">
+                    <Label for="lastName" sm={3}>
+                      Last Name
+                    </Label>
+                    <Col sm={9}>
+                      <Input
+                        id="lastName"
+                        name="lastName"
+                        type="text"
+                        placeholder="Last Name"
+                        defaultValue={formData.lastName}
+                        onChange={handleChange}
+                      />
+                    </Col>
+                  </FormGroup>
+                  <FormGroup row>
+                    <Label for="email" className="mb-0" sm={3}>
+                      E-mail
+                    </Label>
+                    <Col sm={9}>
+                      <Input
+                        id="email"
+                        name="email"
+                        type="email"
+                        placeholder="E-Mail"
+                        defaultValue={formData.email}
+                        onChange={handleChange}
+                      />
+                    </Col>
+                  </FormGroup>
+                  <FormGroup row>
+                    <Label for="password" className="mb-0" sm={3}>
+                      Password (new)
+                    </Label>
+                    <Col sm={9}>
+                      <Input
+                        id="newPassword"
+                        name="newPassword"
+                        type="password"
+                        placeholder="New Password"
+                        autoComplete="off"
+                        onChange={handleChange}
+                      />
+                    </Col>
+                  </FormGroup>
+                  <FormGroup className="mt-5 mb-0" row>
+                    <Label for="password" className="mb-0" sm={3}>
+                      Current Password (Required):
+                    </Label>
+                    <Col sm={9}>
+                      <Input
+                        id="password"
+                        name="password"
+                        type="password"
+                        placeholder="Current Password"
+                        autoComplete="off"
+                        onChange={handleChange}
+                      />
+                    </Col>
+                  </FormGroup>
+                  <Button color="primary" className="mt-0">
                     Submit
                   </Button>
                 </Form>

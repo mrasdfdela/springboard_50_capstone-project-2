@@ -6,7 +6,3 @@
 .navbar-brand:hover, .nav-item>a:hover {
   color: #CA4200;
 }
-
-.nav-item {
-  margin: auto 0.25em;
-}

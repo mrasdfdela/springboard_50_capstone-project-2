@@ -1,7 +1,6 @@
 import React, { useContext, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { Button, Card, CardBody, Form, Input, Label} from "reactstrap";
-import "./Signup.css";
+import { Button, Card, CardBody, Col, Form, FormGroup, Input, Label} from "reactstrap";
 import user from "../helpers/user";
 import UserContext from "../contexts/UserContext";
 
@@ -46,49 +45,79 @@ function Signup(){
     <>
       <h3>Signup</h3>
       <div className="d-flex justify-content-center">
-        <Card className="col-sm-6">
+        <Card className="col-md-6 col-sm-10">
           <CardBody>
             <Form className="form" onSubmit={handleSubmit}>
-              <Label for="username"></Label>
-              <Input
-                id="username"
-                name="username"
-                type="text"
-                placeholder="username"
-                onChange={handleChange}
-              />
-              <Label for="password"></Label>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                placeholder="password"
-                onChange={handleChange}
-              />
-              <Label for="firstName"></Label>
-              <Input
-                id="firstName"
-                name="firstName"
-                type="text"
-                placeholder="First Name"
-                onChange={handleChange}
-              />
-              <Label for="lastName"></Label>
-              <Input
-                id="lastName"
-                name="lastName"
-                type="text"
-                placeholder="Last Name"
-                onChange={handleChange}
-              />
-              <Label for="email"></Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="E-Mail"
-                onChange={handleChange}
-              />
+              <FormGroup row className="mb-1">
+                <Label for="username" sm={3}>
+                  Username
+                </Label>
+                <Col sm={9}>
+                  <Input
+                    id="username"
+                    name="username"
+                    type="text"
+                    placeholder="username"
+                    onChange={handleChange}
+                  />
+                </Col>
+              </FormGroup>
+              <FormGroup row className="mb-1">
+                <Label for="password" sm={3}>
+                  Password
+                </Label>
+                <Col sm={9}>
+                  <Input
+                    id="password"
+                    name="password"
+                    type="password"
+                    placeholder="password"
+                    onChange={handleChange}
+                  />
+                </Col>
+              </FormGroup>
+              <FormGroup row className="mb-1">
+                <Label for="firstName" sm={3}>
+                  Jerry
+                </Label>
+                <Col sm={9}>
+                  <Input
+                    id="firstName"
+                    name="firstName"
+                    type="text"
+                    placeholder="First Name"
+                    onChange={handleChange}
+                  />
+                </Col>
+              </FormGroup>
+              <FormGroup row className="mb-1">
+                <Label for="lastName" sm={3}>
+                  Hsu
+                </Label>
+                <Col sm={9}>
+                  <Input
+                    id="lastName"
+                    name="lastName"
+                    type="text"
+                    placeholder="Last Name"
+                    onChange={handleChange}
+                  />
+                </Col>
+              </FormGroup>
+              <FormGroup row className="mb-1">
+                <Label for="email" sm={3}>
+                  E-mail
+                </Label>
+                <Col sm={9}>
+                  <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    placeholder="E-Mail"
+                    onChange={handleChange}
+                  />
+                </Col>
+              </FormGroup>
               <Button color="primary" className="mt-1">
                 Submit
               </Button>
