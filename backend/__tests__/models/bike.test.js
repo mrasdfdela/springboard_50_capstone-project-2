@@ -1,3 +1,4 @@
+//Tests foe the Bike model
 "use strict";
 
 const {
@@ -34,6 +35,7 @@ const newBike = {
 
 beforeAll( async ()=>{
   await commonBeforeAll();
+  // Setup an "old" bike before running tests
   await db.query(
     `INSERT INTO bikes
     (bike_id, athlete_id, distance, brand_name, model_name, bike_description)
@@ -80,7 +82,7 @@ describe("Bike.getByAthleteId", function () {
     expect(bikeRes[0]).toEqual(oldBike);
   });
 
-  test("add a bike and return array of bikes", async function() {
+  test("adds a bike and return array of bikes", async function() {
     const args = Object.values(newBike);
     let res = await Bike.new(...args);
 
@@ -96,7 +98,7 @@ describe("Bike.remove", function () {
     expect(bikeRes).toEqual(oldBike);
   });
 
-  test("removes a bike and re-checks if it exists", async function () {
+  test("then removes a bike and checks that it no longer exists", async function () {
     const removedRes = await Bike.remove(oldBike.bikeid);
     expect(removedRes.bike_id).toEqual(oldBike.bikeid);
 

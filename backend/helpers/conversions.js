@@ -1,3 +1,6 @@
+// Unit conversions
+
+// calories -> kilojoules
 function calToKj(calories) {
   if(typeof calories !== 'undefined') {
     const kilojoules = calories / 1.005;
@@ -6,6 +9,7 @@ function calToKj(calories) {
   return null;
 }
 
+// kilojoules -> calories
 function kjToCal(kj) {
   if (typeof kj !== "undefined") {
     const calories = kj * 1.005;
@@ -14,6 +18,7 @@ function kjToCal(kj) {
   return null;
 }
 
+// meters -> miles
 function metersToMiles(meters){
   if (typeof meters !== "undefined") {
     const miles = meters * 0.000621371;
@@ -22,6 +27,7 @@ function metersToMiles(meters){
   return null;
 }
 
+// miles -> meters
 function milesToMeters(miles){
   if (typeof miles !== "undefined") {
     const meters = 1609.34 * miles;
@@ -30,6 +36,7 @@ function milesToMeters(miles){
   return null;
 }
 
+// calculates an end date from start date and time period arguments
 function calcEndDt(startDt, period) {
   let time = Date.parse(startDt);
 
@@ -52,6 +59,7 @@ function calcEndDt(startDt, period) {
   return newDate.toISOString().substr(0, 10);
 }
 
+// calculates a time period from start date and end date
 function datesToTimePeriod(startDt, endDt) {
   if (typeof startDt != "undefined" && typeof endDt != "undefined") {
     const timeDiff = endDt - startDt;
@@ -76,6 +84,7 @@ function datesToTimePeriod(startDt, endDt) {
   }
 }
 
+// converts clock time to seconds (ex: 1:00 -> 3600) 
 function timeToSeconds(time){
   if (typeof time !== "undefined") {
     let seconds;
@@ -91,6 +100,7 @@ function timeToSeconds(time){
   }
 }
 
+// converts seconds to clock time (ex: 3600 -> 1:00)
 function secondsToTime(seconds){
   if (typeof seconds !== "undefined" && seconds > 0) {
     let date = new Date(0);

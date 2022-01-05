@@ -1,3 +1,4 @@
+// Tests for the Goal model
 "use strict";
 
 const {
@@ -34,6 +35,7 @@ const {
 
 beforeAll( async ()=> {
   await commonBeforeAll();
+  // Setup an "old" goal before running tests
   await db.query(
     `INSERT INTO goals
       (username, distance, kilojoules, moving_time, start_date, end_date)
@@ -100,7 +102,7 @@ describe("Goal.getUserGoals & Goal.getById", function () {
 describe("Goal.update", function () {
   let updatedGoalRes;
   let goalId;
-  test("Updates distance of an existing goal", async function () {
+  test("updates distance of an existing goal", async function () {
     const goalRes = await Goal.getUserGoals("u1",3,0);
     goalId = goalRes[0].goalid;
     updatedGoalRes = await Goal.update(
@@ -109,14 +111,14 @@ describe("Goal.update", function () {
       goalid: expect.any(Number),
       ...oldGoal, distance: "35000.0" });
   });
-  test("Updates kilojoules of an existing goal", async function () {
+  test("updates kilojoules of an existing goal", async function () {
     updatedGoalRes = await Goal.update(
       goalId, { kilojoules: "650.0"} );
     expect(updatedGoalRes).toEqual({
       goalid: expect.any(Number),
       ...oldGoal, kilojoules: "650.0"});
   });
-  test("Updates moving time of an existing goal", async function () {
+  test("updates moving time of an existing goal", async function () {
     updatedGoalRes = await Goal.update(
       goalId, { moving_time: 4000} );
     expect(updatedGoalRes).toEqual({

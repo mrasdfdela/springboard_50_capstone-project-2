@@ -1,16 +1,16 @@
+/** Routes for bikes */
 "use strict";
 
-/** Routes for bikes */
 const Bike = require("../models/bike");
-// const { BadRequestError, NotFoundError } = require("../expressError");
-
 const jsonschema = require("jsonschema");
-// const { ensureCorrectUser } = require("../middleware/auth");
 
 const express = require("express");
 const router = new express.Router();
 
-// POST new bikes
+// POST bikes (that are downloaded from Strava)
+// Bike objects are downloaded from strava
+// Passes in an array of bikes {id, athleteId, distance, name, nickname }
+// Returns an object with new bike count { new_bike_records: {{someNumber}} }
 router.post("/", async function(req,res,next){
   try {
     const athleteId = req.body.id
@@ -20,7 +20,6 @@ router.post("/", async function(req,res,next){
       // Checks if bikes exists, then populates bikes
       const bikeExists = await Bike.bikeExists(bike.id);
       if (!bikeExists) {
-        // console.log(`inserting bike: ${bike.id}`);
         const { id, distance, name, nickname } = bike;
         const resp = await Bike.new(id, athleteId, distance, name, name, nickname);
       } else {
@@ -35,6 +34,8 @@ router.post("/", async function(req,res,next){
 });
 
 // GET bike by ID
+// Pass in query parameter bike_id
+// Return bike object
 router.get("/:bike_id", async function (req, res, next) {
   try {
     const bikes = await Bike.getById(req.params.bike_id);
@@ -44,7 +45,9 @@ router.get("/:bike_id", async function (req, res, next) {
   }
 });
 
-// GET bikes by athleteId
+// GET a count of user's/athlete's activities
+// Pass in query parameter athleteId
+// Returns an array of bikes
 router.get("/", async function(req, res, next) {
   try {
     const { athleteId, startDt, endDt } = req.body;
@@ -60,6 +63,8 @@ router.get("/", async function(req, res, next) {
 });
 
 // DELETES bikes by ID
+// Pass in query parameter bike_id
+// Returns object confirming deletion
 router.delete("/:bike_id", async function (req, res, next) {
   try {
     const resp = await Bike.remove(req.params.bike_id);

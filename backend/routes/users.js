@@ -1,6 +1,6 @@
+/** Routes for users. */
 "use strict";
 
-/** Routes for users. */
 const User = require("../models/user");
 const Bike = require("../models/bike");
 const Goal = require("../models/goal");
@@ -15,25 +15,9 @@ const { kjToCal, metersToMiles, secondsToTime } = require("../helpers/conversion
 const express = require("express");
 const router = express.Router();
 
-/** GET / => { users: [ {username, firstName, lastName, email }, ... ] }
- * Returns list of all users.
- * Authorization required: admin
- **/
-// router.get("/", ensureAdmin, async function (req, res, next) {
-//   try {
-//     const users = await User.findAll();
-//     return res.json({ users });
-//   } catch (err) {
-//     return next(err);
-//   }
-// });
-
-/** GET /[username] => { user }
- * Returns { username, firstName, lastName, isAdmin, jobs }
- *   where jobs is { id, title, companyHandle, companyName, state }
- * Authorization required: admin or same user-as-:username
- **/
-
+// GET user by ID
+// Pass in query parameter username
+// Return user object
 router.get("/:username", 
   async function (req, res, next) {
     try {
@@ -45,6 +29,9 @@ router.get("/:username",
   }
 );
 
+// GET bikes by user ID
+// Pass in query parameter username
+// Return an array of bike objects
 router.get("/:username/bikes", 
   async function (req, res, next) {
     try {
@@ -57,6 +44,9 @@ router.get("/:username/bikes",
   }
 );
 
+// GET goals by user ID
+// Pass in query parameters username, count (goals per page), and page (SQL offset)
+// Return an array (n = count) of goal objects
 router.get("/:username/goals", 
   async function (req, res, next) {
     try {
@@ -77,6 +67,9 @@ router.get("/:username/goals",
   }
 );
 
+// GET goal count by user ID
+// Pass in query parameters username
+// Return a count object
 router.get("/:username/goals-count", 
   async function (req, res, next) {
     try {
@@ -88,6 +81,9 @@ router.get("/:username/goals-count",
   }
 );
 
+// GET user details by user ID
+// Pass in query parameters username
+// Return a user object
 router.get("/:username/details",
   async function (req, res, next) {
     try {
@@ -119,42 +115,5 @@ router.patch("/:username",
     return next(err);
   }
 });
-
-/** DELETE /:username => { deleted: username }
- * Authorization required: same-user-as-:username **/
-
-// router.delete(
-//   "/:username",
-//   ensureCorrectUserOrAdmin,
-//   async function (req, res, next) {
-//     try {
-//       await User.remove(req.params.username);
-//       return res.json({ deleted: req.params.username });
-//     } catch (err) {
-//       return next(err);
-//     }
-//   }
-// );
-
-/** POST /[username]/jobs/[id]  { state } => { application }
- *
- * Returns {"applied": jobId}
- *
- * Authorization required: admin or same-user-as-:username
- * */
-
-// router.post(
-//   "/:username/jobs/:id",
-//   ensureCorrectUserOrAdmin,
-//   async function (req, res, next) {
-//     try {
-//       const jobId = +req.params.id;
-//       await User.applyToJob(req.params.username, jobId);
-//       return res.json({ applied: jobId });
-//     } catch (err) {
-//       return next(err);
-//     }
-//   }
-// );
 
 module.exports = router;

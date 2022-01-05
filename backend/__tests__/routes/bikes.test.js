@@ -1,14 +1,19 @@
+// Tests for bikes routes
 "use strict";
+
 const request = require("supertest");
 const db = require("../../db.js");
 const app = require("../../app");
 
 const {
-  NotFoundError, BadRequestError, UnauthorizedError,
+  NotFoundError,
+  BadRequestError,
+  UnauthorizedError,
 } = require("../../expressError");
 
 const {
-  user1, user2,
+  user1,
+  user2,
   commonBeforeAll,
   commonBeforeEach,
   commonAfterEach,
@@ -33,8 +38,9 @@ const newBike = {
 };
 
 beforeAll(commonBeforeAll);
-beforeEach( async ()=>{
+beforeEach(async () => {
   commonBeforeEach();
+  // Setup an "old" bike before running tests
   const bikeArgs = Object.values(oldBike);
   await db.query(
     `INSERT INTO bikes
@@ -48,29 +54,30 @@ afterEach(commonAfterEach);
 afterAll(commonAfterAll);
 
 describe("POST /bikes", function () {
-  test("create a new bike", async function () {
+  test("creates a new bike", async function () {
     const resp = await request(app)
       .post(`/bikes`)
       .send({
         id: newBike.athleteid,
-        bikes: [{
+        bikes: [
+          {
             id: newBike.bikeid,
             distance: newBike.distance,
             name: newBike.brand,
             nickname: newBike.desc,
-        }],
+          },
+        ],
       });
     expect(resp.statusCode).toEqual(201);
-    expect(resp.body).toEqual( {new_bike_records: 1 });
+    expect(resp.body).toEqual({ new_bike_records: 1 });
   });
 });
 
 describe("GET /bikes/:bike_id", function () {
   test("returns bike by id", async function () {
-    const resp = await request(app)
-      .get(`/bikes/${oldBike.bikeid}`)
+    const resp = await request(app).get(`/bikes/${oldBike.bikeid}`);
     expect(resp.statusCode).toEqual(200);
-    expect(resp.body).toEqual({ bikes: oldBike});
+    expect(resp.body).toEqual({ bikes: oldBike });
   });
 });
 
@@ -85,7 +92,7 @@ describe("GET /bikes/:athlete_id", function () {
       });
     expect(resp.statusCode).toEqual(200);
     expect(resp.body).toEqual({
-      bikes: [oldBike]
+      bikes: [oldBike],
     });
   });
   test("returns nothing if no bikes associated with athlete id", async function () {
@@ -97,14 +104,13 @@ describe("GET /bikes/:athlete_id", function () {
         endDt: new Date(),
       });
     expect(resp.statusCode).toEqual(200);
-    expect(resp.body).toEqual({ bikes:[] });
+    expect(resp.body).toEqual({ bikes: [] });
   });
 });
 
 describe("DELETE /bikes/:bike_id", function () {
-  test("deletes a bike", async function (){
-    const resp = await request(app)
-      .delete(`/bikes/${oldBike.bikeid}`);
+  test("deletes a bike", async function () {
+    const resp = await request(app).delete(`/bikes/${oldBike.bikeid}`);
     expect(resp.statusCode).toEqual(204);
   });
 });

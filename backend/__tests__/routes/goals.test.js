@@ -1,4 +1,6 @@
+// Tests for goals routes
 "use strict";
+
 const request = require("supertest");
 const db = require("../../db");
 const app = require("../../app");
@@ -37,6 +39,7 @@ const {
 beforeAll(commonBeforeAll);
 beforeEach( async ()=>{
   commonBeforeEach();
+  // Setup an "old" goal before running tests
   const goalArgs = Object.values(oldGoal);
   await db.query(
     `INSERT INTO goals

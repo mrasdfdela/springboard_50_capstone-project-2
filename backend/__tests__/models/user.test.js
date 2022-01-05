@@ -1,3 +1,4 @@
+// Tests for the User model
 "use strict";
 const User = require("../../models/user.js");
 const db = require("../../db.js");
@@ -39,7 +40,7 @@ describe("User.new", function () {
     expect(found.rows[0].password.startsWith("$2b$")).toEqual(true);
   });
 
-  test("bad request with dup data", async function () {
+  test("throw an error after attempting to register with dup data", async function () {
     try {
       await User.register({ ...user3, password: "password" });
       await User.register({ ...user3, password: "otherPwd" });
@@ -137,7 +138,7 @@ describe("User.getDetails", function () {
     });
   });
 
-  test("not found if no such user", async function () {
+  test("throws an error when searching for non-existant user", async function () {
     try {
       await User.getDetails("fakeUser");
       fail();

@@ -7,7 +7,7 @@ function Activity({activity}){
   const time = activity.time;
   const miles = activity.miles;
   const calories = activity.calories;
-  const url = `./activities/${activity.activityid}`;
+  const url = `/activities/${activity.activityid}`;
 
   return (
     <>

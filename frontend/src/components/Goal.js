@@ -14,14 +14,12 @@ function Goal({userGoal}){
             { endDt ? `Goal Date: ${endDt}` : <div></div> }
           </a>
         </CardHeader>
-        {/* <CardTitle></CardTitle> */}
         <CardBody>
           <p>Start: {startDt}</p>
           {userGoal.distance > 0 ? <p>{userGoal.miles} miles</p> : <div></div>}
           {userGoal.kilojoules > 0 ? <p>{userGoal.calories} calories</p> : <div></div>}
           {userGoal.time !== undefined ? <p>{userGoal.time}</p> : <div></div>}
         </CardBody>
-        {/* // <Link to={userGoalLink}>Details</Link> */}
       </Card>
     </>
   );

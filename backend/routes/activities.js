@@ -1,6 +1,6 @@
+/** Routes for activities */
 "use strict";
 
-/** Routes for activities */
 const Activity = require("../models/activity");
 const { BadRequestError, NotFoundError } = require("../expressError");
 
@@ -11,7 +11,8 @@ const { ensureCorrectUser } = require("../middleware/auth");
 const express = require("express");
 const router = new express.Router();
 
-// POST new activities
+// POST activities (that are downloaded from Strava)
+// Returns object with count of activities posted { new_records: {{someNumber}} }
 router.post("/", async function(req,res,next){
   try {
     const activities = req.body;
@@ -46,6 +47,10 @@ router.post("/", async function(req,res,next){
   }
 });
 
+
+// GET user's activities 
+// Pass in query parameters of athleteId, activities per page (count), and page
+// Returns an array of activities
 router.get("/", async function(req, res, next) {
   try {
     const { athleteId, count, page } = req.query;
@@ -64,6 +69,9 @@ router.get("/", async function(req, res, next) {
   }
 });
 
+// GET a count of user's activities
+// Pass in query parameter athleteId
+// Returns an object with activity count
 router.get("/count", async function(req,res,next){
   try {
     const athleteId = req.query.athleteId;
@@ -75,6 +83,8 @@ router.get("/count", async function(req,res,next){
 });
 
 // GET activity by ID
+// Pass in query parameter activity_id
+// Return activity object
 router.get("/:activity_id", async function (req, res, next) {
   try {
     const activities = await Activity.getById(req.params.activity_id);
@@ -89,6 +99,8 @@ router.get("/:activity_id", async function (req, res, next) {
 });
 
 // DELETES activity by ID
+// Pass in query parameter activity_id
+// Returns object confirming deletion { removed: {{activity_id}} }
 router.delete("/:activity_id", async function (req, res, next) {
   try {
     await Activity.remove(req.params.activity_id);
@@ -97,9 +109,5 @@ router.delete("/:activity_id", async function (req, res, next) {
     return next(err);
   }
 });
-
-// PATCHES activity by ID
-// router.patch("/:activity_id", async function (req, res, next) {
-// });
 
 module.exports = router;

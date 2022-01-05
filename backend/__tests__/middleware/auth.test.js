@@ -1,15 +1,16 @@
+// tests authorization middleware (for login, correct user, etc.)
 "use strict";
 
 const jwt = require("jsonwebtoken");
-const { UnauthorizedError } = require("../expressError");
+const { UnauthorizedError } = require("../../expressError");
 const {
   authenticateJWT,
   ensureLoggedIn,
   ensureCorrectUser,
-} = require("./auth");
+} = require("../../middleware/auth");
 
 
-const { SECRET_KEY } = require("../config");
+const { SECRET_KEY } = require("../../config");
 const testJwt = jwt.sign({ username: "test" }, SECRET_KEY);
 const badJwt = jwt.sign({ username: "test" }, "wrong");
 

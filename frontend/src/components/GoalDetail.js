@@ -33,8 +33,7 @@ function GoalDetail() {
           <Card className="border-0" key={goalId}>
             <CardTitle>Goal for: {goal.enddt.substr(0, 10)}</CardTitle>
             <CardSubtitle>
-              Start: {goal.startdt.substr(0, 10)} - End:{" "}
-              {goal.enddt.substr(0, 10)}
+              Goal Start: {goal.startdt.substr(0, 10)}
             </CardSubtitle>
             <CardBody>
               {goal.miles > 0 ? <p>{goal.miles} miles</p> : <div></div>}

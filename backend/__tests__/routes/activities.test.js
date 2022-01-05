@@ -1,4 +1,6 @@
+// Tests for activities routes
 "use strict";
+
 const request = require("supertest");
 const db = require("../../db.js");
 const app = require("../../app");
@@ -41,6 +43,7 @@ const newActivity = {
 beforeAll(commonBeforeAll);
 beforeEach(async ()=> {
   commonBeforeEach();
+  // Setup an "old" activity before running tests
   const activityArgs = Object.values(oldActivity);
   await db.query(
     `INSERT INTO activities

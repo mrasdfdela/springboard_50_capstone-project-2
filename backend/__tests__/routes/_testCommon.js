@@ -1,6 +1,12 @@
+// Setup and teardown for route tests
+"use strict";
+
 const bcrypt = require("bcrypt");
-const db = require("../../db.js");
 const { BCRYPT_WORK_FACTOR } = require("../../config");
+
+const db = require("../../db.js");
+const { createToken } = require("../../helpers/tokens");
+const User = require("../../models/user");
 
 let user1 = {
   username: "u1",
@@ -19,27 +25,25 @@ let user2 = {
   email: "u2@email.com",
   athlete_id: "NULL",
 };
+const u1Token = createToken(user1);
+const u2Token = createToken(user2);
 
-async function commonBeforeAll(){
+async function commonBeforeAll() {
+  // clear all tables before adding new users for tests
   await db.query("DELETE FROM bikes;");
-  await db.query("DELETE FROM activities;");
   await db.query("DELETE FROM goals;");
+  await db.query("DELETE FROM activities;");
   await db.query("DELETE FROM users;");
 
-  user1.password = await bcrypt.hash(user1.password, BCRYPT_WORK_FACTOR);
-  user2.password = await bcrypt.hash(user2.password, BCRYPT_WORK_FACTOR);
-  let user1Args = Object.values(user1);
-  let user2Args = Object.values(user2);  
-
-  await db.query(
-    `INSERT INTO users 
-      (username, password, first_name, last_name, email, athlete_id)
-    VALUES 
-      ($1, $2, $3, $4, $5, $6),
-      ($7, $8, $9, $10, $11, $12)
-    RETURNING username`,
-    [...user1Args, ...user2Args]
-  );
+  // Setup multiple users for route tests
+  await User.register({
+    username: user1.username,
+    firstName: user1.first_name,
+    lastName: user1.last_name,
+    email: user1.email,
+    password: user1.password,
+  });
+  await db.query(`UPDATE users SET athlete_id = $1`, [user1.athlete_id]);
 }
 
 async function commonBeforeEach() {
@@ -54,8 +58,13 @@ async function commonAfterAll() {
   await db.end();
 }
 
+
+test("dummy test function", ()=> { });
 module.exports = {
-  user1, user2,
+  user1,
+  user2,
+  u1Token,
+  u2Token,
   commonBeforeAll,
   commonBeforeEach,
   commonAfterEach,

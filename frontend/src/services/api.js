@@ -167,7 +167,7 @@ class MyStravaApi {
           `https://www.strava.com/oauth/token?client_id=${STRAVA_CLIENT_ID}&client_secret=${STRAVA_CLIENT_SECRET}&grant_type=${grantType}&refresh_token=${refreshToken}`);
 
         // Update strava access token
-        if (userRes.user.strava_access_token != refRes.data.access_token) {
+        if (userRes.user.strava_access_token = refRes.data.access_token) {
           const timeRes = await axios.get(
             `https://worldtimeapi.org/api/timezone/Europe/London`);
           const currDate = new Date(timeRes.data.utc_datetime).toUTCString();

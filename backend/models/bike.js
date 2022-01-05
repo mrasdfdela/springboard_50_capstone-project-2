@@ -1,3 +1,4 @@
+// Bike model setup & methods
 "use strict";
 
 const db = require("../db");
@@ -8,6 +9,7 @@ const {
 
 class Bike {
   /** Post new bike */
+  // If successful, returns {bikeId, athleteID, distance, brand, model, desc }
   static async new(bikeId, athleteId, distance, brand, model, desc) {
     const result = await db.query(
       `INSERT INTO bikes
@@ -25,23 +27,26 @@ class Bike {
         brand_name AS brand, 
         model_name AS model, 
         bike_description AS desc`,
-      [bikeId, athleteId, distance, brand, model, desc]);
+      [bikeId, athleteId, distance, brand, model, desc]
+    );
     const newBike = result.rows[0];
     return newBike;
   }
 
   /** Checks if bike exists */
-  static async bikeExists(bikeId){
+  // Returns boolean if bike_id exists
+  static async bikeExists(bikeId) {
     const bikeRes = await db.query(
-      `SELECT bike_id from bikes WHERE bike_id = $1`, 
-      [bikeId] 
+      `SELECT bike_id from bikes WHERE bike_id = $1`,
+      [bikeId]
     );
     return bikeRes.rowCount === 0 ? false : true;
   }
 
   /** Finds bike by id */
-  static async getById(bikeId){
-    // console.log(`finding bike: ${bikeId}`);
+  // Returns bikeId, athleteId, distance, brand, model, desc
+  // Throws NotFoundError if bikeId does not exist
+  static async getById(bikeId) {
     const bikeRes = await db.query(
       `SELECT
         bike_id AS bikeId, 
@@ -53,8 +58,6 @@ class Bike {
       FROM bikes WHERE bike_id = $1`,
       [bikeId]
     );
-    // console.log(bikeRes.rows);
-
     if (!bikeRes.rows[0]) {
       throw new NotFoundError(`No bike with that ID found`);
     } else {
@@ -63,7 +66,9 @@ class Bike {
   }
 
   /** Finds all bikes by athlete_id*/
-  static async getByAthleteId(athleteId, startDt, endDt){
+  // Returns an array of bike objects { bikeId, athleteId, distance, brand, model, desc }
+  // Returns an empty array if athlete_id does not exist
+  static async getByAthleteId(athleteId, startDt, endDt) {
     const bikeRes = await db.query(
       `SELECT
         bike_id AS bikeId, 
@@ -78,35 +83,13 @@ class Bike {
     return bikeRes.rows;
   }
 
-  /** Updates bike by id */
-  // static async update(bikeId, data){
-  //   const { setCols } = sqlForPartialUpdate(data, {});
-  //   const bikeRes = await db.query(
-  //     `UPDATE bikes
-  //     SET ${setCols}
-  //     WHERE bike_id = $1
-  //     RETURNING 
-  //       bike_id AS bikeId, 
-  //       athlete_id AS athleteID, 
-  //       distance,
-  //       brand_name AS brand, 
-  //       model_name AS model, 
-  //       bike_description AS desc`,
-  //     [bikeId]
-  //   );
-  //   const bike = bikeRes.rows[0];
-
-  //   if (!bike) {
-  //     throw new NotFoundError(`No bike with that ID found`);
-  //   } else {
-  //     return bike;
-  //   }
-  // }
   /** Deletes bike by id */
-  static async remove(bikeId){
+  // On success, returns a the deleted bike_id
+  // Throws NotFoundError if bike_id does not exist
+  static async remove(bikeId) {
     let result = await db.query(
       `DELETE FROM bikes WHERE bike_id = $1
-      RETURNING bike_id`, 
+      RETURNING bike_id`,
       [bikeId]
     );
     const deletedId = result.rows[0];

@@ -46,52 +46,60 @@ function Goals({ homePage=false }){
   return (
     <>
       <h3>Goals</h3>
-      {homePage ? <></> : (
+      {homePage ? (
+        <></>
+      ) : (
         <Link className="btn btn-primary" to="/goals/new">
           Set a New Goal
         </Link>
       )}
-        
-        {loading ? (
-          <p>...loading goals...</p>
-        ) : (
-          <>
-            {goals.length > 0 ? (
-              <div className="form-inline d-flex justify-content-center">
-                <div className="col-sm-8">
-                  {goals.map((g) => {
-                    return <Goal userGoal={g} key={uuidv4()} />;
-                  })}
 
-                  {homePage ? (
-                    <Button color="primary" onClick={() => history.push("./goals")}>
-                      More Goals &#8594;
-                    </Button>
-                  ) : (
-                    <div>
-                      { page <= 1 ? (
-                        <div></div>
-                      ) : (
-                        <Button onClick={() => prevPage()}>
-                          &#8592; Previous Page
-                        </Button>
-                      )}
-                      { page * goalsPerPage >= goalCount? (
-                        <></>
-                      ) : (
-                        <Button onClick={() => nextPage()}>
-                          Next Page &#8594;
-                        </Button>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </div>  
-            ) : (
-              <p>No Goals Loaded</p>
-            )}       
-          </>
-        )}
+      {loading ? (
+        <p>...loading goals...</p>
+      ) : (
+        <>
+          {goals.length > 0 ? (
+            <div className="form-inline d-flex justify-content-center">
+              <div className="col-sm-8">
+                {goals.map((g) => {
+                  return <Goal userGoal={g} key={uuidv4()} />;
+                })}
+
+                {homePage ? (
+                  <Button
+                    color="primary"
+                    onClick={() => history.push("./goals")}
+                  >
+                    More Goals &#8594;
+                  </Button>
+                ) : (
+                  <div>
+                    {page <= 1 ? (
+                      <div></div>
+                    ) : (
+                      <Button 
+                        color="primary" 
+                        onClick={() => prevPage()
+                      }>
+                        &#8592; Previous Page
+                      </Button>
+                    )}
+                    {page * goalsPerPage >= goalCount ? (
+                      <></>
+                    ) : (
+                      <Button color="primary" onClick={() => nextPage()}>
+                        Next Page &#8594;
+                      </Button>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          ) : (
+            <p>No Goals Loaded</p>
+          )}
+        </>
+      )}
     </>
   );
 }

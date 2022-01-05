@@ -1,7 +1,9 @@
-const { sqlForPartialUpdate } = require("./sql");
+// tests output for helper method method sqlForPartialUpdate
+
+const { sqlForPartialUpdate } = require("../../helpers/sql");
 
 describe("sqlForPartialUpdate", function () {
-  test("works for 1 item", function () {
+  test("works when inserting 1 query item", function () {
     const result = sqlForPartialUpdate(
       { f1: "v1" }, 
       { f1: "f1", fF2: "f2" });
@@ -10,7 +12,7 @@ describe("sqlForPartialUpdate", function () {
       values: ["v1"] });
   });
 
-  test("works for 2 items", function () {
+  test("works when inserting 2 query items", function () {
     const result = sqlForPartialUpdate(
       { f1: "v1", jsF2: "v2" },
       { jsF2: "f2" });

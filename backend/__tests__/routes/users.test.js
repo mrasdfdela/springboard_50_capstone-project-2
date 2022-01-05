@@ -1,4 +1,6 @@
+// Tests users routes
 "use strict";
+
 const request = require("supertest");
 const db = require("../../db");
 const app = require("../../app");
@@ -134,7 +136,7 @@ describe("GET /users/:username/goal-count", function () {
 });
 
 describe("GET /users/:username/details", function () {
-  test("returns user details", async function () {
+  test("returns user's details", async function () {
     const resp = await request(app)
       .get(`/users/${user1.username}/details`);
     expect(resp.statusCode).toEqual(200);

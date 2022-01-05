@@ -1,3 +1,4 @@
+// Activity model setup & methods
 "use strict";
 
 const db = require("../db");
@@ -5,21 +6,32 @@ const { sqlForPartialUpdate } = require("../helpers/sql");
 const { NotFoundError, BadRequestError } = require("../expressError");
 
 class Activity {
-  /** Post activity */
+  /** Posts new activity
+   * If successful, returns { activity_id, athlete_id, start_date, type, distance,
+   * kilojoules, moving_time, description, trainer }
+   * Throws BadRequestError on duplicate **/
   static async new(
-    activityId, atheleteId, startDt, type, distance,
-    kilojoules, movingTime, desc, trainer
+    activityId,
+    atheleteId,
+    startDt,
+    type,
+    distance,
+    kilojoules,
+    movingTime,
+    desc,
+    trainer
   ) {
     // First checks if the activity/activity_id exists in the database
     const duplicateCheck = await db.query(
       `SELECT activity_id FROM activities where activity_id=$1`,
       [activityId]
     );
+    // throw error if activity_id already exists
     if (duplicateCheck.rows[0])
       throw new BadRequestError(
         `Activity already exists! activity_id: ${activityId}`
       );
-
+    // otherwise, creates & returns data from new activity
     const result = await db.query(
       `INSERT INTO activities
         ( activity_id, athlete_id,start_date,type,distance,
@@ -28,14 +40,24 @@ class Activity {
       RETURNING 
         activity_id, athlete_id, start_date, type, distance, 
         kilojoules, moving_time, description, trainer`,
-      [ activityId, atheleteId, startDt, type, distance,
-        kilojoules, movingTime, desc, trainer ]
+      [
+        activityId,
+        atheleteId,
+        startDt,
+        type,
+        distance,
+        kilojoules,
+        movingTime,
+        desc,
+        trainer,
+      ]
     );
     const activity = result.rows[0];
     return activity;
   }
 
-  /** Check if activity exists by id */
+  /** Checks if activity exists by id
+   * Returns an object { exists: true/false }**/
   static async activityExists(activityId) {
     const actRes = await db.query(
       `SELECT activity_id FROM activities WHERE activity_id = $1`,
@@ -45,7 +67,9 @@ class Activity {
     return { exists: exists };
   }
 
-  static async getCount(athleteId){
+  // Checks activity count using athlete_id
+  // Returns object { count: {{someInteger}} }
+  static async getCount(athleteId) {
     const countRes = await db.query(
       `SELECT COUNT(*) FROM activities WHERE athlete_id = $1`,
       [athleteId]
@@ -53,7 +77,10 @@ class Activity {
     return countRes.rows[0];
   }
 
-  /** Finds activity by id */
+  // Finds an activity by id
+  // If successful, returns { activity_id, athlete_id, start_date, type, 
+  // distance, kilojoules, moving_time, description }
+  // Throw NotFoundError if activity_id does not exist
   static async getById(activityId) {
     const actRes = await db.query(
       `SELECT
@@ -70,7 +97,10 @@ class Activity {
   }
 
   /** Finds activity by date */
-  static async getByDates(athleteId, startDt, endDt="NOW()") {
+  // Returns an array of activities { start_date, type, distance, 
+  // kilojoules, moving_time, description }
+  // If no matches, returns empty array
+  static async getByDates(athleteId, startDt, endDt = "NOW()") {
     const res = await db.query(
       `SELECT
         start_date,
@@ -87,7 +117,10 @@ class Activity {
     return res.rows;
   }
 
-  /** Finds all activities by user*/
+  // Finds all activities by user
+  // Returns an array of activities { activityId, athleteId, date, type,
+  // meters, kilojoules, time, description, trainer }
+  // If no matches, returns empty array
   static async getByAthlete(athleteId, count, offset) {
     const userRes = await db.query(
       `SELECT 
@@ -111,6 +144,9 @@ class Activity {
   }
 
   /** Updates activity by id */
+  // If successful, returns an object { activity_id, athlete_id, start_date,
+  // type, distance,  kilojoules, moving_time, description }
+  // Throws NotFoundError if activity_id does not exist
   static async update(activityId, data) {
     const { setCols } = sqlForPartialUpdate(data, {});
     const result = await db.query(
@@ -137,6 +173,8 @@ class Activity {
     }
   }
   /** Deletes activity by id */
+  // If successful, returns the activity_id
+  // Throws NotFoundError if activity_id does not exist
   static async remove(activityId) {
     let result = await db.query(
       `DELETE FROM activities WHERE activity_id = $1

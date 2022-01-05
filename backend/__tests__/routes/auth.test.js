@@ -1,3 +1,4 @@
+// Tests for authorization routes
 "use strict";
 
 const request = require("supertest");

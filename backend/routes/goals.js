@@ -1,8 +1,7 @@
+/** Routes for goals */
 "use strict";
 
-/** Routes for goals */
 const Goal = require("../models/goal");
-// const { BadRequestError, NotFoundError } = require("../expressError");
 
 const { ensureCorrectUser } = require("../middleware/auth");
 const {
@@ -22,7 +21,9 @@ const User = require("../models/user");
 const { getPackedSettings } = require("http2");
 const router = new express.Router();
 
-// POST new goal
+// POST new goal from user
+// Converts units before posting data
+// Returns goal object { username, distance, kilojoules, time, startDt, endDt }
 router.post("/", async function(req,res,next){
   try {
     const reqBody = req.body
@@ -47,6 +48,8 @@ router.post("/", async function(req,res,next){
 });
 
 // GET goal by ID
+// Converts units before returning data
+// returns goal object { goalid, miles, calories, time, timePeriod, startdt, enddt }
 router.get("/:goal_id", async function (req, res, next) {
   try {
     const goal = await Goal.getById(req.params.goal_id);
@@ -67,6 +70,8 @@ router.get("/:goal_id", async function (req, res, next) {
 });
 
 // PATCHES goals by ID
+// Pass in query parameter goal_id
+// Return goal object
 router.patch("/:goal_id", 
   // ensureCorrectUser,
   async function (req, res, next) {
@@ -91,6 +96,8 @@ router.patch("/:goal_id",
 });
 
 // DELETES goals by ID
+// Pass in query parameter goal_id
+// Returns object confirming deletion { deleted: {{goal_id}} }
 router.delete("/:goal_id", async function (req, res, next) {
   try {
     await Goal.remove(req.params.goal_id);

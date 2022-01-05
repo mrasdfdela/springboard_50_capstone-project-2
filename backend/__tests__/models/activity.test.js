@@ -1,3 +1,4 @@
+// Tests for the the Activity model
 "use strict";
 
 const {
@@ -40,6 +41,7 @@ const newActivity = {
 
 beforeAll( async ()=>{
   await commonBeforeAll();
+  // Setup an "old" activity before running tests
   await db.query(
     `INSERT INTO activities
       (activity_id, athlete_id, start_date, type, distance, kilojoules, moving_time, description, trainer)
@@ -53,7 +55,7 @@ afterEach(commonAfterEach);
 afterAll(commonAfterAll);
 
 describe("Activity.new", function () {
-  test("create a new activity", async function(){
+  test("creates a new activity", async function(){
     const args = Object.values(newActivity);
     let res = await Activity.new(...args);
     expect(res).toEqual(newActivity);
@@ -78,7 +80,7 @@ describe("Activity.getCount", function () {
     expect(parseInt(cntRes.count)).toEqual(1);
   });
 
-  test("create new activity & check activity count for a userId", async function () {
+  test("creates new activity & check activity count for a userId", async function () {
     const args = Object.values(newActivity);
     await Activity.new(...args);
     const cntRes = await Activity.getCount(oldActivity.athlete_id);
@@ -102,12 +104,12 @@ describe("Activity.getById", function () {
   });
 });
 
-describe("Activity.getByDates", function () {
-  /** no tests; my_strava app does not search using dates */
-});
+// describe("Activity.getByDates", function () {
+//   no tests; my_strava app does not search using dates
+// });
 
 describe("Activity.getByAthlete", function () {
-  test("get all athlete activities", async function(){
+  test("gets all athlete activities", async function(){
     const res = await Activity.getByAthlete(oldActivity.athlete_id, 1, 0);
     expect(res.length).toEqual(1);
     expect(res[0]).toEqual({
@@ -129,9 +131,9 @@ describe("Activity.getByAthlete", function () {
   });
 });
 
-describe("Activity.update", function () {
-  /** no tests; my_strava app does not update activities */
-});
+// describe("Activity.update", function () {
+  // no tests; my_strava app does not update activities
+// });
 
 describe("Activity.remove", function () {
   test("removes activity", async function(){
