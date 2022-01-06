@@ -23,7 +23,7 @@ This project utilizes [Oauth2](https://developers.strava.com/docs/authentication
   <strong>GET bikes</strong>
 </details>
 
-This project also utilizes the [World Time API](http://worldtimeapi.org/) to track at what time (GMT) that a Strava `access_token` was utilized, which expires 6 hours after it is issued.
+This project also utilizes the [World Time API](http://worldtimeapi.org/) to reference at what time (in GMT) that a Strava `access_token` was utilized, which expires 6 hours after it is issued.
 - http://worldtimeapi.org/api/timezone/
 
 ## Pages
