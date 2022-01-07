@@ -4,7 +4,7 @@ Jerry's 2nd Capstone Project for Springboard
 
 ## Introduction
 
-This project uses the [Strava API](https://developers.strava.com/docs/reference). Strava is a social network for endurance athletes that I use to track mine and my friends' workout activities. This project utilizes Node/Express & PostgreSQL on the backend, React/use-react-app on the frontend, and Strava's API.
+This project uses the [Strava API](https://developers.strava.com/docs/reference). Strava is a social network for endurance athletes that I use to track mine and my friends' cycling workouts. This project utilizes Node/Express & PostgreSQL on the backend, React/use-react-app on the frontend, and Strava's API.
 
 ## Libraries & Installation
 
