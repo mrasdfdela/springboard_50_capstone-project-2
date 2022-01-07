@@ -36,48 +36,67 @@ This project also utilizes the [World Time API](http://worldtimeapi.org/) to ref
 - http://worldtimeapi.org/api/timezone/
 
 ## Pages
-- User
+<details>
+  <summary>User</summary>
   - Signup **/signup**
   - Login **/login**
   - User Update **/user-login** - 1) lists Strava athlete info or links to a one-time process for linking to Strava data & 2) form to update user profile information
-- Home Page **/** - displays message to sign into app or displays latest Activities and Goals w/ links to view Activities and Goals pages
-- Activities
+</details>
+<details>
+  <summary>Home Page</summary>
+  - **/** - displays message to sign into app or displays latest Activities and Goals w/ links to view Activities and Goals pages
+</details>
+<details>
+  <summary>Activities</summary>
   - Activities page **/activities** - list of activities with stats for date, distance, and calories and navigation to view more activities
-  - ActivityDetail page **/activities/{{activity_id}} - for listing additional activity details
-- Goals
+  - ActivityDetail page **/activities/{{activity_id}} - for listing additional activity details- 
+</details>
+<details>  
+  <summary>Goals</summary>
   - Goals page **/goals** - with previously input goals for date, distance, or calories, and navigation to view more goals)
   - GoalDetail page **/goals/{{goal_id}} - for listing additional goal details
   - Goal Setting page **/goals/new** - to post weekly, monthly, and yearly goals
-
+</details>
+  
 ## Endpoints
-- /auth
+<details>
+<summary>/auth</summary>
   - GET /strava/callback - endpoint that Strava redirects to after Oauth verification; saves a one-time Strava auth_code for Strava token exchange
   - POST /strava/tokens - saves user's Strava refresh_token and access_token
   - POST /token - authenticates user and returns jwt to authenticate future requests
   - POST /register - registers users to app
-- /users
+</details>
+<details>
+<summary>/users</summary>
   - GET /{{username}} - returns user profile data
   - PATCH /{{username}} - updates user profile
   - GET /{{username}}/bikes - returns an array of user bikes
   - GET /{{username}}/goals - returns an array of user goals
   - GET /{{username}}/goals-count - returns an object with the number of user's goal records
   - GET /{{username}}/details - returns extra user details, including token information
-- /bikes
+</details>
+<details>
+<summary>/bikes</summary>
   - POST / - saves an array of bike data
   - GET /{{bike_id}} - returns bike data
   - GET / - returns an array of user's bikes
   - DELETE /{{bike_id}} - deletes the selected bike
-- /activities
+</details>
+<details>
+<summary>/activities</summary>
   - POST / - saves an array of activities (of data downloaded from Strava)
   - GET / - returns an array of user's activities, using parameters to specify the size of the array and the page number (starting from 1) to retrieve 
   - GET /count - returns an object with count of user's activities
   - GET /{{activity_id}} - returns details of the selected activity
   - DELETE /{{activity_id}} - deletes the selected activity
-- /goals
+</details>
+<details>
+  <summary>/goals</summary>
   - POST / - saves a new user goal
   - GET /{{goal_id}} - returns the selected user goal
   - PATCH /{{goal_id}} - updates the selected user goal
   - DELETE /{{goal_id}} - deletes the selected user goal
+</details>
 
 ## Technologies
 - Frontend
