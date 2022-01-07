@@ -9,7 +9,7 @@ This project uses the [Strava API](https://developers.strava.com/docs/reference)
 ## Libraries & Installation
 
 - The app is split into frontend and backend directories. Their respective libraries are located in the `package.json` files. To install, create separate directories with the `package.json` files and run a `npm install`
-- 
+
 ## API
 This project utilizes [Oauth2](https://developers.strava.com/docs/authentication/) to access Strava data. Once a user saves codes/tokens to their account, the app uses a number of API calls to download Stravav data to the PostgreSQL database so that uses can view the data.
 - https://developers.strava.com/docs/authentication, https://developers.strava.com/playground, https://developers.strava.com/playground/
