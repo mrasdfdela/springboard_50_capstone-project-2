@@ -61,41 +61,41 @@ This project also utilizes the [World Time API](http://worldtimeapi.org/) to ref
 ## Endpoints
 <details>
 <summary>/auth</summary>
-  - GET /strava/callback - endpoint that Strava redirects to after Oauth verification; saves a one-time Strava auth_code for Strava token exchange
-  - POST /strava/tokens - saves user's Strava refresh_token and access_token
-  - POST /token - authenticates user and returns jwt to authenticate future requests
-  - POST /register - registers users to app
+  - <strong>GET /strava/callback</strong> - endpoint that Strava redirects to after Oauth verification; saves a one-time Strava auth_code for Strava token exchange
+  - <strong>POST /strava/tokens</strong> - saves user's Strava refresh_token and access_token
+  - <strong>POST /token</strong> - authenticates user and returns jwt to authenticate future requests
+  - <strong>POST /register</strong> - registers users to app
 </details>
 <details>
 <summary>/users</summary>
-  - GET /{{username}} - returns user profile data
-  - PATCH /{{username}} - updates user profile
-  - GET /{{username}}/bikes - returns an array of user bikes
-  - GET /{{username}}/goals - returns an array of user goals
-  - GET /{{username}}/goals-count - returns an object with the number of user's goal records
-  - GET /{{username}}/details - returns extra user details, including token information
+  - <strong>GET /{{username}}</strong> - returns user profile data
+  - <strong>PATCH /{{username}}</strong> - updates user profile
+  - <strong>GET /{{username}}/bikes</strong> - returns an array of user bikes
+  - <strong>GET /{{username}}/goals</strong> - returns an array of user goals
+  - <strong>GET /{{username}}/goals-count</strong> - returns an object with the number of user's goal records
+  - <strong>GET /{{username}}/details</strong> - returns extra user details, including token information
 </details>
 <details>
 <summary>/bikes</summary>
-  - POST / - saves an array of bike data
-  - GET /{{bike_id}} - returns bike data
-  - GET / - returns an array of user's bikes
-  - DELETE /{{bike_id}} - deletes the selected bike
+  - <strong>POST /</strong> - saves an array of bike data
+  - <strong>GET /{{bike_id}}</strong> - returns bike data
+  - <strong>GET /</strong> - returns an array of user's bikes
+  - <strong>DELETE /{{bike_id}}</strong> - deletes the selected bike
 </details>
 <details>
 <summary>/activities</summary>
-  - POST / - saves an array of activities (of data downloaded from Strava)
-  - GET / - returns an array of user's activities, using parameters to specify the size of the array and the page number (starting from 1) to retrieve 
-  - GET /count - returns an object with count of user's activities
-  - GET /{{activity_id}} - returns details of the selected activity
-  - DELETE /{{activity_id}} - deletes the selected activity
+  - <strong>POST /</strong> - saves an array of activities (of data downloaded from Strava)
+  - <strong>GET /</strong> - returns an array of user's activities, using parameters to specify the size of the array and the page number (starting from 1) to retrieve 
+  - <strong>GET /count</strong> - returns an object with count of user's activities
+  - <strong>GET /{{activity_id}}</strong> - returns details of the selected activity
+  - <strong>DELETE /{{activity_id}}</strong> - deletes the selected activity
 </details>
 <details>
   <summary>/goals</summary>
-  - POST / - saves a new user goal
-  - GET /{{goal_id}} - returns the selected user goal
-  - PATCH /{{goal_id}} - updates the selected user goal
-  - DELETE /{{goal_id}} - deletes the selected user goal
+  - <strong>POST /</strong> - saves a new user goal
+  - <strong>GET /{{goal_id}}</strong> - returns the selected user goal
+  - <strong>PATCH /{{goal_id}}</strong> - updates the selected user goal
+  - <strong>DELETE /{{goal_id}}</strong> - deletes the selected user goal
 </details>
 
 ## Technologies
