@@ -15,13 +15,22 @@ This project utilizes [Oauth2](https://developers.strava.com/docs/authentication
 - https://developers.strava.com/docs/authentication, https://developers.strava.com/playground, https://developers.strava.com/playground/
 
 <details>
-  <summary>Activities</summary>
-  <strong>GET activities</strong>
+  <summary>OAuth</summary>
+  <strong>[Strava Authentication](https://developers.strava.com/docs/authentication/)</strong>
+  This app connects to Strava using Oauth once (saving the generated auth_code), exchanges credentials for access & refresh tokens, and uses those tokens to download user activity data on subsequent sign-ins. A full explanation for this process is detailed in the [Strava Developers documentation](https://developers.strava.com/docs/authentication/)
 </details>
 <details>
-  <summary>Bikes</summary>
-  <strong>GET bikes</strong>
+  <summary>Athlete</summary>
+  <strong>[GET /athlete](https://developers.strava.com/playground/#/Athletes/getLoggedInAthlete)</strong>
+  The athlete route returns profile data for Strava athletes. This app saves the athlete id and their bikes from the returned object.
 </details>
+<details>
+  <summary>Athlete Activities</summary>
+  <strong>[GET /athlete/activities](https://developers.strava.com/playground/#/Activities/getLoggedInAthleteActivities)</strong>
+</details>
+The athlete activities route returns an array of activiy objects, each of which include details of the activity and a reference to the associated athlete. Activities are downloaded using query parameters for batching (page & per_page) and filtering by date (after the last recorded activity). This app saves activity name, date, type, distance, kilojoules, moving_time, and trainer (T/F) data.
+
+A full list of API calls can be found [here](https://developers.strava.com/playground/).
 
 This project also utilizes the [World Time API](http://worldtimeapi.org/) to reference at what time (in GMT) that a Strava `access_token` was utilized, which expires 6 hours after it is issued.
 - http://worldtimeapi.org/api/timezone/
