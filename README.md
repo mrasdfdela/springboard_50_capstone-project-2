@@ -40,24 +40,33 @@ This project also utilizes the [World Time API](http://worldtimeapi.org/) to ref
   <summary>User</summary>
   <ul>
     <li>Signup <strong>/signup</strong></li>
-    <li>Login **/login**</li>
-    <li>User Update **/user-login** - 1) lists Strava athlete info or links to a one-time process for linking to Strava data & 2) form to update user profile information</li>
+    <li>Login <strong>**/login**</strong></li>
+    <li>User Update <strong>**/user-login**</strong>
+      <ol>
+        <li>lists Strava athlete info or links to a one-time process for linking to Strava data</li>
+        <li>form to update user profile information</li>
+      </ol>
+    </li>
   </ul>
 </details>
 <details>
   <summary>Home Page</summary>
-  - **/** - displays message to sign into app or displays latest Activities and Goals w/ links to view Activities and Goals pages
+  - <strong>/</strong> - displays message to sign into app or displays latest Activities and Goals w/ links to view Activities and Goals pages
 </details>
 <details>
   <summary>Activities</summary>
-  - Activities page **/activities** - list of activities with stats for date, distance, and calories and navigation to view more activities
-  - ActivityDetail page **/activities/{{activity_id}} - for listing additional activity details- 
+  <ul>
+    <li>Activities page <strong>/activities</strong> - list of activities with stats for date, distance, and calories and navigation to view more activities</li>
+    <li>ActivityDetail page <strong>/activities/{{activity_id}}</strong> - for listing additional activity details</li>
+  </ul>
 </details>
 <details>  
   <summary>Goals</summary>
-  - Goals page **/goals** - with previously input goals for date, distance, or calories, and navigation to view more goals)
-  - GoalDetail page **/goals/{{goal_id}} - for listing additional goal details
-  - Goal Setting page **/goals/new** - to post weekly, monthly, and yearly goals
+  <ul>
+    <li>Goals page <strong>/goals</strong> - with previously input goals for date, distance, or calories, and navigation to view more goals)</li>
+    <li>GoalDetail page <strong>/goals/{{goal_id}}</strong> - for listing additional goal details</li>
+    <li>Goal Setting page <strong>/goals/new</strong> - to post weekly, monthly, and yearly goals</li>
+  </ul>
 </details>
   
 ## Endpoints
