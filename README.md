@@ -1,6 +1,6 @@
-# Strava Capstone Project
+# My-Strava
 
-2nd Capstone Project for Springboard
+Jerry's 2nd Capstone Project for Springboard
 
 ## Introduction
 
@@ -36,27 +36,51 @@ This project also utilizes the [World Time API](http://worldtimeapi.org/) to ref
 - http://worldtimeapi.org/api/timezone/
 
 ## Pages
-- Home Page (latest Activities and Goals & links to view Activities and Goals pages)
-- Activities
-  - Activities page (list of activities with stats for date, distance, and calories and navigation to view more activities)
-  - ActivityDetail page (for listing additional activity details)
-- Goals
-  - Goals page (with previously input goals for date, distance, or calories, and navigation to view more goals)
-  - GoalDetail page (for listing additional goal details)
-  - Goal Setting page (to post weekly, monthly, and yearly goals)
 - User
-  - Signup
-  - Login
-  - User Update (lists Strava athlete info or options to link/download strava data & form to update user profile information)
+  - Signup **/signup**
+  - Login **/login**
+  - User Update **/user-login** - 1) lists Strava athlete info or links to (one-time) process for linking to Strava data & 2) form to update user profile information
+- Home Page **/** - displays message to sign into app or displays latest Activities and Goals w/ links to view Activities and Goals pages
+- Activities
+  - Activities page **/activities** - list of activities with stats for date, distance, and calories and navigation to view more activities
+  - ActivityDetail page **/activities/{{activity_id}} - for listing additional activity details
+- Goals
+  - Goals page **/goals** - with previously input goals for date, distance, or calories, and navigation to view more goals)
+  - GoalDetail page **/goals/{{goal_id}} - for listing additional goal details
+  - Goal Setting page **/goals/new** - to post weekly, monthly, and yearly goals
 
 ## Endpoints
-- User
-- Activities
-- Bikes
-- Goals
+- /auth
+  - GET /strava/callback - endpoint that Strava redirects to after Oauth verification; saves a one-time Strava auth_code for Strava token exchange
+  - POST /strava/tokens - saves user's Strava refresh_token and access_token
+  - POST /token - authenticates user and returns jwt to authenticate future requests
+  - POST /register - registers users to app
+- /users
+  - GET /{{username}} - returns user profile data
+  - PATCH /{{username}} - updates user profile
+  - GET /{{username}}/bikes - returns an array of user bikes
+  - GET /{{username}}/goals - returns an array of user goals
+  - GET /{{username}}/goals-count - returns an object with the number of user's goal records
+  - GET /{{username}}/details - returns extra user details, including token information
+- /bikes
+  - POST / - saves an array of bike data
+  - GET /{{bike_id}} - returns bike data
+  - GET / - returns an array of user's bikes
+  - DELETE /{{bike_id}} - deletes the selected bike
+- /activities
+  - POST / - saves an array of activities (of data downloaded from Strava)
+  - GET / - returns an array of user's activities, using parameters to specify the size of the array and the page number (starting from 1) to retrieve 
+  - GET /count - returns an object with count of user's activities
+  - GET /{{activity_id}} - returns details of the selected activity
+  - DELETE /{{activity_id}} - deletes the selected activity
+- /goals
+  - POST / - saves a new user goal
+  - GET /{{goal_id}} - returns the selected user goal
+  - PATCH /{{goal_id}} - updates the selected user goal
+  - DELETE /{{goal_id}} - deletes the selected user goal
 
 ## Technologies
-- Backend
-  - node, express, body-parser, jsonschema, pg, bcrypt, jsonschema
 - Frontend
-  - create-react-app, reactstrap, bootstrap, react-router-dom, axios
+  - axios, create-react-app, reactstrap, bootstrap, dotenv, react-router-dom, uuid
+- Backend
+  - bcrypt, body-parser, cors, express, jsonschema, jsonwebtoken, node, nodemon, pg
