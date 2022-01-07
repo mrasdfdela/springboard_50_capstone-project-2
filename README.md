@@ -15,17 +15,17 @@ This project utilizes [Oauth2](https://developers.strava.com/docs/authentication
 
 <details>
   <summary>OAuth</summary>
-  <strong>[Strava Authentication](https://developers.strava.com/docs/authentication/)</strong>
+  <strong><a href="https://developers.strava.com/docs/authentication/">Strava Authentication</a></strong>
   This app connects to Strava using Oauth once (saving the generated auth_code), exchanges credentials for access & refresh tokens, and uses those tokens to download user activity data on subsequent sign-ins. A full explanation for this process is detailed in the [Strava Developers documentation](https://developers.strava.com/docs/authentication/)
 </details>
 <details>
   <summary>Athlete</summary>
-  <strong>[GET /athlete](https://developers.strava.com/playground/#/Athletes/getLoggedInAthlete)</strong>
+  <strong><a href="https://developers.strava.com/playground/#/Athletes/getLoggedInAthlete">GET /athlete</a></strong>
   The athlete route returns profile data for Strava athletes. This app saves the athlete id and their bikes from the returned object.
 </details>
 <details>
   <summary>Athlete Activities</summary>
-  <strong>[GET /athlete/activities](https://developers.strava.com/playground/#/Activities/getLoggedInAthleteActivities)</strong>
+  <strong><a href="https://developers.strava.com/playground/#/Activities/getLoggedInAthleteActivities">GET /athlete/activities</a></strong>
 </details>
 The athlete activities route returns an array of activiy objects, each of which include details of the activity and a reference to the associated athlete. Activities are downloaded using query parameters for batching (page & per_page) and filtering by date (after the last recorded activity). This app saves activity name, date, type, distance, kilojoules, moving_time, and trainer (T/F) data.
 
