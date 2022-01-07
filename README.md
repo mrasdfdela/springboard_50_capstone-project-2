@@ -38,7 +38,7 @@ This project also utilizes the [World Time API](http://worldtimeapi.org/) to ref
 ## Pages
 <details>
   <summary>User</summary>
-  - Signup **/signup**
+  - Signup <strong>/signup</strong>
   - Login **/login**
   - User Update **/user-login** - 1) lists Strava athlete info or links to a one-time process for linking to Strava data & 2) form to update user profile information
 </details>
