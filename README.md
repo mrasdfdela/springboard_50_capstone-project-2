@@ -26,8 +26,8 @@ This project utilizes [Oauth2](https://developers.strava.com/docs/authentication
 <details>
   <summary>Athlete Activities</summary>
   <strong><a href="https://developers.strava.com/playground/#/Activities/getLoggedInAthleteActivities">GET /athlete/activities</a></strong>
+  The athlete activities route returns an array of activiy objects, each of which include details of the activity and a reference to the associated athlete. Activities are downloaded using query parameters for batching (page & per_page) and filtering by date (after the last recorded activity). This app saves activity name, date, type, distance, kilojoules, moving_time, and trainer (T/F) data.
 </details>
-The athlete activities route returns an array of activiy objects, each of which include details of the activity and a reference to the associated athlete. Activities are downloaded using query parameters for batching (page & per_page) and filtering by date (after the last recorded activity). This app saves activity name, date, type, distance, kilojoules, moving_time, and trainer (T/F) data.
 
 - https://developers.strava.com/docs/authentication
 - https://developers.strava.com/playground
