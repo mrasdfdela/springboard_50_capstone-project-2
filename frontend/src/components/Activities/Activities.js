@@ -2,9 +2,9 @@ import React, {useContext, useEffect, useState} from "react";
 import { useHistory } from "react-router-dom";
 import { Button } from "reactstrap";
 
-import UserContext from "../contexts/UserContext";
-import Activity from "./Activity";
-import MyStravaApi from "../services/api";
+import UserContext from "../../contexts/UserContext";
+import Activity from "../Activity/Activity";
+import MyStravaApi from "../../services/api";
 import "./Activities.css";
 
 function Activities({ homePage=false }) {

@@ -1,8 +1,8 @@
 import React, { useContext, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Button, Card, CardBody, Col, Form, FormGroup, Input, Label} from "reactstrap";
-import user from "../helpers/user";
-import UserContext from "../contexts/UserContext";
+import user from "../../helpers/user";
+import UserContext from "../../contexts/UserContext";
 
 function Signup(){
   const { setCurrentUser, setCurrentToken } = useContext(UserContext);
@@ -78,7 +78,7 @@ function Signup(){
               </FormGroup>
               <FormGroup row className="mb-1">
                 <Label for="firstName" sm={3}>
-                  Jerry
+                  First Name
                 </Label>
                 <Col sm={9}>
                   <Input
@@ -92,7 +92,7 @@ function Signup(){
               </FormGroup>
               <FormGroup row className="mb-1">
                 <Label for="lastName" sm={3}>
-                  Hsu
+                  Last Name
                 </Label>
                 <Col sm={9}>
                   <Input

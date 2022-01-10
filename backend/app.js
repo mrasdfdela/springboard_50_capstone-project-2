@@ -1,14 +1,12 @@
+// Express app for jerrystravacapstone
 "user strict";
 
 const express = require("express");
-// const bodyParser = require("body-parser");
-// const { response } = require("express");
 const cors = require("cors");
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-// app.use(bodyParser.json());
 app.use(express.urlencoded( {extended: true} ));
 
 const { NotFoundError } = require("./expressError");
@@ -30,6 +28,8 @@ app.use(function (req, res, next) {
   );
   next();
 });
+
+// Runs express routes
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
 app.use("/activities", actRoutes);
@@ -41,11 +41,11 @@ function ensureAuthenticated(req, res, next) {
   res.redirect('/login')
 }
 
-//
 app.get('/logout', function(req, res){
   req.logout();
 });
 
+// Handles 404 error; matches all (up to this point unmatched) routes
 app.use(function(req,res,next){
   return next(new NotFoundError());
 });

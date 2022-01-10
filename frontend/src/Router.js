@@ -2,19 +2,18 @@ import React from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 
 import NavBar from "./components/navbar";
-import Home from "./components/Home";
-import Login from "./components/Login";
-import Signup from "./components/Signup";
+import Home from "./components/Home/Home";
+import Login from "./components/Login/Login";
+import Signup from "./components/Signup/Signup";
 
-import Profile from "./components/Profile";
-import UserUpdate from "./components/UserUpdate";
+import UserUpdate from "./components/UserUpdate/UserUpdate";
 
-import Activities from "./components/Activities";
-import ActivityDetail from "./components/ActivityDetail";
-import Goals from "./components/Goals";
-import GoalDetail from "./components/GoalDetail";
-import GoalSet from "./components/GoalSet";
-import GoalUpdate from "./components/GoalUpdate";
+import Activities from "./components/Activities/Activities";
+import ActivityDetail from "./components/ActivityDetail/ActivityDetail";
+import Goals from "./components/Goals/Goals";
+import GoalDetail from "./components/GoalDetail/GoalDetail";
+import GoalSet from "./components/GoalSet/GoalSet";
+import GoalUpdate from "./components/GoalUpdate/GoalUpdate";
 
 function Router() {
   return (
@@ -24,7 +23,6 @@ function Router() {
         <Route exact path="/" component={Home} />
         <Route exact path="/login" component={Login} />
         <Route exact path="/signup" component={Signup} />
-        <Route exact path="/profile" component={Profile} />
         <Route exact path="/user-update" component={UserUpdate} />
         <Route exact path="/activities" component={Activities} />
         <Route exact path="/activities/:activityId" component={ActivityDetail} />

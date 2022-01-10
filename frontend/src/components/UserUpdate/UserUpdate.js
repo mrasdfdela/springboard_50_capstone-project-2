@@ -2,11 +2,11 @@ import React, { useContext, useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { Button, Card, CardBody, CardTitle, Col, Form, FormGroup, Input, Label } from "reactstrap";
 
-import Athlete from "./Athlete";
+import Athlete from "../Athlete/Athlete";
 
-import UserContext from "../contexts/UserContext";
-import user from "../helpers/user";
-import MyStravaApi from "../services/api";
+import UserContext from "../../contexts/UserContext";
+import user from "../../helpers/user";
+import MyStravaApi from "../../services/api";
 import "./UserUpdate.css";
 
 function UserUpdate() {

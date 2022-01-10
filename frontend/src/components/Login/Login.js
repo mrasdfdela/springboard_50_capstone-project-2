@@ -2,9 +2,9 @@ import React, { useContext, useState } from "react";
 import { Redirect, useHistory } from "react-router-dom";
 import { Button, Card, CardBody, Col, Form, FormGroup, Input, Label } from "reactstrap";
 
-import UserContext from "../contexts/UserContext";
-import StravaApiContext from "../contexts/StravaApiContext";
-const user = require("../helpers/user");
+import UserContext from "../../contexts/UserContext";
+import StravaApiContext from "../../contexts/StravaApiContext";
+const user = require("../../helpers/user");
 // import "./Login.css";
 
 function Login(){

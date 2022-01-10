@@ -1,7 +1,9 @@
 import React, { 
+  // useContext, 
+  useEffect, 
   useState 
   } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import {
   Button,
   Card,
@@ -13,18 +15,34 @@ import {
   Input,
   Label,
 } from "reactstrap";
-import MyStravaApi from "../services/api.js";
-import "./GoalSet.css";
+// import UserContext from "../contexts/UserContext";
+import MyStravaApi from "../../services/api.js";
+import "../GoalSet/GoalSet.css";
 
-function GoalSet() {
+function GoalUpdate() {
+  const { goalId } = useParams();
+  const [formData, setFormData] = useState({});
   const history = useHistory();
-  // const { currentUser } = useContext(UserContext);
-  const [formData, setFormData] = useState([]);
+  // const [doneLoading, setDoneLoading] = useState(false);
 
+  useEffect(() => {
+    async function getGoalById() {
+      let goalRes = await MyStravaApi.getGoal(goalId);
+      // setDoneLoading(true);
+      return goalRes;
+    }
+    getGoalById().then( (res)=>{
+      setFormData(res);
+    });
+  }, []);
+  
+  const updateUserGoal = async (formData) => {
+    MyStravaApi.updateGoal(formData.goalId, formData);
+  };
+  
   const handleChange = (e)=> {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    console.log( formData );
   };
 
   const handleDate = (e)=> {
@@ -35,20 +53,14 @@ function GoalSet() {
 
   const handleSubmit = (e)=> {
     e.preventDefault();
-    createUserGoal(formData);
+    updateUserGoal(formData);
     history.push("/");
   };
-
-  const createUserGoal = async (formData) => {
-    const username = localStorage.getItem("currentUser");
-    MyStravaApi.addGoal(username, formData);
-  };
-
   return (
     <>
       <div className="d-flex justify-content-center">
         <Card className="col-sm-6">
-          <CardHeader>Create New Goal</CardHeader>
+          <CardHeader>Update Goal</CardHeader>
           <CardBody>
             <Form className="form" onSubmit={handleSubmit}>
               <FormGroup>
@@ -59,7 +71,7 @@ function GoalSet() {
                   name="miles"
                   type="text"
                   placeholder="Distance (miles)"
-                  autoComplete="on"
+                  defaultValue={formData.miles}
                   onChange={handleChange}
                 />
                 <Input
@@ -67,7 +79,7 @@ function GoalSet() {
                   name="calories"
                   type="text"
                   placeholder="Calories"
-                  autoComplete="on"
+                  defaultValue={formData.calories}
                   onChange={handleChange}
                 />
                 <Input
@@ -75,7 +87,7 @@ function GoalSet() {
                   name="time"
                   type="text"
                   placeholder="Time (format: hh:mm)"
-                  autoComplete="on"
+                  defaultValue={formData.time}
                   onChange={handleChange}
                 />
               </FormGroup>
@@ -89,6 +101,7 @@ function GoalSet() {
                     name="timePeriod"
                     type="radio"
                     onChange={handleChange}
+                    checked={formData.timePeriod === "week"}
                   />
                   <Label for="week">&nbsp; Week&nbsp;</Label>
                   <Input
@@ -97,24 +110,28 @@ function GoalSet() {
                     name="timePeriod"
                     type="radio"
                     onChange={handleChange}
+                    checked={formData.timePeriod === "month"}
                   />
                   <Label for="month">&nbsp; Month&nbsp;</Label>
                   <Input
                     id="year"
-                    value="month"
+                    value="year"
                     name="timePeriod"
                     type="radio"
                     placeholder="Time Period"
                     autoComplete="on"
                     onChange={handleChange}
+                    checked={formData.timePeriod === "year"}
                   />
                   <Label for="year">&nbsp; Year</Label>
                 </FormGroup>
                 <Label for="date">Goal Start Date:</Label>
                 <Input
                   id="date"
+                  value="date"
                   name="date"
                   type="date"
+                  value={formData.startdt}
                   id="date"
                   onChange={handleDate}
                 />
@@ -130,4 +147,4 @@ function GoalSet() {
   );
 }
 
-export default GoalSet;
+export default GoalUpdate;

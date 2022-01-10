@@ -5,7 +5,7 @@ import { Link, useParams } from "react-router-dom";
 import { Card, CardBody, CardSubtitle, CardTitle } from "reactstrap";
 
 // import UserContext from "../contexts/UserContext";
-import MyStravaApi from "../services/api.js";
+import MyStravaApi from "../../services/api.js";
 
 function GoalDetail() {
   const { goalId } = useParams();

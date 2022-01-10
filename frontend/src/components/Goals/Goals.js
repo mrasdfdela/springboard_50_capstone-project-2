@@ -2,11 +2,11 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { Button } from "reactstrap";
 
-import Goal from "./Goal";
-import UserContext from "../contexts/UserContext";
+import Goal from "../Goal/Goal";
+import UserContext from "../../contexts/UserContext";
 import { v4 as uuidv4 } from "uuid";
 
-import MyStravaApi from "../services/api.js";
+import MyStravaApi from "../../services/api.js";
 
 function Goals({ homePage=false }){
   const history = useHistory();

@@ -2,10 +2,10 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Card } from "reactstrap";
 
-import Activities from "./Activities";
-import Goals from "./Goals";
-import UserContext from "../contexts/UserContext";
-import StravaApiContext from "../contexts/StravaApiContext";
+import Activities from "../Activities/Activities";
+import Goals from "../Goals/Goals";
+import UserContext from "../../contexts/UserContext";
+import StravaApiContext from "../../contexts/StravaApiContext";
 import "./Home.css";
 
 function Home() {
